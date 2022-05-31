@@ -1,5 +1,5 @@
 // converted by version 1.3
-// on Thu May 26 00:39:38 ICT 2022
+// on Wed Jun 01 13:10:45 ICT 2022
 
 .package CardUser {
 	.aid 0x88:0x88:0x88:0x88:0x88;
@@ -56,40 +56,54 @@
 		// 19
 		staticFieldRef byte[] CardUser/avatar;
 		// 20
-		staticMethodRef CardUser/saveInfoLong(Ljavacard/framework/APDU;[B[BS)V;
+		staticMethodRef CardUser/saveInfoLong(Ljavacard/framework/APDU;[BS)V;
 			.descriptor	Ljavacard/framework/APDU;	0.10;
 
 		// 21
-		staticMethodRef CardUser/showInfo(Ljavacard/framework/APDU;[B[BS)V;
+		virtualMethodRef CardUser/initInformation(Ljavacard/framework/APDU;[BS)V;
 			.descriptor	Ljavacard/framework/APDU;	0.10;
 
 		// 22
-		staticMethodRef CardUser/showInfoLong(Ljavacard/framework/APDU;[B[B)V;
+		virtualMethodRef CardUser/showInformation(Ljavacard/framework/APDU;)V;
 			.descriptor	Ljavacard/framework/APDU;	0.10;
 
 		// 23
-		staticMethodRef CardUser/verify([BB)V;
+		staticMethodRef CardUser/showInfo(Ljavacard/framework/APDU;[B[BS)V;
+			.descriptor	Ljavacard/framework/APDU;	0.10;
+
 		// 24
-		virtualMethodRef 0.9.6()V;		// resetAndUnblock()V
+		staticMethodRef CardUser/showInfoLong(Ljavacard/framework/APDU;[B[B)V;
+			.descriptor	Ljavacard/framework/APDU;	0.10;
+
 		// 25
-		virtualMethodRef 0.9.4()Z;		// isValidated()Z
+		staticMethodRef CardUser/verify([BB)V;
 		// 26
-		staticMethodRef 0.16.1([BS[BSS)S;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+		virtualMethodRef 0.9.6()V;		// resetAndUnblock()V
 		// 27
-		virtualMethodRef 0.10.8(SS)V;		// setOutgoingAndSend(SS)V
+		staticMethodRef 0.8.1()V;		// javacard/framework/JCSystem.beginTransaction()V
 		// 28
 		virtualMethodRef 0.10.16()S;		// getOffsetCdata()S
 		// 29
 		virtualMethodRef 0.10.15()S;		// getIncomingLength()S
 		// 30
-		virtualMethodRef 0.10.3(S)S;		// receiveBytes(S)S
+		staticMethodRef 0.16.1([BS[BSS)S;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 		// 31
-		virtualMethodRef 0.10.7()S;		// setOutgoing()S
+		virtualMethodRef 0.10.3(S)S;		// receiveBytes(S)S
 		// 32
-		virtualMethodRef 0.10.9(S)V;		// setOutgoingLength(S)V
+		staticMethodRef CardUser/getLengthWithMaker([BSS)S;
 		// 33
-		virtualMethodRef 0.10.5([BSS)V;		// sendBytesLong([BSS)V
+		staticMethodRef 0.8.2()V;		// javacard/framework/JCSystem.commitTransaction()V
 		// 34
+		virtualMethodRef 0.10.7()S;		// setOutgoing()S
+		// 35
+		virtualMethodRef 0.10.9(S)V;		// setOutgoingLength(S)V
+		// 36
+		virtualMethodRef 0.10.5([BSS)V;		// sendBytesLong([BSS)V
+		// 37
+		virtualMethodRef 0.9.4()Z;		// isValidated()Z
+		// 38
+		virtualMethodRef 0.10.8(SS)V;		// setOutgoingAndSend(SS)V
+		// 39
 		virtualMethodRef 0.9.1([BSB)Z;		// check([BSB)Z
 	}
 
@@ -151,6 +165,8 @@
 			getShareableInterfaceObject(Ljavacard/framework/AID;B)Ljavacard/framework/Shareable;;
 			select()Z;
 			process(Ljavacard/framework/APDU;)V;
+			initInformation(Ljavacard/framework/APDU;[BS)V;
+			showInformation(Ljavacard/framework/APDU;)V;
 		}
 
 		.packageMethodTable 0 {
@@ -274,7 +290,6 @@
 					astore_2;
 				L3:	aload_1;
 					invokevirtual 12;		// setIncomingAndReceive()S
-					s2b;
 					sstore_3;
 				L4:	aload_2;
 					sconst_4;
@@ -296,7 +311,7 @@
 				L9:	aload_2;
 					sconst_1;
 					baload;
-					stableswitch L27 1 6 L25 L10 L27 L27 L18 L26;
+					slookupswitch L29 6 1 L27 2 L10 5 L20 6 L28 47 L18 63 L19;
 				L10:	aload_2;
 					sconst_2;
 					baload;
@@ -346,9 +361,8 @@
 					putstatic_a 19;		// reference CardUser/CardUser.avatar
 					aload_1;
 					aload_2;
-					getstatic_a 19;		// reference CardUser/CardUser.avatar
 					sload_3;
-					invokestatic 20;		// CardUser/CardUser.saveInfoLong(Ljavacard/framework/APDU;[B[BS)V
+					invokestatic 20;		// CardUser/CardUser.saveInfoLong(Ljavacard/framework/APDU;[BS)V
 					goto L17;
 				L16:	getstatic_a 3;		// reference CardUser/CardUser.pin
 					aload_2;
@@ -356,66 +370,356 @@
 					sload 4;
 					s2b;
 					invokevirtual 4;		// update([BSB)V
-				L17:	goto L28;
-				L18:	aload_2;
-					sconst_2;
-					baload;
-					stableswitch L24 2 7 L19 L20 L23 L21 L22 L24;
-				L19:	aload_1;
-					aload_2;
-					getstatic_a 14;		// reference CardUser/CardUser.userId
-					getstatic_a 14;		// reference CardUser/CardUser.userId
-					arraylength;
-					invokestatic 21;		// CardUser/CardUser.showInfo(Ljavacard/framework/APDU;[B[BS)V
-					goto L24;
-				L20:	aload_1;
-					aload_2;
-					getstatic_a 16;		// reference CardUser/CardUser.userName
-					getstatic_a 16;		// reference CardUser/CardUser.userName
-					arraylength;
-					invokestatic 21;		// CardUser/CardUser.showInfo(Ljavacard/framework/APDU;[B[BS)V
-					goto L24;
-				L21:	aload_1;
-					aload_2;
-					getstatic_a 19;		// reference CardUser/CardUser.avatar
-					invokestatic 22;		// CardUser/CardUser.showInfoLong(Ljavacard/framework/APDU;[B[B)V
-					goto L24;
-				L22:	aload_1;
-					aload_2;
-					getstatic_a 18;		// reference CardUser/CardUser.birthDay
-					getstatic_a 18;		// reference CardUser/CardUser.birthDay
-					arraylength;
-					invokestatic 21;		// CardUser/CardUser.showInfo(Ljavacard/framework/APDU;[B[BS)V
-					goto L24;
-				L23:	aload_1;
-					aload_2;
-					getstatic_a 17;		// reference CardUser/CardUser.gender
-					getstatic_a 17;		// reference CardUser/CardUser.gender
-					arraylength;
-					invokestatic 21;		// CardUser/CardUser.showInfo(Ljavacard/framework/APDU;[B[BS)V
-					goto L24;
-				L24:	goto L28;
-				L25:	aload_0;
+				L17:	goto_w L30;
+				L18:	aload_0;
+					aload_1;
 					aload_2;
 					sload_3;
-					invokespecial 23;		// CardUser/CardUser.verify([BB)V
-					goto L28;
-				L26:	getstatic_a 3;		// reference CardUser/CardUser.pin
-					invokevirtual 24;		// resetAndUnblock()V
+					invokevirtual 21;		// initInformation(Ljavacard/framework/APDU;[BS)V
+					goto L30;
+				L19:	aload_0;
+					aload_1;
+					invokevirtual 22;		// showInformation(Ljavacard/framework/APDU;)V
+					goto L30;
+				L20:	aload_2;
+					sconst_2;
+					baload;
+					stableswitch L26 2 7 L21 L22 L25 L23 L24 L26;
+				L21:	aload_1;
+					aload_2;
+					getstatic_a 14;		// reference CardUser/CardUser.userId
+					getstatic_a 14;		// reference CardUser/CardUser.userId
+					arraylength;
+					invokestatic 23;		// CardUser/CardUser.showInfo(Ljavacard/framework/APDU;[B[BS)V
+					goto L26;
+				L22:	aload_1;
+					aload_2;
+					getstatic_a 16;		// reference CardUser/CardUser.userName
+					getstatic_a 16;		// reference CardUser/CardUser.userName
+					arraylength;
+					invokestatic 23;		// CardUser/CardUser.showInfo(Ljavacard/framework/APDU;[B[BS)V
+					goto L26;
+				L23:	aload_1;
+					aload_2;
+					getstatic_a 19;		// reference CardUser/CardUser.avatar
+					invokestatic 24;		// CardUser/CardUser.showInfoLong(Ljavacard/framework/APDU;[B[B)V
+					goto L26;
+				L24:	aload_1;
+					aload_2;
+					getstatic_a 18;		// reference CardUser/CardUser.birthDay
+					getstatic_a 18;		// reference CardUser/CardUser.birthDay
+					arraylength;
+					invokestatic 23;		// CardUser/CardUser.showInfo(Ljavacard/framework/APDU;[B[BS)V
+					goto L26;
+				L25:	aload_1;
+					aload_2;
+					getstatic_a 17;		// reference CardUser/CardUser.gender
+					getstatic_a 17;		// reference CardUser/CardUser.gender
+					arraylength;
+					invokestatic 23;		// CardUser/CardUser.showInfo(Ljavacard/framework/APDU;[B[BS)V
+					goto L26;
+				L26:	goto L30;
+				L27:	aload_0;
+					aload_2;
+					sload_3;
+					s2b;
+					invokespecial 25;		// CardUser/CardUser.verify([BB)V
+					goto L30;
+				L28:	getstatic_a 3;		// reference CardUser/CardUser.pin
+					invokevirtual 26;		// resetAndUnblock()V
 					return;
-				L27:	sspush 27904;
+				L29:	sspush 27904;
 					invokestatic 13;		// javacard/framework/ISOException.throwIt(S)V
-				L28:	return;
+				L30:	return;
 		}
 
-		.method public static showInfo(Ljavacard/framework/APDU;[B[BS)V 1 {
+		.method public static getLengthWithMaker([BSS)S 1 {
+			.stack 2;
+			.locals 3;
+
+				L0:	sload_1;
+					sstore_3;
+				L1:	sconst_0;
+					sstore 4;
+				L2:	sload_1;
+					sstore 5;
+				L3:	sload 5;
+					sload_2;
+					if_scmpge L7;
+				L4:	sload 5;
+					sstore_3;
+					aload_0;
+					sload 5;
+					baload;
+					bspush 44;
+					if_scmpne L6;
+				L5:	sconst_1;
+					sstore 4;
+					goto L7;
+				L6:	sinc 5 1;
+					goto L3;
+				L7:	sload 4;
+					sconst_1;
+					if_scmpne L9;
+				L8:	sload_3;
+					sload_1;
+					ssub;
+					sreturn;
+				L9:	sload_3;
+					sconst_1;
+					sadd;
+					sload_1;
+					ssub;
+					sreturn;
+		}
+
+		.method public initInformation(Ljavacard/framework/APDU;[BS)V 8 {
+			.stack 5;
+			.locals 9;
+
+			.descriptor	Ljavacard/framework/APDU;	0.10;
+
+				L0:	invokestatic 27;		// javacard/framework/JCSystem.beginTransaction()V
+					sconst_0;
+					sstore 4;
+				L1:	aload_1;
+					invokevirtual 28;		// getOffsetCdata()S
+					sstore 5;
+				L2:	aload_1;
+					invokevirtual 29;		// getIncomingLength()S
+					sstore 6;
+				L3:	sload 6;
+					newarray 11;
+					astore 7;
+				L4:	sconst_0;
+					sstore 8;
+				L5:	sload_3;
+					ifle L7;
+				L6:	aload_2;
+					sload 5;
+					aload 7;
+					sload 4;
+					sload_3;
+					invokestatic 30;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					pop;
+					sload 4;
+					sload_3;
+					sadd;
+					sstore 4;
+					aload_1;
+					sload 5;
+					invokevirtual 31;		// receiveBytes(S)S
+					sstore_3;
+					goto L5;
+				L7:	aload 7;
+					sload 8;
+					aload 7;
+					arraylength;
+					invokestatic 32;		// CardUser/CardUser.getLengthWithMaker([BSS)S
+					sstore 9;
+				L8:	sload 9;
+					newarray 11;
+					putstatic_a 16;		// reference CardUser/CardUser.userName
+					aload 7;
+					sload 8;
+					getstatic_a 16;		// reference CardUser/CardUser.userName
+					sconst_0;
+					getstatic_a 16;		// reference CardUser/CardUser.userName
+					arraylength;
+					invokestatic 30;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					pop;
+					getstatic_a 16;		// reference CardUser/CardUser.userName
+					arraylength;
+					sload 8;
+					sadd;
+					sconst_1;
+					sadd;
+					sstore 8;
+					aload 7;
+					sload 8;
+					aload 7;
+					arraylength;
+					invokestatic 32;		// CardUser/CardUser.getLengthWithMaker([BSS)S
+					sstore 10;
+				L9:	sload 10;
+					newarray 11;
+					putstatic_a 18;		// reference CardUser/CardUser.birthDay
+					aload 7;
+					sload 8;
+					getstatic_a 18;		// reference CardUser/CardUser.birthDay
+					sconst_0;
+					getstatic_a 18;		// reference CardUser/CardUser.birthDay
+					arraylength;
+					invokestatic 30;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					pop;
+					getstatic_a 18;		// reference CardUser/CardUser.birthDay
+					arraylength;
+					sload 8;
+					sadd;
+					sconst_1;
+					sadd;
+					sstore 8;
+					aload 7;
+					sload 8;
+					aload 7;
+					arraylength;
+					invokestatic 32;		// CardUser/CardUser.getLengthWithMaker([BSS)S
+					sstore 11;
+				L10:	sload 11;
+					newarray 11;
+					putstatic_a 17;		// reference CardUser/CardUser.gender
+					aload 7;
+					sload 8;
+					getstatic_a 17;		// reference CardUser/CardUser.gender
+					sconst_0;
+					getstatic_a 17;		// reference CardUser/CardUser.gender
+					arraylength;
+					invokestatic 30;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					pop;
+					getstatic_a 17;		// reference CardUser/CardUser.gender
+					arraylength;
+					sload 8;
+					sadd;
+					sconst_1;
+					sadd;
+					sstore 8;
+					aload 7;
+					sload 8;
+					aload 7;
+					arraylength;
+					invokestatic 32;		// CardUser/CardUser.getLengthWithMaker([BSS)S
+					sstore 12;
+				L11:	sload 12;
+					newarray 11;
+					putstatic_a 19;		// reference CardUser/CardUser.avatar
+					aload 7;
+					sload 8;
+					getstatic_a 19;		// reference CardUser/CardUser.avatar
+					sconst_0;
+					getstatic_a 19;		// reference CardUser/CardUser.avatar
+					arraylength;
+					invokestatic 30;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					pop;
+					getstatic_a 19;		// reference CardUser/CardUser.avatar
+					arraylength;
+					sload 12;
+					sadd;
+					sconst_1;
+					sadd;
+					sstore 8;
+					invokestatic 33;		// javacard/framework/JCSystem.commitTransaction()V
+					return;
+		}
+
+		.method public showInformation(Ljavacard/framework/APDU;)V 9 {
+			.stack 5;
+			.locals 9;
+
+			.descriptor	Ljavacard/framework/APDU;	0.10;
+
+				L0:	invokestatic 27;		// javacard/framework/JCSystem.beginTransaction()V
+					getstatic_a 16;		// reference CardUser/CardUser.userName
+					arraylength;
+					sstore_2;
+				L1:	getstatic_a 18;		// reference CardUser/CardUser.birthDay
+					arraylength;
+					sstore_3;
+				L2:	getstatic_a 17;		// reference CardUser/CardUser.gender
+					arraylength;
+					sstore 4;
+				L3:	getstatic_a 19;		// reference CardUser/CardUser.avatar
+					arraylength;
+					sstore 5;
+				L4:	sload_2;
+					sload_3;
+					sadd;
+					sload 4;
+					sadd;
+					sload 5;
+					sadd;
+					sstore 6;
+				L5:	sload 6;
+					newarray 11;
+					astore 7;
+				L6:	getstatic_a 16;		// reference CardUser/CardUser.userName
+					sconst_0;
+					aload 7;
+					sconst_0;
+					sload_2;
+					invokestatic 30;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					pop;
+					getstatic_a 18;		// reference CardUser/CardUser.birthDay
+					sconst_0;
+					aload 7;
+					sload_2;
+					sload_3;
+					invokestatic 30;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					pop;
+					getstatic_a 17;		// reference CardUser/CardUser.gender
+					sconst_0;
+					aload 7;
+					sload_3;
+					sload_2;
+					sadd;
+					sload 4;
+					invokestatic 30;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					pop;
+					getstatic_a 19;		// reference CardUser/CardUser.avatar
+					sconst_0;
+					aload 7;
+					sload_3;
+					sload_2;
+					sadd;
+					sload 4;
+					sadd;
+					sload 5;
+					invokestatic 30;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					pop;
+					aload_1;
+					invokevirtual 34;		// setOutgoing()S
+					sstore 8;
+				L7:	aload_1;
+					sload 6;
+					invokevirtual 35;		// setOutgoingLength(S)V
+					sconst_0;
+					sstore 9;
+				L8:	sconst_0;
+					sstore 10;
+				L9:	sload 6;
+					ifle L14;
+				L10:	sload 6;
+					sload 8;
+					if_scmple L12;
+				L11:	sload 8;
+					goto L13;
+				L12:	sload 6;
+				L13:	sstore 9;
+					aload_1;
+					aload 7;
+					sload 10;
+					sload 9;
+					invokevirtual 36;		// sendBytesLong([BSS)V
+					sload 6;
+					sload 9;
+					ssub;
+					sstore 6;
+					sload 10;
+					sload 9;
+					sadd;
+					sstore 10;
+					goto L9;
+				L14:	invokestatic 33;		// javacard/framework/JCSystem.commitTransaction()V
+					return;
+		}
+
+		.method public static showInfo(Ljavacard/framework/APDU;[B[BS)V 2 {
 			.stack 5;
 			.locals 0;
 
 			.descriptor	Ljavacard/framework/APDU;	0.10;
 
 				L0:	getstatic_a 3;		// reference CardUser/CardUser.pin
-					invokevirtual 25;		// isValidated()Z
+					invokevirtual 37;		// isValidated()Z
 					ifne L2;
 				L1:	sspush 25345;
 					invokestatic 13;		// javacard/framework/ISOException.throwIt(S)V
@@ -424,21 +728,21 @@
 					aload_1;
 					sconst_0;
 					sload_3;
-					invokestatic 26;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					invokestatic 30;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
 					aload_0;
 					sconst_0;
 					sload_3;
-					invokevirtual 27;		// setOutgoingAndSend(SS)V
+					invokevirtual 38;		// setOutgoingAndSend(SS)V
 					return;
 		}
 
-		.method public static saveInfo([BS[BSS)V 2 {
+		.method public static saveInfo([BS[BSS)V 3 {
 			.stack 5;
 			.locals 0;
 
 				L0:	getstatic_a 3;		// reference CardUser/CardUser.pin
-					invokevirtual 25;		// isValidated()Z
+					invokevirtual 37;		// isValidated()Z
 					ifne L2;
 				L1:	sspush 25345;
 					invokestatic 13;		// javacard/framework/ISOException.throwIt(S)V
@@ -447,62 +751,77 @@
 					aload_2;
 					sload_3;
 					sload 4;
-					invokestatic 26;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					invokestatic 30;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
 					return;
 		}
 
-		.method public static saveInfoLong(Ljavacard/framework/APDU;[B[BS)V 3 {
+		.method public static saveInfoLong(Ljavacard/framework/APDU;[BS)V 4 {
 			.stack 5;
-			.locals 3;
+			.locals 4;
 
 			.descriptor	Ljavacard/framework/APDU;	0.10;
 
 				L0:	getstatic_a 3;		// reference CardUser/CardUser.pin
-					invokevirtual 25;		// isValidated()Z
+					invokevirtual 37;		// isValidated()Z
 					ifne L2;
 				L1:	sspush 25345;
 					invokestatic 13;		// javacard/framework/ISOException.throwIt(S)V
 				L2:	sconst_0;
-					sstore 4;
+					sstore_3;
 				L3:	aload_0;
 					invokevirtual 28;		// getOffsetCdata()S
-					sstore 5;
+					sstore 4;
 				L4:	aload_0;
 					invokevirtual 29;		// getIncomingLength()S
-					sstore 6;
-				L5:	sload 6;
+					sstore 5;
+				L5:	sload 5;
 					newarray 11;
-					astore_2;
-				L6:	sload_3;
+					astore 6;
+				L6:	sload_2;
 					ifle L8;
 				L7:	aload_1;
-					sload 5;
-					aload_2;
 					sload 4;
+					aload 6;
 					sload_3;
-					invokestatic 26;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					sload_2;
+					invokestatic 30;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
-					sload 4;
 					sload_3;
+					sload_2;
 					sadd;
-					sstore 4;
-					aload_0;
-					sload 5;
-					invokevirtual 30;		// receiveBytes(S)S
 					sstore_3;
+					aload_0;
+					sload 4;
+					invokevirtual 31;		// receiveBytes(S)S
+					sstore_2;
 					goto L6;
 				L8:	return;
 		}
 
-		.method public static showInfoLong(Ljavacard/framework/APDU;[B[B)V 4 {
+		.method public static setupNewCard(Ljavacard/framework/APDU;[B)V 5 {
+			.stack 1;
+			.locals 2;
+
+			.descriptor	Ljavacard/framework/APDU;	0.10;
+
+				L0:	aload_0;
+					invokevirtual 28;		// getOffsetCdata()S
+					sstore_2;
+				L1:	aload_0;
+					invokevirtual 29;		// getIncomingLength()S
+					sstore_3;
+				L2:	return;
+		}
+
+		.method public static showInfoLong(Ljavacard/framework/APDU;[B[B)V 6 {
 			.stack 4;
 			.locals 4;
 
 			.descriptor	Ljavacard/framework/APDU;	0.10;
 
 				L0:	getstatic_a 3;		// reference CardUser/CardUser.pin
-					invokevirtual 25;		// isValidated()Z
+					invokevirtual 37;		// isValidated()Z
 					ifne L2;
 				L1:	sspush 25345;
 					invokestatic 13;		// javacard/framework/ISOException.throwIt(S)V
@@ -510,11 +829,11 @@
 					arraylength;
 					sstore_3;
 				L3:	aload_0;
-					invokevirtual 31;		// setOutgoing()S
+					invokevirtual 34;		// setOutgoing()S
 					sstore 4;
 				L4:	aload_0;
 					sload_3;
-					invokevirtual 32;		// setOutgoingLength(S)V
+					invokevirtual 35;		// setOutgoingLength(S)V
 					sconst_0;
 					sstore 5;
 				L5:	sconst_0;
@@ -532,7 +851,7 @@
 					aload_2;
 					sload 6;
 					sload 5;
-					invokevirtual 33;		// sendBytesLong([BSS)V
+					invokevirtual 36;		// sendBytesLong([BSS)V
 					sload_3;
 					sload 5;
 					ssub;
@@ -553,7 +872,7 @@
 					aload_1;
 					sconst_5;
 					sload_2;
-					invokevirtual 34;		// check([BSB)Z
+					invokevirtual 39;		// check([BSB)Z
 					ifne L2;
 				L1:	sspush 25344;
 					invokestatic 13;		// javacard/framework/ISOException.throwIt(S)V
