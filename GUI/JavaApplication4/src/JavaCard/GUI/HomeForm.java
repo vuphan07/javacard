@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 //import javacard.connect.RSAAppletHelper;
 //import javacard.utils.RSAData;
 //import javacard.utils.RandomUtil;
@@ -31,6 +32,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.Timer;
 import javax.swing.filechooser.FileFilter;
@@ -44,49 +46,23 @@ public class HomeForm extends javax.swing.JFrame {
     /**
      * Creates new form HomeForm
      */
-    private int CheckEnd = 0;
-    private String startTime = "";
+    private boolean isUploadAvatar = false;
+    private String imageBuffer = "";
+    private String gender = "";
 
     public HomeForm() {
         initComponents();
         ConnectCard connect = new ConnectCard();
-        if(connect.ReadInformation()){
-            txtID.setText(connect.strID);
-            txtName.setText(connect.strName);
-            txtDate.setText(connect.strDate);
-        }
         jpnInfo.setVisible(true);
         jpnPIN.setVisible(false);
-        getImage();
+//      getImage();
+        avatarContain.setHorizontalAlignment(JTextField.CENTER);
+        avatarContain.setText("Chưa cập nhật");
         jpanleAttendance.setVisible(false);
-        txtName.setEnabled(false);
-        txtDate.setEnabled(false);
         txtID.setEnabled(false);
         txtID.setText("001");
-        TextAreaLog.setEditable(false);
-        showDate();
-        showTime();
     }
-    void showDate(){
-        Date date = new Date();
-        SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd");
-        lableDate.setText(s.format(date));
-    }
-    void showTime(){
-        new Timer(0, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Date d = new Date();
-                SimpleDateFormat s = new SimpleDateFormat("hh:mm:ss a");
-                lableTime.setText(s.format(d));
-                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-        }).start();
-    }
-    void ResetCheckTime(){
-        this.CheckEnd = 0;
-    }
-    
+
     public boolean hasObject(File f) {
         // thu doc xem co object nao chua
         FileInputStream fi;
@@ -108,55 +84,6 @@ public class HomeForm extends javax.swing.JFrame {
             e.printStackTrace();
         }
         return check;
-    }
-    void inputTime(String dateString,String startTimeString,String endTimeString){
-        try {
- 
-            File f = new File("C:/smartcarddata.bin");
-            FileOutputStream fo;
-            ObjectOutputStream oStream = null;
-            if (!f.exists()) {
-                fo = new FileOutputStream(f);
-                oStream = new ObjectOutputStream(fo);
-            } else { 
-                if (!hasObject(f)) {
-                    fo = new FileOutputStream(f);
-                    oStream = new ObjectOutputStream(fo);
-                } else { // neu co roi thi ghi them vao
- 
-                    fo = new FileOutputStream(f, true);
- 
-                    oStream = new ObjectOutputStream(fo) {
-                        protected void writeStreamHeader() throws IOException {
-                            reset();
-                        }
-                    };
-                }
-            }
-            StockFile s = new StockFile(dateString, startTimeString, endTimeString);
-            oStream.writeObject(s);
-            oStream.close();
- 
-        } catch (IOException e) {
-            System.out.println("javacard.HomeForm.inputTime()" + e);
-        }
-    }
-    void outputTime(){
-        try {
-            File f = new File("C:/smartcarddata.bin");
-            FileInputStream fis = new FileInputStream(f);
-            ObjectInputStream inStream = new ObjectInputStream(fis);
-            Object s;
-            int i = 0;
-            TextAreaLog.setText("");
-            while (true) {
-                s = inStream.readObject();
-                String log = ++i + ":" + s.toString() + "\n";
-                TextAreaLog.append(log);
-            }
-        } catch (ClassNotFoundException | IOException e) {
-            System.out.println("javacard.HomeForm.outputTime()" + e);
-        }
     }
 //    private boolean rsaAuthentication() {
 //        try {
@@ -205,14 +132,13 @@ public class HomeForm extends javax.swing.JFrame {
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         txtID = new javax.swing.JTextField();
-        txtName = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
         txtDate = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
-        image = new javax.swing.JLabel();
-        jButton6 = new javax.swing.JButton();
+        avatarContain = new javax.swing.JLabel();
         radiobuttonnam = new javax.swing.JRadioButton();
         radiobuttonnu = new javax.swing.JRadioButton();
+        txtName1 = new javax.swing.JTextField();
         jpnPIN = new javax.swing.JPanel();
         jLabel16 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
@@ -285,18 +211,18 @@ public class HomeForm extends javax.swing.JFrame {
         txtID.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         txtID.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)));
 
-        txtName.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        txtName.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)));
-        txtName.addActionListener(new java.awt.event.ActionListener() {
+        txtDate.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        txtDate.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)));
+        txtDate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNameActionPerformed(evt);
+                txtDateActionPerformed(evt);
             }
         });
 
         jButton1.setBackground(new java.awt.Color(0, 102, 153));
         jButton1.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Cập nhật");
+        jButton1.setText("Khởi tạo");
         jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jButton1MouseClicked(evt);
@@ -308,10 +234,6 @@ public class HomeForm extends javax.swing.JFrame {
             }
         });
 
-        txtDate.setToolTipText("");
-        txtDate.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)));
-        txtDate.setEnabled(false);
-
         jButton5.setText("chọn ảnh");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -319,20 +241,16 @@ public class HomeForm extends javax.swing.JFrame {
             }
         });
 
-        image.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
-        jButton6.setBackground(new java.awt.Color(0, 102, 153));
-        jButton6.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        jButton6.setText("Khởi tạo");
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
-            }
-        });
+        avatarContain.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         radiobuttonnam.setBackground(new java.awt.Color(255, 255, 255));
         buttonGroup1.add(radiobuttonnam);
         radiobuttonnam.setText("Nam");
+        radiobuttonnam.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                radiobuttonnamStateChanged(evt);
+            }
+        });
         radiobuttonnam.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 radiobuttonnamActionPerformed(evt);
@@ -342,9 +260,22 @@ public class HomeForm extends javax.swing.JFrame {
         radiobuttonnu.setBackground(new java.awt.Color(255, 255, 255));
         buttonGroup1.add(radiobuttonnu);
         radiobuttonnu.setText("Nữ");
+        radiobuttonnu.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                radiobuttonnuStateChanged(evt);
+            }
+        });
         radiobuttonnu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 radiobuttonnuActionPerformed(evt);
+            }
+        });
+
+        txtName1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        txtName1.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)));
+        txtName1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtName1ActionPerformed(evt);
             }
         });
 
@@ -366,29 +297,27 @@ public class HomeForm extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(radiobuttonnu))
                     .addComponent(txtDate)
-                    .addComponent(txtName)
-                    .addComponent(txtID, javax.swing.GroupLayout.DEFAULT_SIZE, 188, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtID, javax.swing.GroupLayout.DEFAULT_SIZE, 188, Short.MAX_VALUE)
+                    .addComponent(txtName1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
                 .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(image, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE))
+                    .addComponent(avatarContain, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpnInfoLayout.createSequentialGroup()
-                .addGap(160, 160, 160)
-                .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(206, 206, 206))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpnInfoLayout.createSequentialGroup()
                 .addContainerGap(496, Short.MAX_VALUE)
                 .addComponent(jButton5)
                 .addGap(166, 166, 166))
+            .addGroup(jpnInfoLayout.createSequentialGroup()
+                .addGap(253, 253, 253)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jpnInfoLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jLabel10, jLabel11, jLabel12, jLabel9});
 
-        jpnInfoLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {txtID, txtName});
+        jpnInfoLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {txtDate, txtID});
 
         jpnInfoLayout.setVerticalGroup(
             jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -396,7 +325,7 @@ public class HomeForm extends javax.swing.JFrame {
                 .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jpnInfoLayout.createSequentialGroup()
                         .addGap(45, 45, 45)
-                        .addComponent(image, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(avatarContain, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel14))
                     .addGroup(jpnInfoLayout.createSequentialGroup()
@@ -404,20 +333,19 @@ public class HomeForm extends javax.swing.JFrame {
                         .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jpnInfoLayout.createSequentialGroup()
                                 .addGap(8, 8, 8)
-                                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(22, 22, 22))
+                                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jpnInfoLayout.createSequentialGroup()
                                 .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(33, 33, 33)
-                                .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel10)
-                                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                                    .addComponent(txtName1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel11)
-                            .addComponent(txtDate, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(txtDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton5)
                 .addGap(2, 2, 2)
@@ -425,18 +353,14 @@ public class HomeForm extends javax.swing.JFrame {
                     .addComponent(jLabel12)
                     .addComponent(radiobuttonnam)
                     .addComponent(radiobuttonnu))
-                .addGap(83, 83, 83)
-                .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton6))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addGap(43, 43, 43))
         );
 
         jpnInfoLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jLabel10, jLabel11, jLabel12, jLabel14, jLabel9});
 
-        jpnInfoLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txtID, txtName});
-
-        jpnInfoLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jButton1, jButton6});
+        jpnInfoLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txtDate, txtID});
 
         jPanel4.add(jpnInfo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
@@ -670,97 +594,15 @@ public class HomeForm extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void btnAttendanceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAttendanceActionPerformed
-        // TODO add your handling code here:
-//        if(rsaAuthentication()){
-//            String date = lableDate.getText();
-//            String time = lableTime.getText();
-//            switch (CheckEnd) {
-//                case 0:
-//                    this.startTime = time;
-//                    this.CheckEnd = 1;
-//                    JOptionPane.showMessageDialog(null, "Điểm danh đến thành công! Chúc bạn một ngày làm việc vui vẻ");
-//                    break;
-//                case 1:
-//                    inputTime(date, startTime, time);
-//                    outputTime();
-//                    this.CheckEnd = 2;
-//                    JOptionPane.showMessageDialog(null, "Điểm danh thành công!");
-//                    break;
-//                default:
-//                    JOptionPane.showMessageDialog(null, "Bạn đã điểm danh ngày hôm nay! Vui lòng quay lại vào ngày mai");
-//                    break;
-//            }
-//        }
-//        else{
-//            System.out.println("RSA ERROR");
-//        }
+        
     }//GEN-LAST:event_btnAttendanceActionPerformed
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-        
-        String strId = txtID.getText();
-        String strName = txtName.getText();
-        String strDate = txtDate.getText();
-        
-        byte[] byteID = strId.getBytes();
-        byte[] byteName = strName.getBytes();
-        byte[] byteDate = strDate.getBytes();
-        
-        ConnectCard connect = new ConnectCard();
-        byte[] data = new byte[byteID.length+byteName.length+byteDate.length+3];
-        int offSet = 0;
-        offSet += 1;
-        System.arraycopy(byteID, 0,data, offSet, byteID.length);        
-        offSet += byteID.length;
-        data[offSet] = (byte)0x2c;
-        offSet += 1;
-        System.arraycopy(byteName, 0,data, offSet, byteName.length);
-        offSet += byteName.length;
-        data[offSet] = (byte) 0x2c;
-        offSet += 1;
-        System.arraycopy(byteDate, 0, data, offSet, byteDate.length);
-        offSet += byteDate.length;
-        System.out.println(data.length);
-        data[offSet] = (byte)0x2c;
-        offSet += 1;
-        
-        if(connect.EditInformation(data)){
-//            try {
-//                PublicKey publicKeys = RSAAppletHelper.getInstance(
-//                        ConnectCard.getInstance().channel).getPublicKey();
-//            } catch (CardException ex) {
-//                Logger.getLogger(HomeForm.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-            HomeForm home = new HomeForm();
-            home.setVisible(true);
-            this.dispose();
-            
-            System.out.println("Success");
-        }
-        else{
-            System.out.println("Sending Error");
-        }
-        
     }//GEN-LAST:event_jButton1MouseClicked
 
     private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
-        // TODO add your handling code here:
-        String strOld = jPasswordField1.getText();
-        String strNew = jPasswordField2.getText();
-        String strCofirm = jPasswordField3.getText();
-        
-        if(strNew.equals(strCofirm) && !strNew.equals(strOld)){
-            ConnectCard cn = new ConnectCard();
-            if(cn.ChangePIN(strOld, strNew)){
-                System.out.println("PIN CHANGE SUCCESS");
-            }
-            else{
-                System.out.println("PIN CHANGE ERROR");
-            }
-        }
-        else{
-            JOptionPane.showMessageDialog(null, "Kiểm tra mã PIN");
-        }
+
+    
     }//GEN-LAST:event_jButton2MouseClicked
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
@@ -771,35 +613,30 @@ public class HomeForm extends javax.swing.JFrame {
         File file = jfc.getSelectedFile();
 
         if (file != null) {
-            if (file.length() > 10000) {
+            if (file.length() > 1000000) {
                 JOptionPane.showMessageDialog(null, "Kích thước quá lớn. Vui lòng chọn ảnh khác!");
                 return;
             }
-            ReviewAvatarUI avatarUI = new ReviewAvatarUI(file, this);
-            avatarUI.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            avatarUI.setLocationRelativeTo(null);
-            avatarUI.setVisible(true);
+             try {
+            BufferedImage myPicture = ImageIO.read(file);
+            avatarContain.setIcon(new ImageIcon(myPicture));
+            this.isUploadAvatar = true;
+            avatarContain.setText("");
+            } catch (IOException ex) {
+                Logger.getLogger(ReviewAvatarUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
     }//GEN-LAST:event_jButton5ActionPerformed
 
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        // TODO add your handling code here:
-//        txtID.setEnabled(false);
-//        txtID.setText("001");
-        txtName.setEnabled(true);
-        txtDate.setEnabled(true);
-    }//GEN-LAST:event_jButton6ActionPerformed
-
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         // TODO add your handling code here:
-        ResetCheckTime();
-        this.startTime = "";
+       
     }//GEN-LAST:event_jButton7ActionPerformed
 
-    private void txtNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNameActionPerformed
+    private void txtDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDateActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtNameActionPerformed
+    }//GEN-LAST:event_txtDateActionPerformed
 
     private void radiobuttonnamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radiobuttonnamActionPerformed
         // TODO add your handling code here:
@@ -808,17 +645,25 @@ public class HomeForm extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
 String strId = txtID.getText();
-        String strName = txtName.getText();
-        String strDate = txtDate.getText();
+        String strName = txtDate.getText();
+        String strDate = txtDate.getText();        
+      
+        String strImage = "vatar";
+
         
         byte[] byteID = strId.getBytes();
         byte[] byteName = strName.getBytes();
         byte[] byteDate = strDate.getBytes();
+        byte[] byteGender = this.gender.getBytes();
+        byte[] byteAvatar = strImage.getBytes();
+        
+        if(! this.isUploadAvatar  || !(byteID.length > 0) || !(byteName.length > 0) || !(byteDate.length > 0) || !(byteGender.length>0) ) {
+            JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin!");
+        }
         
         ConnectCard connect = new ConnectCard();
-        byte[] data = new byte[byteID.length+byteName.length+byteDate.length+2];
+        byte[] data = new byte[byteID.length+byteName.length+byteDate.length + byteGender.length + byteAvatar.length +4];
         int offSet = 0;
-        offSet += 1;
         System.arraycopy(byteID, 0,data, offSet, byteID.length);        
         offSet += byteID.length;
         data[offSet] = (byte)0x2c;
@@ -829,9 +674,13 @@ String strId = txtID.getText();
         offSet += 1;
         System.arraycopy(byteDate, 0, data, offSet, byteDate.length);
         offSet += byteDate.length;
-        System.out.println(data);
-//        data[offSet] = (byte)0x2c;
-//        offSet += 1;
+        data[offSet] = (byte) 0x2c;
+        offSet += 1;
+        System.arraycopy(byteGender, 0, data, offSet, byteGender.length);
+        offSet += byteGender.length;
+        data[offSet] = (byte) 0x2c;
+        offSet += 1;
+        System.arraycopy(byteAvatar, 0, data, offSet, byteAvatar.length);
         
         if(connect.EditInformation(data)){
 //            try {
@@ -849,12 +698,33 @@ String strId = txtID.getText();
         else{
             System.out.println("Sending Error");
         }
-        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void radiobuttonnuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radiobuttonnuActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_radiobuttonnuActionPerformed
+
+    private void txtName1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtName1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtName1ActionPerformed
+
+    private void radiobuttonnamStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_radiobuttonnamStateChanged
+        // TODO add your handling code here:
+       
+           JRadioButton radioButton = (JRadioButton) evt.getSource();
+            if(radioButton.isSelected()){
+                this.gender = "nam";
+            }
+   
+    }//GEN-LAST:event_radiobuttonnamStateChanged
+
+    private void radiobuttonnuStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_radiobuttonnuStateChanged
+        // TODO add your handling code here:
+         JRadioButton radioButton = (JRadioButton) evt.getSource();
+            if(radioButton.isSelected()){
+                this.gender = "nu";
+            }
+    }//GEN-LAST:event_radiobuttonnuStateChanged
     public class JPEGImageFileFilter extends FileFilter {
 
         @Override
@@ -878,10 +748,10 @@ String strId = txtID.getText();
         ConnectCard connect = new ConnectCard();
         BufferedImage imageBuf = connect.DownloadImage();
         if (imageBuf != null) {
-            image.setIcon(new ImageIcon(imageBuf));
+            avatarContain.setIcon(new ImageIcon(imageBuf));
         } else {
-            image.setHorizontalAlignment(JTextField.CENTER);
-            image.setText("Chưa cập nhật");
+            avatarContain.setHorizontalAlignment(JTextField.CENTER);
+            avatarContain.setText("Chưa cập nhật");
         }
 
     }
@@ -924,15 +794,14 @@ String strId = txtID.getText();
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea TextAreaLog;
+    private javax.swing.JLabel avatarContain;
     private javax.swing.JButton btnAttendance;
     private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.JLabel image;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -960,8 +829,8 @@ String strId = txtID.getText();
     private javax.swing.JLabel lableTime;
     private javax.swing.JRadioButton radiobuttonnam;
     private javax.swing.JRadioButton radiobuttonnu;
-    private javax.swing.JTextField txtDate;
+    public javax.swing.JTextField txtDate;
     private javax.swing.JTextField txtID;
-    private javax.swing.JTextField txtName;
+    public javax.swing.JTextField txtName1;
     // End of variables declaration//GEN-END:variables
 }
