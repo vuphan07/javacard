@@ -95,213 +95,30 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <EmptySpace pref="17" max="32767" attributes="0"/>
-                  <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jPanel4" pref="722" max="32767" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace pref="615" max="32767" attributes="0"/>
-                          <Component id="jButton4" min="-2" pref="102" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
+                  <EmptySpace pref="68" max="32767" attributes="0"/>
+                  <Component id="jPanel4" pref="1022" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+              </Group>
+              <Group type="102" alignment="1" attributes="0">
+                  <EmptySpace max="32767" attributes="0"/>
+                  <Component id="jButton4" min="-2" pref="102" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="jPanel3" alignment="0" max="32767" attributes="0"/>
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jPanel4" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="jButton4" min="-2" pref="39" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace pref="54" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Container class="javax.swing.JPanel" name="jPanel3">
-
-          <Layout>
-            <DimensionLayout dim="0">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="114" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jlbPIN1" min="-2" pref="189" max="-2" attributes="0"/>
-                          <Component id="jPanelPIN" min="-2" pref="190" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="jLabel4" alignment="1" max="32767" attributes="0"/>
-                              <Group type="102" attributes="0">
-                                  <Component id="jLabel3" min="-2" pref="189" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
-                              </Group>
-                              <Component id="jLabel5" alignment="1" max="32767" attributes="0"/>
-                              <Component id="jPanelConnect" max="32767" attributes="0"/>
-                          </Group>
-                          <Component id="jpnInfor" min="-2" pref="189" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace pref="35" max="32767" attributes="0"/>
-                  </Group>
-              </Group>
-            </DimensionLayout>
-            <DimensionLayout dim="1">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <EmptySpace min="-2" pref="60" max="-2" attributes="0"/>
-                      <Component id="jLabel3" min="-2" pref="46" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jpnInfor" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jPanelPIN" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="jLabel4" min="-2" pref="46" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
-                      <Component id="jlbPIN1" min="-2" pref="39" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="jLabel5" min="-2" pref="46" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="jPanelConnect" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                  </Group>
-              </Group>
-            </DimensionLayout>
-          </Layout>
-          <SubComponents>
-            <Component class="javax.swing.JLabel" name="jLabel3">
-              <Properties>
-                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Tahoma" size="18" style="1"/>
-                </Property>
-                <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="Ng&#x1b0;&#x1edd;i d&#xf9;ng"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="jLabel4">
-              <Properties>
-                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Tahoma" size="18" style="1"/>
-                </Property>
-                <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="&#x110;i&#x1ec3;m danh"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="jLabel5">
-              <Properties>
-                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Tahoma" size="18" style="1"/>
-                </Property>
-                <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="T&#xf9;y ch&#x1ecd;n"/>
-              </Properties>
-            </Component>
-            <Container class="javax.swing.JPanel" name="jpnInfor">
-
-              <Layout class="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout">
-                <Property name="useNullLayout" type="boolean" value="false"/>
-              </Layout>
-              <SubComponents>
-                <Component class="javax.swing.JLabel" name="jlbInfo">
-                  <Properties>
-                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Tahoma" size="13" style="1"/>
-                    </Property>
-                    <Property name="horizontalAlignment" type="int" value="0"/>
-                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/images/icons8-user-32.png"/>
-                    </Property>
-                    <Property name="text" type="java.lang.String" value="Th&#xf4;ng tin"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jlbInfoMouseClicked"/>
-                  </Events>
-                  <Constraints>
-                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                      <AbsoluteConstraints x="0" y="0" width="190" height="42"/>
-                    </Constraint>
-                  </Constraints>
-                </Component>
-              </SubComponents>
-            </Container>
-            <Container class="javax.swing.JPanel" name="jPanelPIN">
-
-              <Layout class="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout">
-                <Property name="useNullLayout" type="boolean" value="false"/>
-              </Layout>
-              <SubComponents>
-                <Component class="javax.swing.JLabel" name="jlbPIN">
-                  <Properties>
-                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Tahoma" size="13" style="1"/>
-                    </Property>
-                    <Property name="horizontalAlignment" type="int" value="0"/>
-                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/images/icons8-pin-code-32.png"/>
-                    </Property>
-                    <Property name="text" type="java.lang.String" value="M&#xe3; PIN"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jlbPINMouseClicked"/>
-                  </Events>
-                  <Constraints>
-                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                      <AbsoluteConstraints x="0" y="0" width="189" height="39"/>
-                    </Constraint>
-                  </Constraints>
-                </Component>
-              </SubComponents>
-            </Container>
-            <Container class="javax.swing.JPanel" name="jPanelConnect">
-
-              <Layout class="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout">
-                <Property name="useNullLayout" type="boolean" value="false"/>
-              </Layout>
-              <SubComponents>
-                <Component class="javax.swing.JLabel" name="jlbConnect">
-                  <Properties>
-                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Tahoma" size="13" style="1"/>
-                    </Property>
-                    <Property name="horizontalAlignment" type="int" value="0"/>
-                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/images/icons8-link-32.png"/>
-                    </Property>
-                    <Property name="text" type="java.lang.String" value="Ng&#x1eaf;t k&#x1ebf;t n&#x1ed1;i"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jlbConnectMouseClicked"/>
-                  </Events>
-                  <Constraints>
-                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                      <AbsoluteConstraints x="0" y="0" width="189" height="36"/>
-                    </Constraint>
-                  </Constraints>
-                </Component>
-              </SubComponents>
-            </Container>
-            <Component class="javax.swing.JLabel" name="jlbPIN1">
-              <Properties>
-                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Tahoma" size="13" style="1"/>
-                </Property>
-                <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/images/icons8-attendance-32.png"/>
-                </Property>
-                <Property name="text" type="java.lang.String" value="&#x110;i&#x1ec3;m danh"/>
-              </Properties>
-              <Events>
-                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jlbPIN1MouseClicked"/>
-              </Events>
-            </Component>
-          </SubComponents>
-        </Container>
         <Container class="javax.swing.JPanel" name="jPanel4">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
@@ -339,15 +156,15 @@
                           <EmptySpace min="-2" pref="77" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
-                                  <Component id="jRadioButton1" min="-2" pref="71" max="-2" attributes="0"/>
+                                  <Component id="radiobuttonnam" min="-2" pref="71" max="-2" attributes="0"/>
                                   <EmptySpace max="32767" attributes="0"/>
-                                  <Component id="jRadioButton2" min="-2" max="-2" attributes="0"/>
+                                  <Component id="radiobuttonnu" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Component id="txtDate" max="32767" attributes="0"/>
                               <Component id="txtName" linkSize="5" alignment="1" max="32767" attributes="0"/>
                               <Component id="txtID" linkSize="5" alignment="1" pref="188" max="32767" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="57" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
                               <Component id="jLabel14" alignment="0" max="32767" attributes="0"/>
                               <Component id="image" alignment="0" pref="121" max="32767" attributes="0"/>
@@ -363,7 +180,7 @@
                           <EmptySpace min="-2" pref="206" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace pref="496" max="32767" attributes="0"/>
                           <Component id="jButton5" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="166" max="-2" attributes="0"/>
                       </Group>
@@ -382,9 +199,10 @@
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Group type="102" attributes="0">
+                                      <Group type="102" alignment="0" attributes="0">
                                           <EmptySpace min="8" pref="8" max="-2" attributes="0"/>
                                           <Component id="jLabel15" min="-2" pref="121" max="-2" attributes="0"/>
+                                          <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
                                       </Group>
                                       <Group type="102" alignment="0" attributes="0">
                                           <Group type="103" groupAlignment="3" attributes="0">
@@ -396,9 +214,9 @@
                                               <Component id="jLabel10" linkSize="4" min="-2" max="-2" attributes="0"/>
                                               <Component id="txtName" linkSize="6" min="-2" max="-2" attributes="0"/>
                                           </Group>
+                                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
-                                  <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="jLabel11" linkSize="4" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="txtDate" alignment="3" min="-2" pref="32" max="-2" attributes="0"/>
@@ -410,8 +228,8 @@
                           <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="jLabel12" linkSize="4" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jRadioButton1" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jRadioButton2" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="radiobuttonnam" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="radiobuttonnu" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="83" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -558,7 +376,7 @@
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton6ActionPerformed"/>
                   </Events>
                 </Component>
-                <Component class="javax.swing.JRadioButton" name="jRadioButton1">
+                <Component class="javax.swing.JRadioButton" name="radiobuttonnam">
                   <Properties>
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -569,10 +387,10 @@
                     <Property name="text" type="java.lang.String" value="Nam"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jRadioButton1ActionPerformed"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="radiobuttonnamActionPerformed"/>
                   </Events>
                 </Component>
-                <Component class="javax.swing.JRadioButton" name="jRadioButton2">
+                <Component class="javax.swing.JRadioButton" name="radiobuttonnu">
                   <Properties>
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -582,6 +400,9 @@
                     </Property>
                     <Property name="text" type="java.lang.String" value="N&#x1eef;"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="radiobuttonnuActionPerformed"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>

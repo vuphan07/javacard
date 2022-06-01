@@ -55,7 +55,7 @@ public class ConnectCard {
             
             channel = card.getBasicChannel();
             
-            ResponseAPDU answer = channel.transmit(new CommandAPDU(0x00,0xA4,0x04,0x00,APPLET.AID_APPLET));
+            ResponseAPDU answer = channel.transmit(new CommandAPDU(APPLET.CLA,0xA4,0x04,0x00,APPLET.AID_APPLET));
             String kq = answer.toString();
             data = answer.getData();
             System.out.println("Connect thành công");            
@@ -85,7 +85,7 @@ public class ConnectCard {
             
             CardChannel channel = card.getBasicChannel();
             
-            ResponseAPDU answer = channel.transmit(new CommandAPDU(0xB0,APPLET.INS_VERIFY_PIN,0x00,0x00,pinbyte));
+            ResponseAPDU answer = channel.transmit(new CommandAPDU(APPLET.CLA,APPLET.INS_VERIFY_PIN,0x00,0x00,pinbyte));
             message = Integer.toHexString(answer.getSW());
             switch (message.toUpperCase()) {
                 case RESPONS.SW_NO_ERROR:
@@ -130,7 +130,7 @@ public class ConnectCard {
             
             CardChannel channel = card.getBasicChannel();
             
-            ResponseAPDU answer = channel.transmit(new CommandAPDU(0xB0,APPLET.INS_CREATE_PIN,0x00,0x03,send));
+            ResponseAPDU answer = channel.transmit(new CommandAPDU(APPLET.CLA,APPLET.INS_CREATE_PIN,0x00,0x03,send));
             
             message = answer.toString();
             switch (((message.split("="))[1]).toUpperCase()) {
@@ -180,7 +180,7 @@ public class ConnectCard {
             
             CardChannel channel = card.getBasicChannel();
             
-            ResponseAPDU answer = channel.transmit(new CommandAPDU(0xB0,APPLET.INS_CHANGE_PIN,0x00,0x00,send));
+            ResponseAPDU answer = channel.transmit(new CommandAPDU(APPLET.CLA,APPLET.INS_CHANGE_PIN,0x00,0x00,send));
             
             message = answer.toString();
             switch (((message.split("="))[1]).toUpperCase()) {
@@ -256,7 +256,7 @@ public class ConnectCard {
             
             CardChannel channel = card.getBasicChannel();
             
-            ResponseAPDU answer = channel.transmit(new CommandAPDU(0xB0,APPLET.INS_SETUP,0x00,0x00));
+            ResponseAPDU answer = channel.transmit(new CommandAPDU(APPLET.CLA,APPLET.INS_SETUP,0x00,0x00));
             
         }
         catch(Exception ex){
@@ -277,13 +277,14 @@ public class ConnectCard {
             Card card = terminal.connect("*");
             
             CardChannel channel0 = card.getBasicChannel();
-            ResponseAPDU resetData = channel0.transmit(new CommandAPDU(0xB0,APPLET.INS_CHANGE_INFORMATION,0x00,0x00));
+//            ResponseAPDU resetData = channel0.transmit(new CommandAPDU(APPLET.CLA,APPLET.INS_CHANGE_INFORMATION,0x00,0x00));
             
-            CardChannel channel = card.getBasicChannel();
+//            CardChannel channel = card.getBasicChannel();
             
-            ResponseAPDU answer = channel.transmit(new CommandAPDU(0xB0,APPLET.INS_CREATE_INFORMATION,0x00,0x00,data));
+            ResponseAPDU answer = channel.transmit(new CommandAPDU(APPLET.CLA,0x2f,0x00,0x00,data));
             
             message = answer.toString();
+            System.out.println(message);
             switch (((message.split("="))[1]).toUpperCase()) {
                 case "9000":
                     JOptionPane.showMessageDialog(null, "Cập nhật thông tin thành công!");
@@ -313,19 +314,19 @@ public class ConnectCard {
             
             CardChannel channel = card.getBasicChannel();
             
-            ResponseAPDU answerID = channel.transmit(new CommandAPDU(0xB0,APPLET.INS_OUT_INFORMATION,APPLET.OUT_ID,0x00));
+            ResponseAPDU answerID = channel.transmit(new CommandAPDU(APPLET.CLA,APPLET.INS_OUT_INFORMATION,APPLET.OUT_ID,0x00));
             strID = new String(answerID.getData());
             
             CardChannel channel1 = card.getBasicChannel();
-            ResponseAPDU answerName = channel1.transmit(new CommandAPDU(0xB0,APPLET.INS_OUT_INFORMATION,APPLET.OUT_NAME,0x00));
+            ResponseAPDU answerName = channel1.transmit(new CommandAPDU(APPLET.CLA,APPLET.INS_OUT_INFORMATION,APPLET.OUT_NAME,0x00));
             strName = new String(answerName.getData());
             
             CardChannel channel3 = card.getBasicChannel();
-            ResponseAPDU answerDate = channel3.transmit(new CommandAPDU(0xB0,APPLET.INS_OUT_INFORMATION,APPLET.OUT_DATE,0x00));
+            ResponseAPDU answerDate = channel3.transmit(new CommandAPDU(APPLET.CLA,APPLET.INS_OUT_INFORMATION,APPLET.OUT_DATE,0x00));
             strDate = new String(answerDate.getData());
             
             CardChannel channel4 = card.getBasicChannel();
-            ResponseAPDU answerPhone = channel4.transmit(new CommandAPDU(0xB0,APPLET.INS_OUT_INFORMATION,APPLET.OUT_PHONE,0x00));
+            ResponseAPDU answerPhone = channel4.transmit(new CommandAPDU(APPLET.CLA,APPLET.INS_OUT_INFORMATION,APPLET.OUT_PHONE,0x00));
             strPhone = new String(answerPhone.getData());
             return true;
         }
@@ -358,7 +359,7 @@ public class ConnectCard {
             
             byte[] send = strsend.getBytes();
             
-            ResponseAPDU response = channel.transmit(new CommandAPDU(0xB0,APPLET.INS_CREATE_SIZEIMAGE,0x00,0x01,send));
+            ResponseAPDU response = channel.transmit(new CommandAPDU(APPLET.CLA,APPLET.INS_CREATE_SIZEIMAGE,0x00,0x01,send));
             String check = Integer.toHexString(response.getSW());
             
             if(check.equals(RESPONS.SW_NO_ERROR)){
@@ -373,7 +374,7 @@ public class ConnectCard {
                         end = napanh.length;
                     }
                     byte[] slice = Arrays.copyOfRange(napanh, start, end);
-                    response = channel.transmit(new CommandAPDU(0xB0,APPLET.INS_CREATE_IMAGE,p1,0x01,slice));
+                    response = channel.transmit(new CommandAPDU(APPLET.CLA,APPLET.INS_CREATE_IMAGE,p1,0x01,slice));
                     String checkSlide = Integer.toHexString(response.getSW());
                     if(!checkSlide.equals(RESPONS.SW_NO_ERROR)){
                         return false;
@@ -401,7 +402,7 @@ public class ConnectCard {
             CardChannel channelImage = card.getBasicChannel();
             
             int size = 0;
-            ResponseAPDU answer = channelImage.transmit(new CommandAPDU(0xB0,APPLET.INS_OUT_SIZEIMAGE,0x01,0x01));
+            ResponseAPDU answer = channelImage.transmit(new CommandAPDU(APPLET.CLA,APPLET.INS_OUT_SIZEIMAGE,0x01,0x01));
             String check = Integer.toHexString(answer.getSW());
             if(check.equals(RESPONS.SW_NO_ERROR)){
                 byte[] sizeAnh = answer.getData();
@@ -418,7 +419,7 @@ public class ConnectCard {
                 int count = size / 249;
                 System.err.println(count);
                 for(int j=0;j<=count;j++){
-                    answer = channelImage.transmit(new CommandAPDU(0xB0,APPLET.INS_OUT_IMAGE,(byte)j,0x01));
+                    answer = channelImage.transmit(new CommandAPDU(APPLET.CLA,APPLET.INS_OUT_IMAGE,(byte)j,0x01));
                     String check1 = Integer.toHexString(answer.getSW());
                     if(check1.equals(RESPONS.SW_NO_ERROR)){
                         byte[] result = answer.getData();
