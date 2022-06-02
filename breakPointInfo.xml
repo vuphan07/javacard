@@ -3,7 +3,13 @@
 <name>CardUser</name>
 <classFile>
 <name>CardUser.java</name>
-<lines/>
+<lines>
+<line>
+<linenumber>292</linenumber>
+<valid>1</valid>
+<invalidTimes>0</invalidTimes>
+</line>
+</lines>
 </classFile>
 </package>
 </breakPointInfo>

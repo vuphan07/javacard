@@ -12,7 +12,7 @@ import javacard.security.RSAPrivateCrtKey;
 import javacard.security.RSAPrivateKey;
 import javacard.security.RSAPublicKey;
 import javacardx.apdu.ExtendedLength;
-public class CardUser extends Applet
+public class CardUser extends Applet implements ExtendedLength
 {
 	public static byte[] userId;
 	public static byte[] userName;
@@ -64,8 +64,8 @@ public class CardUser extends Applet
     final static short SW_PIN_VERIFICATION_REQUIRED = 0x6301;
 	/* instance variables declaration */
 	static OwnerPIN pin;
-	private Cipher aesCipher;
-	private AESKey aesKey;
+	private static Cipher aesCipher;
+	private static AESKey aesKey;
 	private final static byte[] PIN_INIT_VALUE={0x01,0x02,0x03,0x04};
 	private static short LENGTH_BLOCK_AES = (short)64;
 
@@ -177,7 +177,8 @@ public class CardUser extends Applet
 			initInformation(apdu,buf,byteRead);
 			break;
 		case (byte) 0x3f:
-			showInformation(apdu);
+			 showInformation(apdu);
+			// getName(apdu,buf);
 			break;
 		case (byte)GET_USER:
 			switch(buf[ISO7816.OFFSET_P1]){
@@ -297,26 +298,34 @@ public class CardUser extends Applet
         short lengthBirthDay = (short)decryptBirthday.length;
         short lengthGender = (short)decryptGender.length;
         short lengthAvatar = (short)avatar.length;
-		short toSend = (short)(lengthName + lengthBirthDay +lengthGender +lengthAvatar+lengthUserId);
-        byte[] temp = new byte[toSend + 4];
+		short toSend = (short)(lengthName + lengthBirthDay +lengthGender +lengthAvatar+lengthUserId + 4);
+        byte[] temp = new byte[toSend];
         Util.arrayCopy(decryptUserId, (short)0, temp, (short)0,(short)lengthUserId);
-        temp[temp.length] = 0x2c;
+        temp[(short)lengthUserId] = 0x2c;
         Util.arrayCopy(decryptUsername, (short)0, temp, (short)(lengthUserId+1),(short)lengthName);
-        temp[temp.length] = 0x2c;
-        Util.arrayCopy(decryptBirthday, (short)0, temp, (short)(lengthName+lengthUserId+1),(short)lengthBirthDay);
-        temp[temp.length] = 0x2c;
-        Util.arrayCopy(decryptGender, (short)0, temp, (short)(lengthBirthDay+lengthName+lengthUserId+1),(short)lengthGender);
-		temp[temp.length] = 0x2c;
-        Util.arrayCopy(avatar, (short)0, temp, (short)(lengthBirthDay+lengthName+lengthGender+lengthUserId+1),(short)lengthAvatar);
+        temp[(short)(lengthName +lengthUserId +1) ] = 0x2c;
+        Util.arrayCopy(decryptBirthday, (short)0, temp, (short)(lengthName+lengthUserId+2),(short)lengthBirthDay);
+        temp[(short)(lengthBirthDay + lengthName +lengthUserId +2)] = 0x2c;
+        Util.arrayCopy(decryptGender, (short)0, temp, (short)(lengthBirthDay+lengthName+lengthUserId+3),(short)lengthGender);
+		temp[(short)(lengthGender + lengthBirthDay + lengthName +lengthUserId +3)] = 0x2c;
+		
+		short solanCopImg = (short)(lengthAvatar/255);
+		short soduCopImg = (short)(lengthAvatar%255);
+		
+		for(short i = 0;i<solanCopImg;i++) {
+			Util.arrayCopy(avatar, (short)(i*255), temp, (short)(lengthBirthDay+lengthName+lengthGender+lengthUserId+4 + i*255),(short)255);
+		}
+		Util.arrayCopy(avatar, (short)(solanCopImg*255), temp, (short)(lengthBirthDay+lengthName+lengthGender+lengthUserId+4 + solanCopImg*255),(short)soduCopImg);
+
+        // Util.arrayCopy(avatar, (short)0, temp, (short)(lengthBirthDay+lengthName+lengthGender+lengthUserId+4),(short)255);
         short le = apdu.setOutgoing(); // do dai du lieu toi da gui len may tinh
 
-
+		apdu.setOutgoingLength((short)toSend);
         short sendLen = 0;
         short pointer = 0;
         while(toSend > 0)
         {
 			sendLen = (toSend > le)?le:toSend;
-			apdu.setOutgoingLength((short)sendLen);
 			apdu.sendBytesLong(temp, pointer,sendLen);
 			toSend -= sendLen;
 			pointer += sendLen;
@@ -349,7 +358,7 @@ public class CardUser extends Applet
         return dataEncrypted;
     }
     
-    private byte[] decrypt(byte[] decryptData, short length) {
+    private static byte[] decrypt(byte[] decryptData, short length) {
     	if(length != (short)0){
 			aesCipher.init(aesKey, Cipher.MODE_DECRYPT);
 			byte[] dataDecrypted;
@@ -372,7 +381,7 @@ public class CardUser extends Applet
 	
 	public static void showInfo(APDU apdu, byte[] buf,byte[] data,short dataLength) {
 		if ( ! pin.isValidated()) ISOException.throwIt(SW_PIN_VERIFICATION_REQUIRED);
-		Util.arrayCopy(data,(short)0,buf,(short)0,(short)(dataLength));
+		Util.arrayCopy(data ,(short)0,buf,(short)0,(short)(dataLength));
 		apdu.setOutgoingAndSend((short) 0,(short)(dataLength));
 	}
 	
@@ -395,10 +404,13 @@ public class CardUser extends Applet
 		}
 	}
 	
-	public static void setupNewCard(APDU apdu, byte[] buf){
-		short dataOffset = apdu.getOffsetCdata();
-				short datalenght = apdu.getIncomingLength();
+	public static void getName(APDU apdu,byte[] buf){
 
+		byte[] decryptUsername =avatar;
+		short lengthName = (short)avatar.length;
+		short toSend = (short)(lengthName);
+        byte[] temp = new byte[toSend];
+        apdu.setOutgoingLength(toSend);
 	}
 	
 	public static void showInfoLong(APDU apdu, byte[] buf,byte[] data) {
@@ -423,3 +435,6 @@ public class CardUser extends Applet
 			ISOException.throwIt(SW_VERIFICATION_FAILED);
 	}
 }
+
+
+

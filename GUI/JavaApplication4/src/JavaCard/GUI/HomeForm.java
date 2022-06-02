@@ -10,6 +10,8 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,6 +22,8 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.security.PublicKey;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -51,7 +55,7 @@ public class HomeForm extends javax.swing.JFrame {
      * Creates new form HomeForm
      */
     private boolean isUploadAvatar = false;
-    private byte[] imageBuffer;
+    private String imageBuffer;
     private String gender = "";
 
     public HomeForm() {
@@ -76,7 +80,7 @@ public class HomeForm extends javax.swing.JFrame {
                 check = false;
             }
             inStream.close();
- 
+
         } catch (FileNotFoundException e) {
             check = false;
         } catch (IOException e) {
@@ -87,30 +91,6 @@ public class HomeForm extends javax.swing.JFrame {
         }
         return check;
     }
-//    private boolean rsaAuthentication() {
-//        try {
-//            PublicKey publicKeys = RSAData.getPublicKey();
-//            if (publicKeys == null) {
-//                return false;
-//            }
-//            System.out.println("publicKeys: " + Arrays.toString(publicKeys.getEncoded()));
-//            byte[] data = RandomUtil.randomData(20);
-//
-//            byte[] signed = RSAAppletHelper.getInstance(
-//                    ConnectCard.getInstance().channel).requestSign(data);
-//
-//            if (signed == null) {
-//                return false;
-//            }
-//
-//            System.out.println("signed: " + Arrays.toString(signed));
-//
-//            return RSAData.verify(publicKeys, signed, data);
-//        } catch (CardException ex) {
-//        }
-//
-//        return false;
-//    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -140,7 +120,7 @@ public class HomeForm extends javax.swing.JFrame {
         avatarContain = new javax.swing.JLabel();
         radiobuttonnam = new javax.swing.JRadioButton();
         radiobuttonnu = new javax.swing.JRadioButton();
-        txtName1 = new javax.swing.JTextField();
+        txtName = new javax.swing.JTextField();
         close = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
@@ -257,11 +237,11 @@ public class HomeForm extends javax.swing.JFrame {
             }
         });
 
-        txtName1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        txtName1.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)));
-        txtName1.addActionListener(new java.awt.event.ActionListener() {
+        txtName.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        txtName.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)));
+        txtName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtName1ActionPerformed(evt);
+                txtNameActionPerformed(evt);
             }
         });
 
@@ -298,7 +278,7 @@ public class HomeForm extends javax.swing.JFrame {
                         .addComponent(radiobuttonnu))
                     .addComponent(txtDate)
                     .addComponent(txtID, javax.swing.GroupLayout.DEFAULT_SIZE, 188, Short.MAX_VALUE)
-                    .addComponent(txtName1))
+                    .addComponent(txtName))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
                 .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
@@ -345,7 +325,7 @@ public class HomeForm extends javax.swing.JFrame {
                                 .addGap(33, 33, 33)
                                 .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel10)
-                                    .addComponent(txtName1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel11)
@@ -412,7 +392,7 @@ public class HomeForm extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1MouseClicked
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-            // TODO add your handling code here:
+        // TODO add your handling code here:
         JFileChooser jfc = new JFileChooser();
         jfc.setFileFilter(new JPEGImageFileFilter());
         jfc.showOpenDialog(this);
@@ -423,13 +403,13 @@ public class HomeForm extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Kích thước quá lớn. Vui lòng chọn ảnh khác!");
                 return;
             }
-             try {
-            BufferedImage myPicture = ImageIO.read(file);
-            avatarContain.setIcon(new ImageIcon(myPicture));
-            byte[] valueAvatar = imageToString(file, "jpg");
-            this.imageBuffer = valueAvatar;
-            this.isUploadAvatar = true;
-            avatarContain.setText("");
+            try {
+                BufferedImage myPicture = ImageIO.read(file);
+                avatarContain.setIcon(new ImageIcon(myPicture));
+                String valueAvatar = encodeToString(myPicture, "jpg");
+                this.imageBuffer = valueAvatar;
+                this.isUploadAvatar = true;
+                avatarContain.setText("");
             } catch (IOException ex) {
                 Logger.getLogger(ReviewAvatarUI.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -447,64 +427,61 @@ public class HomeForm extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
-String strId = txtID.getText();
-        String strName = txtDate.getText();
-        String strDate = txtDate.getText();        
-      
-        String strImage = "vatar";
+        String strId = txtID.getText();
+        try {
 
-        
-        byte[] byteID = strId.getBytes();
-        byte[] byteName = strName.getBytes();
-        byte[] byteDate = strDate.getBytes();
-        byte[] byteGender = this.gender.getBytes();
-//        byte[] byteAvatar = this.imageBuffer;        
-        byte[] byteAvatar = strImage.getBytes();
+            String strName = txtName.getText();
+            String strDate = txtDate.getText();
+//            String strImage = "123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890";
+            byte[] byteID = strId.getBytes();
+            byte[] byteName = strName.getBytes();
+            byte[] byteDate = strDate.getBytes();
+            byte[] byteGender = this.gender.getBytes();
+            byte[] byteAvatar = this.imageBuffer.getBytes();
+//            byte[] byteAvatar = strImage.getBytes();
 
-        
-        if(! this.isUploadAvatar  || !(byteID.length > 0) || !(byteName.length > 0) || !(byteDate.length > 0) || !(byteGender.length>0) ) {
-            JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin!");
-            return;
-        }
-        
-        ConnectCard connect = new ConnectCard();
-        byte[] data = new byte[byteID.length+byteName.length+byteDate.length + byteGender.length + byteAvatar.length +4];
-        int offSet = 0;
-        System.arraycopy(byteID, 0,data, offSet, byteID.length);        
-        offSet += byteID.length;
-        data[offSet] = (byte)0x2c;
-        offSet += 1;
-        System.arraycopy(byteName, 0,data, offSet, byteName.length);
-        offSet += byteName.length;
-        data[offSet] = (byte) 0x2c;
-        offSet += 1;
-        System.arraycopy(byteDate, 0, data, offSet, byteDate.length);
-        offSet += byteDate.length;
-        data[offSet] = (byte) 0x2c;
-        offSet += 1;
-        System.arraycopy(byteGender, 0, data, offSet, byteGender.length);
-        offSet += byteGender.length;
-        data[offSet] = (byte) 0x2c;
-        offSet += 1;
-        System.arraycopy(byteAvatar, 0, data, offSet, byteAvatar.length);
-        for(int i=0;i<data.length;i++){    //length is the property of the array  
-            System.out.println(data[i]);    
-            } 
-        if(connect.EditInformation(data)){
+            if (!(byteAvatar.length > 0) || !(byteID.length > 0) || !(byteName.length > 0) || !(byteDate.length > 0) || !(byteGender.length > 0)) {
+                JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin!");
+                return;
+            }
+
+            ConnectCard connect = new ConnectCard();
+            byte[] data = new byte[byteID.length + byteName.length + byteDate.length + byteGender.length + byteAvatar.length + 4];
+            int offSet = 0;
+            System.arraycopy(byteID, 0, data, offSet, byteID.length);
+            offSet += byteID.length;
+            data[offSet] = (byte) 0x2c;
+            offSet += 1;
+            System.arraycopy(byteName, 0, data, offSet, byteName.length);
+            offSet += byteName.length;
+            data[offSet] = (byte) 0x2c;
+            offSet += 1;
+            System.arraycopy(byteDate, 0, data, offSet, byteDate.length);
+            offSet += byteDate.length;
+            data[offSet] = (byte) 0x2c;
+            offSet += 1;
+            System.arraycopy(byteGender, 0, data, offSet, byteGender.length);
+            offSet += byteGender.length;
+            data[offSet] = (byte) 0x2c;
+            offSet += 1;
+            System.arraycopy(byteAvatar, 0, data, offSet, byteAvatar.length);
+            if (connect.EditInformation(data)) {
 //            try {
 //                PublicKey publicKeys = RSAAppletHelper.getInstance(
 //                        ConnectCard.getInstance().channel).getPublicKey();
 //            } catch (CardException ex) {
 //                Logger.getLogger(HomeForm.class.getName()).log(Level.SEVERE, null, ex);
 //            }
-            HomeForm home = new HomeForm();
-            home.setVisible(true);
-            this.dispose();
-            
-            System.out.println("Success");
-        }
-        else{
-            System.out.println("Sending Error");
+                HomeForm home = new HomeForm();
+                home.setVisible(true);
+                this.dispose();
+
+                System.out.println("Success");
+            } else {
+                System.out.println("Sending Error");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Có lỗi xảy ra!");
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -512,26 +489,26 @@ String strId = txtID.getText();
         // TODO add your handling code here:
     }//GEN-LAST:event_radiobuttonnuActionPerformed
 
-    private void txtName1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtName1ActionPerformed
+    private void txtNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtName1ActionPerformed
+    }//GEN-LAST:event_txtNameActionPerformed
 
     private void radiobuttonnamStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_radiobuttonnamStateChanged
         // TODO add your handling code here:
-       
-           JRadioButton radioButton = (JRadioButton) evt.getSource();
-            if(radioButton.isSelected()){
-                this.gender = "nam";
-            }
-   
+
+        JRadioButton radioButton = (JRadioButton) evt.getSource();
+        if (radioButton.isSelected()) {
+            this.gender = "nam";
+        }
+
     }//GEN-LAST:event_radiobuttonnamStateChanged
 
     private void radiobuttonnuStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_radiobuttonnuStateChanged
         // TODO add your handling code here:
-         JRadioButton radioButton = (JRadioButton) evt.getSource();
-            if(radioButton.isSelected()){
-                this.gender = "nu";
-            }
+        JRadioButton radioButton = (JRadioButton) evt.getSource();
+        if (radioButton.isSelected()) {
+            this.gender = "nu";
+        }
     }//GEN-LAST:event_radiobuttonnuStateChanged
 
     private void closeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeActionPerformed
@@ -542,7 +519,24 @@ String strId = txtID.getText();
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         ConnectCard connect = new ConnectCard();
-        connect.ReadInformation();
+       String Data =  connect.ReadInformation();
+        String[] arrOfStr = Data.split(",");
+        String dataImg = arrOfStr[arrOfStr.length-1];       
+        String id = arrOfStr[0];
+        String name = arrOfStr[1];
+        String ngaysinh = arrOfStr[2];
+        txtID.setText(id);
+        txtName.setText(name);
+        txtDate.setText(ngaysinh);
+        avatarContain.setText("");
+        byte[] bytes = Base64.getDecoder().decode(dataImg);
+         ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+                try {
+                    BufferedImage image  = ImageIO.read(bais);
+                     avatarContain.setIcon(new ImageIcon(image));
+                } catch (Exception e) {
+                    System.err.println("Error image");
+                }
     }//GEN-LAST:event_jButton2ActionPerformed
     public class JPEGImageFileFilter extends FileFilter {
 
@@ -563,6 +557,7 @@ String strId = txtID.getText();
         }
 
     }
+
     public void getImage() {
         ConnectCard connect = new ConnectCard();
         BufferedImage imageBuf = connect.DownloadImage();
@@ -598,7 +593,7 @@ String strId = txtID.getText();
             return false;  
         }  
     }  
-        
+    
     public String getImageStr(String path) {  
         byte[] data = null;  
         // read byte array  
@@ -614,18 +609,21 @@ String strId = txtID.getText();
         return Base64.getEncoder().encodeToString(data);
     }
     
-    public byte[] imageToString(File file,String type) {
-        byte[] data = null;
-        try {
-            BufferedImage bImage = ImageIO.read(file);
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ImageIO.write(bImage, type, bos);
-            data = bos.toByteArray();
-             System.out.println(data.length);
-        } catch (Exception e) {
-             e.printStackTrace();  
-        }
-        return data;
+ public static String encodeToString(BufferedImage image, String type) {
+    String imageString = null;
+    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
+    try {
+        ImageIO.write(image, type, bos);
+        byte[] imageBytes = bos.toByteArray();
+        Base64.Encoder encoder = Base64.getEncoder();
+        imageString = encoder.encodeToString(imageBytes);
+
+        bos.close();
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+    return imageString;
     }
     /**
      * @param args the command line arguments
@@ -687,6 +685,6 @@ String strId = txtID.getText();
     private javax.swing.JRadioButton radiobuttonnu;
     public javax.swing.JTextField txtDate;
     private javax.swing.JTextField txtID;
-    public javax.swing.JTextField txtName1;
+    public javax.swing.JTextField txtName;
     // End of variables declaration//GEN-END:variables
 }

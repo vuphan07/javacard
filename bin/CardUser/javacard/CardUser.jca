@@ -1,14 +1,15 @@
-// converted by version 1.3
-// on Thu Jun 02 12:16:35 ICT 2022
+// converted by version  [v3.0.4]
+// on Sun Jun 05 16:12:56 ICT 2022
 
 .package CardUser {
 	.aid 0x88:0x88:0x88:0x88:0x88;
 	.version 1.0;
 
 	.imports {
-		0xA0:0x0:0x0:0x0:0x62:0x1:0x1 1.3;		//javacard/framework
-		0xA0:0x0:0x0:0x0:0x62:0x2:0x1 1.3;		//javacardx/crypto
-		0xA0:0x0:0x0:0x0:0x62:0x1:0x2 1.3;		//javacard/security
+		0xA0:0x0:0x0:0x0:0x62:0x1:0x1 1.5;		//javacard/framework
+		0xA0:0x0:0x0:0x0:0x62:0x2:0x9 1.0;		//javacardx/apdu
+		0xA0:0x0:0x0:0x0:0x62:0x2:0x1 1.5;		//javacardx/crypto
+		0xA0:0x0:0x0:0x0:0x62:0x1:0x2 1.5;		//javacard/security
 		0xA0:0x0:0x0:0x0:0x62:0x0:0x1 1.0;		//java/lang
 	}
 
@@ -18,11 +19,11 @@
 
 	.constantPool {
 		// 0
-		instanceFieldRef 1.1 CardUser/aesCipher;
+		staticMethodRef 0.3.0()V;		// javacard/framework/Applet.<init>()V
 		// 1
-		instanceFieldRef 2.20 CardUser/aesKey;
+		.classRef 0.13;		// javacard/framework/SystemException
 		// 2
-		classRef 0.9;		// javacard/framework/OwnerPIN
+		.classRef 0.9;		// javacard/framework/OwnerPIN
 		// 3
 		staticMethodRef 0.9.0(BB)V;		// javacard/framework/OwnerPIN.<init>(BB)V
 		// 4
@@ -30,19 +31,19 @@
 		// 5
 		staticMethodRef 0.8.13(SB)[B;		// javacard/framework/JCSystem.makeTransientByteArray(SB)[B
 		// 6
-		staticMethodRef 1.1.0(BZ)Ljavacardx/crypto/Cipher;;		// javacardx/crypto/Cipher.getInstance(BZ)Ljavacardx/crypto/Cipher;
-			.descriptor	Ljavacardx/crypto/Cipher;	1.1;
+		staticMethodRef 2.1.0(BZ)Ljavacardx/crypto/Cipher;;		// javacardx/crypto/Cipher.getInstance(BZ)Ljavacardx/crypto/Cipher;
+			.descriptor	Ljavacardx/crypto/Cipher;	2.1;
 
 		// 7
-		staticMethodRef 0.3.0()V;		// javacard/framework/Applet.<init>()V
+		staticFieldRef 2.1 CardUser/aesCipher;
 		// 8
-		staticMethodRef 2.13.0(BSZ)Ljavacard/security/Key;;		// javacard/security/KeyBuilder.buildKey(BSZ)Ljavacard/security/Key;
-			.descriptor	Ljavacard/security/Key;	2.0;
+		staticMethodRef 3.13.0(BSZ)Ljavacard/security/Key;;		// javacard/security/KeyBuilder.buildKey(BSZ)Ljavacard/security/Key;
+			.descriptor	Ljavacard/security/Key;	3.0;
 
 		// 9
-		classRef 2.20;		// javacard/security/AESKey
+		.classRef 3.20;		// javacard/security/AESKey
 		// 10
-		classRef 0.13;		// javacard/framework/SystemException
+		staticFieldRef 3.20 CardUser/aesKey;
 		// 11
 		staticMethodRef Sha512/init()V;
 		// 12
@@ -64,7 +65,7 @@
 		// 20
 		virtualMethodRef 0.9.5()V;		// reset()V
 		// 21
-		classRef CardUser;
+		.classRef CardUser;
 		// 22
 		staticMethodRef CardUser/<init>([BSB)V;
 		// 23
@@ -144,11 +145,11 @@
 		// 55
 		virtualMethodRef 0.10.5([BSS)V;		// sendBytesLong([BSS)V
 		// 56
-		virtualMethodRef 1.1.3(Ljavacard/security/Key;B)V;		// init(Ljavacard/security/Key;B)V
-			.descriptor	Ljavacard/security/Key;	2.0;
+		virtualMethodRef 2.1.3(Ljavacard/security/Key;B)V;		// init(Ljavacard/security/Key;B)V
+			.descriptor	Ljavacard/security/Key;	3.0;
 
 		// 57
-		virtualMethodRef 1.1.1([BSS[BS)S;		// doFinal([BSS[BS)S
+		virtualMethodRef 2.1.1([BSS[BS)S;		// doFinal([BSS[BS)S
 		// 58
 		virtualMethodRef 0.9.4()Z;		// isValidated()Z
 		// 59
@@ -156,7 +157,7 @@
 		// 60
 		virtualMethodRef 0.9.1([BSB)Z;		// check([BSB)Z
 		// 61
-		staticMethodRef 3.0.0()V;		// java/lang/Object.<init>()V
+		staticMethodRef 4.0.0()V;		// java/lang/Object.<init>()V
 		// 62
 		staticFieldRef byte[] HMacSHA512/data;
 		// 63
@@ -190,8 +191,6 @@
 	.class public CardUser 0 extends 0.3 {		// extends javacard/framework/Applet
 
 		.fields {
-			private 1.1 aesCipher 0;		// Ljavacardx/crypto/Cipher;
-			private 2.20 aesKey 1;		// Ljavacard/security/AESKey;
 			public static byte[] userId 0;		// [B
 			public static byte[] userName 1;		// [B
 			public static byte[] gender 2;		// [B
@@ -240,6 +239,8 @@
 			static final short SW_CARD_IS_BLOCKED = 25346;		// S
 			static final short SW_PIN_VERIFICATION_REQUIRED = 25345;		// S
 			static 0.9 pin;		// Ljavacard/framework/OwnerPIN;
+			private static 2.1 aesCipher;		// Ljavacardx/crypto/Cipher;
+			private static 3.20 aesKey;		// Ljavacard/security/AESKey;
 			private static final byte[] PIN_INIT_VALUE = {1,2,3,4};		// [B
 			private static short LENGTH_BLOCK_AES = 64;		// S
 		}
@@ -261,12 +262,18 @@
 		.packageMethodTable 0 {
 		}
 
+		.implementedInterfaceInfoTable { 
+			.interface 1.0 { 		// javacardx/apdu/ExtendedLength
+			}
+
+		}
+
 		.method private <init>([BSB)V {
 			.stack 5;
 			.locals 6;
 
 				L0:	aload_0;
-					invokespecial 7;		// javacard/framework/Applet.<init>()V
+					invokespecial 0;		// javacard/framework/Applet.<init>()V
 					new 2;		// javacard/framework/OwnerPIN
 					dup;
 					sconst_5;
@@ -306,18 +313,16 @@
 				L6:	sspush 256;
 					newarray 11;
 					astore 7;
-				L7:	aload_0;
-					bspush 13;
+				L7:	bspush 13;
 					sconst_0;
 					invokestatic 6;		// javacardx/crypto/Cipher.getInstance(BZ)Ljavacardx/crypto/Cipher;
-					putfield_a 0;		// reference CardUser/CardUser.aesCipher
-					aload_0;
+					putstatic_a 7;		// reference CardUser/CardUser.aesCipher
 					bspush 15;
 					sspush 128;
 					sconst_0;
 					invokestatic 8;		// javacard/security/KeyBuilder.buildKey(BSZ)Ljavacard/security/Key;
 					checkcast 0 9;		// T_CLASSORINTERFACE javacard/security/AESKey
-					putfield_a 1;		// reference CardUser/CardUser.aesKey
+					putstatic_a 10;		// reference CardUser/CardUser.aesKey
 					invokestatic 11;		// CardUser/Sha512.init()V
 					aload 7;
 					invokestatic 12;		// CardUser/HMacSHA512.init([B)V
@@ -333,7 +338,7 @@
 					sconst_0;
 					invokestatic 15;		// CardUser/HMacSHA512.computeHmacSha512([BSS[BS)[B
 					pop;
-					getfield_a_this 1;		// reference CardUser/CardUser.aesKey
+					getstatic_a 10;		// reference CardUser/CardUser.aesKey
 					aload 8;
 					sconst_0;
 					invokeinterface 3 9 4;		// javacard/security/AESKey
@@ -365,7 +370,7 @@
 					return;
 			.exceptionTable {
 				// start_block end_block handler_block catch_type_index
-				L3 L4 L5 10;
+				L3 L4 L5 1;
 				L8 L9 L10 0;
 				L10 L11 L10 0;
 			}
@@ -835,30 +840,26 @@
 		}
 
 		.method public showInformation(Ljavacard/framework/APDU;)V 9 {
-			.stack 5;
-			.locals 14;
+			.stack 6;
+			.locals 16;
 
 			.descriptor	Ljavacard/framework/APDU;	0.10;
 
-				L0:	aload_0;
-					getstatic_a 27;		// reference CardUser/CardUser.userId
+				L0:	getstatic_a 27;		// reference CardUser/CardUser.userId
 					getstatic_s 46;		// short CardUser/CardUser.userIdLength
-					invokespecial 52;		// CardUser/CardUser.decrypt([BS)[B
+					invokestatic 52;		// CardUser/CardUser.decrypt([BS)[B
 					astore_2;
-				L1:	aload_0;
-					getstatic_a 29;		// reference CardUser/CardUser.userName
+				L1:	getstatic_a 29;		// reference CardUser/CardUser.userName
 					getstatic_s 48;		// short CardUser/CardUser.usernameLength
-					invokespecial 52;		// CardUser/CardUser.decrypt([BS)[B
+					invokestatic 52;		// CardUser/CardUser.decrypt([BS)[B
 					astore_3;
-				L2:	aload_0;
-					getstatic_a 31;		// reference CardUser/CardUser.birthDay
+				L2:	getstatic_a 31;		// reference CardUser/CardUser.birthDay
 					getstatic_s 49;		// short CardUser/CardUser.birthDayLength
-					invokespecial 52;		// CardUser/CardUser.decrypt([BS)[B
+					invokestatic 52;		// CardUser/CardUser.decrypt([BS)[B
 					astore 4;
-				L3:	aload_0;
-					getstatic_a 30;		// reference CardUser/CardUser.gender
+				L3:	getstatic_a 30;		// reference CardUser/CardUser.gender
 					getstatic_s 50;		// short CardUser/CardUser.genderLength
-					invokespecial 52;		// CardUser/CardUser.decrypt([BS)[B
+					invokestatic 52;		// CardUser/CardUser.decrypt([BS)[B
 					astore 5;
 				L4:	aload_2;
 					arraylength;
@@ -884,10 +885,10 @@
 					sadd;
 					sload 6;
 					sadd;
-					sstore 11;
-				L10:	sload 11;
 					sconst_4;
 					sadd;
+					sstore 11;
+				L10:	sload 11;
 					newarray 11;
 					astore 12;
 				L11:	aload_2;
@@ -898,8 +899,7 @@
 					invokestatic 43;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
 					aload 12;
-					aload 12;
-					arraylength;
+					sload 6;
 					bspush 44;
 					bastore;
 					aload_3;
@@ -912,8 +912,11 @@
 					invokestatic 43;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
 					aload 12;
-					aload 12;
-					arraylength;
+					sload 7;
+					sload 6;
+					sadd;
+					sconst_1;
+					sadd;
 					bspush 44;
 					bastore;
 					aload 4;
@@ -922,14 +925,19 @@
 					sload 7;
 					sload 6;
 					sadd;
-					sconst_1;
+					sconst_2;
 					sadd;
 					sload 8;
 					invokestatic 43;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
 					aload 12;
-					aload 12;
-					arraylength;
+					sload 8;
+					sload 7;
+					sadd;
+					sload 6;
+					sadd;
+					sconst_2;
+					sadd;
 					bspush 44;
 					bastore;
 					aload 5;
@@ -940,18 +948,40 @@
 					sadd;
 					sload 6;
 					sadd;
-					sconst_1;
+					sconst_3;
 					sadd;
 					sload 9;
 					invokestatic 43;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
 					aload 12;
-					aload 12;
-					arraylength;
+					sload 9;
+					sload 8;
+					sadd;
+					sload 7;
+					sadd;
+					sload 6;
+					sadd;
+					sconst_3;
+					sadd;
 					bspush 44;
 					bastore;
-					getstatic_a 32;		// reference CardUser/CardUser.avatar
-					sconst_0;
+					sload 10;
+					sspush 255;
+					sdiv;
+					sstore 13;
+				L12:	sload 10;
+					sspush 255;
+					srem;
+					sstore 14;
+				L13:	sconst_0;
+					sstore 15;
+				L14:	sload 15;
+					sload 13;
+					if_scmpge L16;
+				L15:	getstatic_a 32;		// reference CardUser/CardUser.avatar
+					sload 15;
+					sspush 255;
+					smul;
 					aload 12;
 					sload 8;
 					sload 7;
@@ -960,53 +990,80 @@
 					sadd;
 					sload 6;
 					sadd;
-					sconst_1;
+					sconst_4;
 					sadd;
-					sload 10;
+					sload 15;
+					sspush 255;
+					smul;
+					sadd;
+					sspush 255;
+					invokestatic 43;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					pop;
+					sinc 15 1;
+					goto L14;
+				L16:	getstatic_a 32;		// reference CardUser/CardUser.avatar
+					sload 13;
+					sspush 255;
+					smul;
+					aload 12;
+					sload 8;
+					sload 7;
+					sadd;
+					sload 9;
+					sadd;
+					sload 6;
+					sadd;
+					sconst_4;
+					sadd;
+					sload 13;
+					sspush 255;
+					smul;
+					sadd;
+					sload 14;
 					invokestatic 43;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
 					aload_1;
 					invokevirtual 53;		// setOutgoing()S
-					sstore 13;
-				L12:	sconst_0;
-					sstore 14;
-				L13:	sconst_0;
 					sstore 15;
-				L14:	sload 11;
-					ifle L19;
-				L15:	sload 11;
-					sload 13;
-					if_scmple L17;
-				L16:	sload 13;
-					goto L18;
-				L17:	sload 11;
-				L18:	sstore 14;
-					aload_1;
-					sload 14;
+				L17:	aload_1;
+					sload 11;
 					invokevirtual 54;		// setOutgoingLength(S)V
+					sconst_0;
+					sstore 16;
+				L18:	sconst_0;
+					sstore 17;
+				L19:	sload 11;
+					ifle L24;
+				L20:	sload 11;
+					sload 15;
+					if_scmple L22;
+				L21:	sload 15;
+					goto L23;
+				L22:	sload 11;
+				L23:	sstore 16;
 					aload_1;
 					aload 12;
-					sload 15;
-					sload 14;
+					sload 17;
+					sload 16;
 					invokevirtual 55;		// sendBytesLong([BSS)V
 					sload 11;
-					sload 14;
+					sload 16;
 					ssub;
 					sstore 11;
-					sload 15;
-					sload 14;
+					sload 17;
+					sload 16;
 					sadd;
-					sstore 15;
-					goto L14;
-				L19:	return;
+					sstore 17;
+					goto L19;
+				L24:	return;
 		}
 
 		.method public encrypt([B)[B 10 {
 			.stack 6;
 			.locals 4;
 
-				L0:	getfield_a_this 0;		// reference CardUser/CardUser.aesCipher
-					getfield_a_this 1;		// reference CardUser/CardUser.aesKey
+				L0:	getstatic_a 7;		// reference CardUser/CardUser.aesCipher
+					getstatic_a 10;		// reference CardUser/CardUser.aesKey
 					sconst_2;
 					invokevirtual 56;		// init(Ljavacard/security/Key;B)V
 					sconst_1;
@@ -1048,7 +1105,7 @@
 				L13:	sspush 128;
 					newarray 11;
 					astore 4;
-				L14:	getfield_a_this 0;		// reference CardUser/CardUser.aesCipher
+				L14:	getstatic_a 7;		// reference CardUser/CardUser.aesCipher
 					aload_3;
 					sconst_0;
 					sspush 128;
@@ -1060,57 +1117,57 @@
 					areturn;
 			.exceptionTable {
 				// start_block end_block handler_block catch_type_index
-				L10 L11 L12 10;
+				L10 L11 L12 1;
 			}
 		}
 
-		.method private decrypt([BS)[B {
+		.method private static decrypt([BS)[B {
 			.stack 6;
 			.locals 2;
 
-				L0:	sload_2;
+				L0:	sload_1;
 					ifeq L8;
-				L1:	getfield_a_this 0;		// reference CardUser/CardUser.aesCipher
-					getfield_a_this 1;		// reference CardUser/CardUser.aesKey
+				L1:	getstatic_a 7;		// reference CardUser/CardUser.aesCipher
+					getstatic_a 10;		// reference CardUser/CardUser.aesKey
 					sconst_1;
 					invokevirtual 56;		// init(Ljavacard/security/Key;B)V
 				L2:	sspush 128;
 					sconst_2;
 					invokestatic 5;		// javacard/framework/JCSystem.makeTransientByteArray(SB)[B
-					astore_3;
+					astore_2;
 				L3:	goto L6;
-				L4:	astore 4;
+				L4:	astore_3;
 				L5:	sspush 128;
 					newarray 11;
-					astore_3;
-				L6:	getfield_a_this 0;		// reference CardUser/CardUser.aesCipher
-					aload_1;
+					astore_2;
+				L6:	getstatic_a 7;		// reference CardUser/CardUser.aesCipher
+					aload_0;
 					sconst_0;
 					sspush 128;
-					aload_3;
+					aload_2;
 					sconst_0;
 					invokevirtual 57;		// doFinal([BSS[BS)S
 					pop;
-					sload_2;
+					sload_1;
 					newarray 11;
-					astore 4;
-				L7:	aload_3;
+					astore_3;
+				L7:	aload_2;
 					sconst_0;
-					aload 4;
+					aload_3;
 					sconst_0;
-					sload_2;
+					sload_1;
 					invokestatic 43;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
-					aload 4;
+					aload_3;
 					areturn;
 				L8:	sconst_1;
 					newarray 11;
-					astore_3;
-				L9:	aload_3;
+					astore_2;
+				L9:	aload_2;
 					areturn;
 			.exceptionTable {
 				// start_block end_block handler_block catch_type_index
-				L2 L3 L4 10;
+				L2 L3 L4 1;
 			}
 		}
 
@@ -1201,19 +1258,26 @@
 				L8:	return;
 		}
 
-		.method public static setupNewCard(Ljavacard/framework/APDU;[B)V 5 {
-			.stack 1;
-			.locals 2;
+		.method public static getName(Ljavacard/framework/APDU;[B)V 5 {
+			.stack 2;
+			.locals 4;
 
 			.descriptor	Ljavacard/framework/APDU;	0.10;
 
-				L0:	aload_0;
-					invokevirtual 41;		// getOffsetCdata()S
-					sstore_2;
-				L1:	aload_0;
-					invokevirtual 42;		// getIncomingLength()S
+				L0:	getstatic_a 32;		// reference CardUser/CardUser.avatar
+					astore_2;
+				L1:	getstatic_a 32;		// reference CardUser/CardUser.avatar
+					arraylength;
 					sstore_3;
-				L2:	return;
+				L2:	sload_3;
+					sstore 4;
+				L3:	sload 4;
+					newarray 11;
+					astore 5;
+				L4:	aload_0;
+					sload 4;
+					invokevirtual 54;		// setOutgoingLength(S)V
+					return;
 		}
 
 		.method public static showInfoLong(Ljavacard/framework/APDU;[B[B)V 6 {
@@ -1283,7 +1347,7 @@
 
 	}
 
-	.class public HMacSHA512 1 extends 3.0 {		// extends java/lang/Object
+	.class public HMacSHA512 1 extends 4.0 {		// extends java/lang/Object
 
 		.fields {
 			public static final short BLOCKSIZE = 128;		// S
@@ -1398,7 +1462,7 @@
 
 	}
 
-	.class public Sha512 2 extends 3.0 {		// extends java/lang/Object
+	.class public Sha512 2 extends 4.0 {		// extends java/lang/Object
 
 		.fields {
 			public static final short[] H_INIT_SHORT 0 = {27145,-6553,-3140,-14072,-17561,-20859,-31542,-22725,15470,-3214,-364,-2005,-23217,-2758,24349,14065,20750,21119,-21018,-32047,-25851,26764,11070,27679,8067,-9813,-1215,-17045,23520,-13031,4990,8569};		// [S

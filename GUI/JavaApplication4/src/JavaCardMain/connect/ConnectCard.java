@@ -51,7 +51,7 @@ public class ConnectCard {
             
             terminal = terminals.get(0);
             
-            card = terminal.connect("*");
+            card = terminal.connect("T=1");
             
             channel = card.getBasicChannel();
             
@@ -81,7 +81,7 @@ public class ConnectCard {
             
             CardTerminal terminal = terminals.get(0);
             
-            Card card = terminal.connect("*");
+            Card card = terminal.connect("T=1");
             
             CardChannel channel = card.getBasicChannel();
             
@@ -126,7 +126,7 @@ public class ConnectCard {
             
             CardTerminal terminal = terminals.get(0);
             
-            Card card = terminal.connect("*");
+            Card card = terminal.connect("T=1");
             
             CardChannel channel = card.getBasicChannel();
             
@@ -176,7 +176,7 @@ public class ConnectCard {
             
             CardTerminal terminal = terminals.get(0);
             
-            Card card = terminal.connect("*");
+            Card card = terminal.connect("T=1");
             
             CardChannel channel = card.getBasicChannel();
             
@@ -210,7 +210,7 @@ public class ConnectCard {
             
             CardTerminal terminal = terminals.get(0);
             
-            Card card = terminal.connect("*");
+            Card card = terminal.connect("T=1");
             
             CardChannel channel = card.getBasicChannel();
             
@@ -252,7 +252,7 @@ public class ConnectCard {
             
             CardTerminal terminal = terminals.get(0);
             
-            Card card = terminal.connect("*");
+            Card card = terminal.connect("T=1");
             
             CardChannel channel = card.getBasicChannel();
             
@@ -266,23 +266,16 @@ public class ConnectCard {
     }
     
     public boolean EditInformation(byte [] data){
-        connectapplet();
         try{
-            
+            connectapplet();
             TerminalFactory factory = TerminalFactory.getDefault();
             List<CardTerminal> terminals = factory.terminals().list();
             
             CardTerminal terminal = terminals.get(0);
-            
-            Card card = terminal.connect("*");
-            
-            CardChannel channel0 = card.getBasicChannel();
-//            ResponseAPDU resetData = channel0.transmit(new CommandAPDU(APPLET.CLA,APPLET.INS_CHANGE_INFORMATION,0x00,0x00));
-            
-//            CardChannel channel = card.getBasicChannel();
-            
+            Card card = terminal.connect("T=1");
+            CardChannel channel = card.getBasicChannel();
             ResponseAPDU answer = channel.transmit(new CommandAPDU(APPLET.CLA,0x2f,0x00,0x00,data));
-            
+
             message = answer.toString();
             System.out.println(answer);
             System.out.println(message);
@@ -302,16 +295,15 @@ public class ConnectCard {
             return false;
         }
     }
-    public boolean ReadInformation(){
-        connectapplet();
+    public String ReadInformation(){
         try{
-            
+             connectapplet();
             TerminalFactory factory = TerminalFactory.getDefault();
             List<CardTerminal> terminals = factory.terminals().list();
             
             CardTerminal terminal = terminals.get(0);
             
-            Card card = terminal.connect("*");
+            Card card = terminal.connect("T=1");
             
             CardChannel channel = card.getBasicChannel();
             System.out.println("begin get info");
@@ -319,11 +311,10 @@ public class ConnectCard {
                            System.out.println(answerID);
 
             String strData = new String(answerID.getData());
-               System.out.println(strData);
-            return true;
+            return strData;
         }
         catch(Exception ex){
-            return false;
+            return "";
         }
     }   
     public boolean UploadImage(File file, String type){
@@ -335,7 +326,7 @@ public class ConnectCard {
             
             CardTerminal terminal = terminals.get(0);
             
-            Card card = terminal.connect("*");
+            Card card = terminal.connect("T=1");
             
             CardChannel channel = card.getBasicChannel();
             
@@ -389,7 +380,7 @@ public class ConnectCard {
             
             CardTerminal terminal = terminals.get(0);
             
-            Card card = terminal.connect("*");
+            Card card = terminal.connect("T=1");
             
             CardChannel channelImage = card.getBasicChannel();
             
