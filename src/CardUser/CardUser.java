@@ -298,12 +298,16 @@ public class CardUser extends Applet
         short lengthGender = (short)decryptGender.length;
         short lengthAvatar = (short)avatar.length;
 		short toSend = (short)(lengthName + lengthBirthDay +lengthGender +lengthAvatar+lengthUserId);
-        byte[] temp = new byte[toSend];
+        byte[] temp = new byte[toSend + 4];
         Util.arrayCopy(decryptUserId, (short)0, temp, (short)0,(short)lengthUserId);
-        Util.arrayCopy(decryptUsername, (short)0, temp, (short)lengthUserId,(short)lengthName);
-        Util.arrayCopy(decryptBirthday, (short)0, temp, (short)(lengthName+lengthUserId),(short)lengthBirthDay);
-        Util.arrayCopy(decryptGender, (short)0, temp, (short)(lengthBirthDay+lengthName+lengthUserId),(short)lengthGender);
-        Util.arrayCopy(avatar, (short)0, temp, (short)(lengthBirthDay+lengthName+lengthGender+lengthUserId),(short)lengthAvatar);
+        temp[temp.length] = 0x2c;
+        Util.arrayCopy(decryptUsername, (short)0, temp, (short)(lengthUserId+1),(short)lengthName);
+        temp[temp.length] = 0x2c;
+        Util.arrayCopy(decryptBirthday, (short)0, temp, (short)(lengthName+lengthUserId+1),(short)lengthBirthDay);
+        temp[temp.length] = 0x2c;
+        Util.arrayCopy(decryptGender, (short)0, temp, (short)(lengthBirthDay+lengthName+lengthUserId+1),(short)lengthGender);
+		temp[temp.length] = 0x2c;
+        Util.arrayCopy(avatar, (short)0, temp, (short)(lengthBirthDay+lengthName+lengthGender+lengthUserId+1),(short)lengthAvatar);
         short le = apdu.setOutgoing(); // do dai du lieu toi da gui len may tinh
 
 

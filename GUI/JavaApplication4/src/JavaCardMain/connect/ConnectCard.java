@@ -284,6 +284,7 @@ public class ConnectCard {
             ResponseAPDU answer = channel.transmit(new CommandAPDU(APPLET.CLA,0x2f,0x00,0x00,data));
             
             message = answer.toString();
+            System.out.println(answer);
             System.out.println(message);
             switch (((message.split("="))[1]).toUpperCase()) {
                 case "9000":
@@ -313,21 +314,12 @@ public class ConnectCard {
             Card card = terminal.connect("*");
             
             CardChannel channel = card.getBasicChannel();
-            
-            ResponseAPDU answerID = channel.transmit(new CommandAPDU(APPLET.CLA,APPLET.INS_OUT_INFORMATION,APPLET.OUT_ID,0x00));
-            strID = new String(answerID.getData());
-            
-            CardChannel channel1 = card.getBasicChannel();
-            ResponseAPDU answerName = channel1.transmit(new CommandAPDU(APPLET.CLA,APPLET.INS_OUT_INFORMATION,APPLET.OUT_NAME,0x00));
-            strName = new String(answerName.getData());
-            
-            CardChannel channel3 = card.getBasicChannel();
-            ResponseAPDU answerDate = channel3.transmit(new CommandAPDU(APPLET.CLA,APPLET.INS_OUT_INFORMATION,APPLET.OUT_DATE,0x00));
-            strDate = new String(answerDate.getData());
-            
-            CardChannel channel4 = card.getBasicChannel();
-            ResponseAPDU answerPhone = channel4.transmit(new CommandAPDU(APPLET.CLA,APPLET.INS_OUT_INFORMATION,APPLET.OUT_PHONE,0x00));
-            strPhone = new String(answerPhone.getData());
+            System.out.println("begin get info");
+            ResponseAPDU answerID = channel.transmit(new CommandAPDU(APPLET.CLA,0x3f,0x00,0x00));
+                           System.out.println(answerID);
+
+            String strData = new String(answerID.getData());
+               System.out.println(strData);
             return true;
         }
         catch(Exception ex){
