@@ -22,39 +22,15 @@ public class CardUser extends Applet implements ExtendedLength
 	public static short usernameLength,userIdLength,genderLength,birthDayLength;
 	
 	final static byte marker =(byte)0x2c;
-
+	
+	public static byte isNewUser;
 
 	final static byte USER_CLA =(byte)0x00;
 	final static byte VERIFY = (byte) 0x01;
+	final static byte INIT_DATA = (byte) 0x2f;
+	final static byte GET_INFO = (byte) 0x3f;
+
 	final static byte CREATE_USER = (byte) 0x02;
-	final static byte INSERT_USERID = (byte) 0x02;
-    final static byte INSERT_USERNAME = (byte) 0x03;
-    final static byte INSERT_GENDER = (byte) 0x04;
-    final static byte INSERT_AVATAR = (byte) 0x05;
-    final static byte INSERT_BIRTHDAY = (byte) 0x06;
-	final static byte INSERT_PASSWORD =(byte)0x07;
-	final static byte INSERT_ALL = (byte) 0x08;
-    final static byte EDIT_USER = (byte) 0x03;
-    final static byte EDIT_USERID = (byte) 0x02;
-    final static byte EDIT_USERNAME = (byte) 0x03;
-    final static byte EDIT_GENDER = (byte) 0x04;
-    final static byte EDIT_AVATAR = (byte) 0x05;
-    final static byte EDIT_BIRTHDAY = (byte) 0x06;
-	final static byte EDIT_PASSWORD =(byte)0x05;
-    final static byte DELETE_USER = (byte) 0x04;
-    final static byte DELETE_USERID = (byte) 0x02;
-    final static byte DELETE_USERNAME = (byte) 0x03;
-    final static byte DELETE_GENDER = (byte) 0x04;
-    final static byte DELETE_AVATAR = (byte) 0x05;
-    final static byte DELETE_BIRTHDAY = (byte) 0x06;
-	final static byte DELETE_PASSWORD =(byte)0x07;
-    final static byte GET_USER = (byte) 0x05;
-    final static byte GET_USERID = (byte) 0x02;
-    final static byte GET_USERNAME = (byte) 0x03;
-    final static byte GET_GENDER = (byte) 0x04;
-    final static byte GET_AVATAR = (byte) 0x05;
-    final static byte GET_BIRTHDAY = (byte) 0x06;
-	final static byte GET_PASSWORD =(byte)0x07;
     final static byte UNLOCK_USER = (byte) 0x06;
 	final static byte PASSWORD_TRY_LIMIT =(byte)0x05;
 	final static byte MAX_PASS_SIZE =(byte)0x08;
@@ -66,7 +42,7 @@ public class CardUser extends Applet implements ExtendedLength
 	static OwnerPIN pin;
 	private static Cipher aesCipher;
 	private static AESKey aesKey;
-	private final static byte[] PIN_INIT_VALUE={0x01,0x02,0x03,0x04};
+	private final static byte[] PIN_INIT_VALUE={(byte)1,(byte)2,(byte)3,(byte)4};
 	private static short LENGTH_BLOCK_AES = (short)64;
 
 	private CardUser(byte[] bArray, short bOffset, byte bLength) {
@@ -146,64 +122,14 @@ public class CardUser extends Applet implements ExtendedLength
 		
 		switch (buf[ISO7816.OFFSET_INS])
 		{
-		case CREATE_USER:
-			switch(buf[ISO7816.OFFSET_P1]){
-				case (byte) INSERT_USERID:
-					userId = new byte[byteRead];
-					saveInfo(buf,ISO7816.OFFSET_CDATA,userId,(short)0,(short)byteRead);
-					break;
-				case (byte) INSERT_USERNAME:
-					userName = new byte[byteRead];
-					saveInfo(buf,ISO7816.OFFSET_CDATA,userName,(short)0,(short)byteRead);
-					break;
-				case (byte) INSERT_GENDER:
-					gender = new byte[byteRead];
-					saveInfo(buf,ISO7816.OFFSET_CDATA,gender,(short)0,(short)byteRead);
-					break;
-				case (byte) INSERT_BIRTHDAY:
-					birthDay = new byte[byteRead];
-					saveInfo(buf,ISO7816.OFFSET_CDATA,birthDay,(short)0,(short)byteRead);
-					break;
-				case (byte) INSERT_AVATAR:
-					avatar = new byte[byteRead];
-					saveInfoLong(apdu,buf,(short)byteRead);
-					break;
-				case (byte) INSERT_PASSWORD:
-					 pin.update(buf, ISO7816.OFFSET_CDATA,(byte) dataLen);
-					break;	
-			}
-			break;
-		case (byte) 0x2f:
+		case (byte) INIT_DATA:
 			initInformation(apdu,buf,byteRead);
 			break;
-		case (byte) 0x3f:
+		case (byte) GET_INFO:
 			 showInformation(apdu);
-			// getName(apdu,buf);
-			break;
-		case (byte)GET_USER:
-			switch(buf[ISO7816.OFFSET_P1]){
-				case (byte)GET_USERID:
-					showInfo(apdu,buf,userId,(short)userId.length);
-					break;
-				case (byte)GET_USERNAME:
-					showInfo(apdu,buf,userName,(short)userName.length);
-					break;
-				case (byte)GET_AVATAR:
-					showInfoLong(apdu,buf,avatar);
-					break;
-				case (byte)GET_BIRTHDAY:
-					showInfo(apdu,buf,birthDay,(short)birthDay.length);
-					break;
-				case (byte)GET_GENDER:
-					showInfo(apdu,buf,gender,(short)gender.length);
-					break;
-				case (byte)GET_PASSWORD:
-					
-					break;
-			}
 			break;
 		case (byte) VERIFY:
-			verify(buf,(byte)byteRead);
+			verify(apdu,buf,(byte)byteRead);
 			break;
 		case (byte)UNLOCK_USER: pin.resetAndUnblock();
 			return;
@@ -284,6 +210,7 @@ public class CardUser extends Applet implements ExtendedLength
 		 avatar = new byte[lengthAvatar];
 		 Util.arrayCopy(temp, dataOffsetInput, avatar, (short)0,(short)avatar.length);
 		 dataOffsetInput = (short)(avatar.length + lengthAvatar +1);
+		 isNewUser= (byte)0x01;
 		JCSystem.commitTransaction();	
 	}
 	
@@ -376,63 +303,16 @@ public class CardUser extends Applet implements ExtendedLength
     		byte[] dataDecrypted = new byte[1];
 	    	return dataDecrypted;
     	}
-        // short newLength = removePadding(dataDecrypted, (short) length);;
     }
 	
-	public static void showInfo(APDU apdu, byte[] buf,byte[] data,short dataLength) {
-		if ( ! pin.isValidated()) ISOException.throwIt(SW_PIN_VERIFICATION_REQUIRED);
-		Util.arrayCopy(data ,(short)0,buf,(short)0,(short)(dataLength));
-		apdu.setOutgoingAndSend((short) 0,(short)(dataLength));
-	}
-	
-	public static void saveInfo(byte[] buf,short offset,byte[] target,short offsetTarget, short targetLeng) {
-		if ( ! pin.isValidated()) ISOException.throwIt(SW_PIN_VERIFICATION_REQUIRED);
-		Util.arrayCopy(buf, offset,target, offsetTarget, targetLeng);
-	}
-	
-	public static void saveInfoLong(APDU apdu,byte[] buf, short recvLen ) {
-		if ( ! pin.isValidated()) ISOException.throwIt(SW_PIN_VERIFICATION_REQUIRED);
-		short pointer = 0;
-		short dataOffset = apdu.getOffsetCdata();
-		short datalength = apdu.getIncomingLength();
-		byte[] temp=new byte[datalength];
-		while (recvLen > 0)
-		{
-			Util.arrayCopy(buf, dataOffset, temp, pointer,recvLen);
-			pointer += recvLen;
-			recvLen = apdu.receiveBytes(dataOffset);
-		}
-	}
-	
-	public static void getName(APDU apdu,byte[] buf){
-
-		byte[] decryptUsername =avatar;
-		short lengthName = (short)avatar.length;
-		short toSend = (short)(lengthName);
-        byte[] temp = new byte[toSend];
-        apdu.setOutgoingLength(toSend);
-	}
-	
-	public static void showInfoLong(APDU apdu, byte[] buf,byte[] data) {
-		if ( ! pin.isValidated()) ISOException.throwIt(SW_PIN_VERIFICATION_REQUIRED);
-		short toSend = (short)data.length;
-		short le = apdu.setOutgoing();
-		apdu.setOutgoingLength(toSend);
-		short sendLen = 0;
-		short pointer = 0;
-		while(toSend > 0)
-		{
-			sendLen = (toSend > le)?le:toSend;
-
-			apdu.sendBytesLong(data, pointer,sendLen);
-			toSend -= sendLen;
-			pointer += sendLen;
-		}
-	}
-	
-	private void verify(byte[] buf,byte length) {
+	private void verify(APDU apdu,byte[] buf,byte length) {
 		if ( pin.check(buf, ISO7816.OFFSET_CDATA,length) == false ) 
 			ISOException.throwIt(SW_VERIFICATION_FAILED);
+			byte[] status = new byte[1];
+			status[0] = isNewUser;
+			short le = apdu.setOutgoing();
+			apdu.setOutgoingLength((short)1);
+			apdu.sendBytesLong(status, (short)0, (short)1);
 	}
 }
 

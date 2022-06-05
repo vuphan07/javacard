@@ -87,6 +87,7 @@ public class ConnectCard {
             
             ResponseAPDU answer = channel.transmit(new CommandAPDU(APPLET.CLA,APPLET.INS_VERIFY_PIN,0x00,0x00,pinbyte));
             message = Integer.toHexString(answer.getSW());
+            System.out.println(answer);
             switch (message.toUpperCase()) {
                 case RESPONS.SW_NO_ERROR:
                     return true;
@@ -274,7 +275,7 @@ public class ConnectCard {
             CardTerminal terminal = terminals.get(0);
             Card card = terminal.connect("T=1");
             CardChannel channel = card.getBasicChannel();
-            ResponseAPDU answer = channel.transmit(new CommandAPDU(APPLET.CLA,0x2f,0x00,0x00,data));
+            ResponseAPDU answer = channel.transmit(new CommandAPDU(APPLET.CLA,APPLET.INIT_INFO,0x00,0x00,data));
 
             message = answer.toString();
             System.out.println(answer);
@@ -307,7 +308,7 @@ public class ConnectCard {
             
             CardChannel channel = card.getBasicChannel();
             System.out.println("begin get info");
-            ResponseAPDU answerID = channel.transmit(new CommandAPDU(APPLET.CLA,0x3f,0x00,0x00));
+            ResponseAPDU answerID = channel.transmit(new CommandAPDU(APPLET.CLA,APPLET.READ_INFO,0x00,0x00));
                            System.out.println(answerID);
 
             String strData = new String(answerID.getData());
@@ -317,117 +318,7 @@ public class ConnectCard {
             return "";
         }
     }   
-    public boolean UploadImage(File file, String type){
-        connectapplet();
-        try{
-            
-            TerminalFactory factory = TerminalFactory.getDefault();
-            List<CardTerminal> terminals = factory.terminals().list();
-            
-            CardTerminal terminal = terminals.get(0);
-            
-            Card card = terminal.connect("T=1");
-            
-            CardChannel channel = card.getBasicChannel();
-            
-            BufferedImage bImage = ImageIO.read(file);
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ImageIO.write(bImage, type, bos);
-            
-            byte[] napanh = bos.toByteArray();
-            
-            int soLan = napanh.length / 249;
-            
-            String strsend = soLan + "S" + napanh.length % 249;
-            
-            byte[] send = strsend.getBytes();
-            
-            ResponseAPDU response = channel.transmit(new CommandAPDU(APPLET.CLA,APPLET.INS_CREATE_SIZEIMAGE,0x00,0x01,send));
-            String check = Integer.toHexString(response.getSW());
-            
-            if(check.equals(RESPONS.SW_NO_ERROR)){
-                for(int i = 0;i<=soLan ;i++){
-                    byte p1 = (byte) i;
-                    int start = 0, end = 0;
-                    start = i * 249;
-                    if(i != soLan){
-                        end = (i+1) *249;
-                    }
-                    else{
-                        end = napanh.length;
-                    }
-                    byte[] slice = Arrays.copyOfRange(napanh, start, end);
-                    response = channel.transmit(new CommandAPDU(APPLET.CLA,APPLET.INS_CREATE_IMAGE,p1,0x01,slice));
-                    String checkSlide = Integer.toHexString(response.getSW());
-                    if(!checkSlide.equals(RESPONS.SW_NO_ERROR)){
-                        return false;
-                    }
-                }
-                return true;
-            }
-            return true;
-        }
-        catch(Exception ex){
-            return false;
-        }
-    }
-    public BufferedImage DownloadImage(){
-        connectapplet();
-        try {
-            TerminalFactory factory = TerminalFactory.getDefault();
-            
-            List<CardTerminal> terminals = factory.terminals().list();
-            
-            CardTerminal terminal = terminals.get(0);
-            
-            Card card = terminal.connect("T=1");
-            
-            CardChannel channelImage = card.getBasicChannel();
-            
-            int size = 0;
-            ResponseAPDU answer = channelImage.transmit(new CommandAPDU(APPLET.CLA,APPLET.INS_OUT_SIZEIMAGE,0x01,0x01));
-            String check = Integer.toHexString(answer.getSW());
-            if(check.equals(RESPONS.SW_NO_ERROR)){
-                byte[] sizeAnh = answer.getData();
-                if(ConvertData.isByteArrayAllZero(sizeAnh)){
-                    return null;
-                }
-                byte[] arrAnh = new byte[10000];
-                String strSizeAnh = new String(sizeAnh);
-                String[] outPut1 = strSizeAnh.split("S");
-                
-                int lan = Integer.parseInt(outPut1[0].replaceAll("\\D", ""));
-                int du = Integer.parseInt(outPut1[1].replaceAll("\\D", ""));
-                size = lan * 249 + du;
-                int count = size / 249;
-                System.err.println(count);
-                for(int j=0;j<=count;j++){
-                    answer = channelImage.transmit(new CommandAPDU(APPLET.CLA,APPLET.INS_OUT_IMAGE,(byte)j,0x01));
-                    String check1 = Integer.toHexString(answer.getSW());
-                    if(check1.equals(RESPONS.SW_NO_ERROR)){
-                        byte[] result = answer.getData();
-                        int leng = 249;
-                        if(j == count){
-                            leng = size % 249;
-                        }
-                        System.arraycopy(result, 0, arrAnh, j*249, leng);
-                    }
-                }
-                
-                ByteArrayInputStream bais = new ByteArrayInputStream(arrAnh);
-                try {
-                    BufferedImage image  = ImageIO.read(bais);
-                    return image;
-                } catch (Exception e) {
-                    System.err.println("Error image");
-                }
-            }
-        } catch (Exception e) {
-            System.err.println("error dowloadimage");
-        }
-        return null;
-    }
-    
+        
     public static void main(String[] args) {
         System.out.println("begin connect");
         new ConnectCard().connectapplet();

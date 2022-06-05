@@ -17,11 +17,14 @@ public class APPLET {
     };
     
     public final static byte CLA =(byte)0x00;
-    
+    //Read info
+    public final static byte READ_INFO =(byte)0x3f;
+     //init info
+    public final static byte INIT_INFO =(byte)0x2f;
     public final static byte INS_SETUP = (byte) 0x2A;
 	//INS-PIN
     public final static byte INS_CREATE_PIN = (byte) 0x40;
-    public final static byte INS_VERIFY_PIN = (byte) 0x42;
+    public final static byte INS_VERIFY_PIN = (byte) 0x01;
     public final static byte INS_CHANGE_PIN = (byte) 0x44;
     public final static byte INS_UNBLOCK_PIN = (byte) 0x46;
     
