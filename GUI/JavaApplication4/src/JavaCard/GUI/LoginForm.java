@@ -18,8 +18,6 @@ import javax.smartcardio.CardException;
  * @author Bawcs
  */
 public class LoginForm extends javax.swing.JFrame {
-
-    private int firstUSE;
     private static int login_status = 0; 
 
     /**
@@ -156,10 +154,10 @@ public class LoginForm extends javax.swing.JFrame {
 
         String pin = txtPIN.getText();
         ConnectCard connect = new ConnectCard();
-        
-        if (connect.verifyPin(pin)) {
-            if (firstUSE == 1) {
-                
+        String isNewUser = connect.verifyPin(pin);
+        System.out.println(isNewUser);
+        if (isNewUser != "") {
+            if ( isNewUser.equalsIgnoreCase("1")) {
                 PinForm pinform = new PinForm();
                 pinform.setVisible(true);
                 this.dispose();
@@ -187,8 +185,6 @@ public class LoginForm extends javax.swing.JFrame {
                 txtPIN.setEnabled(true);
                 checkbox.setEnabled(true);
                 btnLogin.setEnabled(true);
-//                firstUSE = (int) ((connect.data)[0] & 0xFF);
-                System.out.println(firstUSE);
 //                connect.setUp();
             } else {
                 JOptionPane.showMessageDialog(null, "Kết nối bị lỗi");

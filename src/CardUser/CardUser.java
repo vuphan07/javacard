@@ -42,7 +42,7 @@ public class CardUser extends Applet implements ExtendedLength
 	static OwnerPIN pin;
 	private static Cipher aesCipher;
 	private static AESKey aesKey;
-	private final static byte[] PIN_INIT_VALUE={(byte)1,(byte)2,(byte)3,(byte)4};
+	private final static byte[] PIN_INIT_VALUE={(byte)'1',(byte)'2',(byte)'3',(byte)'4'};
 	private static short LENGTH_BLOCK_AES = (short)64;
 
 	private CardUser(byte[] bArray, short bOffset, byte bLength) {
@@ -77,6 +77,7 @@ public class CardUser extends Applet implements ExtendedLength
         }
         // The installation parameters contain the PIN
         // initialization value
+		isNewUser= (byte)'1';
 		pin.update(PIN_INIT_VALUE, (short) 0, (byte)PIN_INIT_VALUE.length);
         register();
 	}
@@ -210,7 +211,6 @@ public class CardUser extends Applet implements ExtendedLength
 		 avatar = new byte[lengthAvatar];
 		 Util.arrayCopy(temp, dataOffsetInput, avatar, (short)0,(short)avatar.length);
 		 dataOffsetInput = (short)(avatar.length + lengthAvatar +1);
-		 isNewUser= (byte)0x01;
 		JCSystem.commitTransaction();	
 	}
 	

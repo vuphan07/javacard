@@ -71,7 +71,7 @@ public class ConnectCard {
     }
     
     
-    public boolean verifyPin(String pin){
+    public String verifyPin(String pin){
         connectapplet();
         byte[] pinbyte =  pin.getBytes();
         try{
@@ -87,26 +87,26 @@ public class ConnectCard {
             
             ResponseAPDU answer = channel.transmit(new CommandAPDU(APPLET.CLA,APPLET.INS_VERIFY_PIN,0x00,0x00,pinbyte));
             message = Integer.toHexString(answer.getSW());
-            System.out.println(answer);
+                  String strData = new String(answer.getData());
             switch (message.toUpperCase()) {
                 case RESPONS.SW_NO_ERROR:
-                    return true;
+                    return strData;
                 case RESPONS.SW_AUTH_FAILED:
                     JOptionPane.showMessageDialog(null, "Bạn đã nhập sai PIN");
-                    return false;
+                    return "";
                 case RESPONS.SW_IDENTITY_BLOCKED:
                     JOptionPane.showMessageDialog(null, "Bạn đã nhập sai quá số lần thử!Thẻ đã bị khoá");
-                    return false;
+                    return "";
                 case RESPONS.SW_INVALID_PARAMETER:
                     JOptionPane.showMessageDialog(null, "Độ dài pin chưa hợp lệ");
-                    return false;
+                    return "";
                 default:
-                    return false;
+                    return "";
             }
             
         }
         catch(Exception ex){
-            return false;
+            return "";
         }
     }
     
@@ -278,8 +278,6 @@ public class ConnectCard {
             ResponseAPDU answer = channel.transmit(new CommandAPDU(APPLET.CLA,APPLET.INIT_INFO,0x00,0x00,data));
 
             message = answer.toString();
-            System.out.println(answer);
-            System.out.println(message);
             switch (((message.split("="))[1]).toUpperCase()) {
                 case "9000":
                     JOptionPane.showMessageDialog(null, "Cập nhật thông tin thành công!");
@@ -309,7 +307,6 @@ public class ConnectCard {
             CardChannel channel = card.getBasicChannel();
             System.out.println("begin get info");
             ResponseAPDU answerID = channel.transmit(new CommandAPDU(APPLET.CLA,APPLET.READ_INFO,0x00,0x00));
-                           System.out.println(answerID);
 
             String strData = new String(answerID.getData());
             return strData;

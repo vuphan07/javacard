@@ -2,6 +2,14 @@
 <prevNodes>
 <jnode>
 <fileName>C:\workspace\ProjectMain\src\CardUser\CardUser.java</fileName>
+<line>79</line>
+</jnode>
+<jnode>
+<fileName>C:\workspace\ProjectMain\src\CardUser\CardUser.java</fileName>
+<line>30</line>
+</jnode>
+<jnode>
+<fileName>C:\workspace\ProjectMain\src\CardUser\CardUser.java</fileName>
 <line>311</line>
 </jnode>
 <jnode>
@@ -232,7 +240,7 @@
 <nextRecord>
 <jnode>
 <fileName>C:\workspace\ProjectMain\src\CardUser\CardUser.java</fileName>
-<line>30</line>
+<line>44</line>
 </jnode>
 </nextRecord>
 </jumpRecord>

@@ -4,6 +4,9 @@
  */
 package JavaCard.GUI;
 
+import JavaCardMain.connect.ConnectCard;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author quang
@@ -303,96 +306,16 @@ public class ViewInfo extends javax.swing.JPanel {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
-        String strId = txtID.getText();
-        try {
-
-            String strName = txtName.getText();
-            String strDate = txtDate.getText();
-            //            String strImage = "123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890";
-            byte[] byteID = strId.getBytes();
-            byte[] byteName = strName.getBytes();
-            byte[] byteDate = strDate.getBytes();
-            byte[] byteGender = this.gender.getBytes();
-            byte[] byteAvatar = this.imageBuffer.getBytes();
-            //            byte[] byteAvatar = strImage.getBytes();
-
-            if (!(byteAvatar.length > 0) || !(byteID.length > 0) || !(byteName.length > 0) || !(byteDate.length > 0) || !(byteGender.length > 0)) {
-                JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin!");
-                return;
-            }
-
-            ConnectCard connect = new ConnectCard();
-            byte[] data = new byte[byteID.length + byteName.length + byteDate.length + byteGender.length + byteAvatar.length + 4];
-            int offSet = 0;
-            System.arraycopy(byteID, 0, data, offSet, byteID.length);
-            offSet += byteID.length;
-            data[offSet] = (byte) 0x2c;
-            offSet += 1;
-            System.arraycopy(byteName, 0, data, offSet, byteName.length);
-            offSet += byteName.length;
-            data[offSet] = (byte) 0x2c;
-            offSet += 1;
-            System.arraycopy(byteDate, 0, data, offSet, byteDate.length);
-            offSet += byteDate.length;
-            data[offSet] = (byte) 0x2c;
-            offSet += 1;
-            System.arraycopy(byteGender, 0, data, offSet, byteGender.length);
-            offSet += byteGender.length;
-            data[offSet] = (byte) 0x2c;
-            offSet += 1;
-            System.arraycopy(byteAvatar, 0, data, offSet, byteAvatar.length);
-            if (connect.EditInformation(data)) {
-                //            try {
-                    //                PublicKey publicKeys = RSAAppletHelper.getInstance(
-                        //                        ConnectCard.getInstance().channel).getPublicKey();
-                    //            } catch (CardException ex) {
-                    //                Logger.getLogger(HomeForm.class.getName()).log(Level.SEVERE, null, ex);
-                    //            }
-                HomeForm home = new HomeForm();
-                home.setVisible(true);
-                this.dispose();
-
-                System.out.println("Success");
-            } else {
-                System.out.println("Sending Error");
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Có lỗi xảy ra!");
-        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
-        JFileChooser jfc = new JFileChooser();
-        jfc.setFileFilter(new JPEGImageFileFilter());
-        jfc.showOpenDialog(this);
-        File file = jfc.getSelectedFile();
-
-        if (file != null) {
-            if (file.length() > 1000000) {
-                JOptionPane.showMessageDialog(null, "Kích thước quá lớn. Vui lòng chọn ảnh khác!");
-                return;
-            }
-            try {
-                BufferedImage myPicture = ImageIO.read(file);
-                avatarContain.setIcon(new ImageIcon(myPicture));
-                String valueAvatar = encodeToString(myPicture, "jpg");
-                this.imageBuffer = valueAvatar;
-                this.isUploadAvatar = true;
-                avatarContain.setText("");
-            } catch (IOException ex) {
-                System.out.println(ex);
-            }
-        }
+        
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void radiobuttonnamStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_radiobuttonnamStateChanged
         // TODO add your handling code here:
 
-        JRadioButton radioButton = (JRadioButton) evt.getSource();
-        if (radioButton.isSelected()) {
-            this.gender = "nam";
-        }
     }//GEN-LAST:event_radiobuttonnamStateChanged
 
     private void radiobuttonnamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radiobuttonnamActionPerformed
@@ -401,10 +324,6 @@ public class ViewInfo extends javax.swing.JPanel {
 
     private void radiobuttonnuStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_radiobuttonnuStateChanged
         // TODO add your handling code here:
-        JRadioButton radioButton = (JRadioButton) evt.getSource();
-        if (radioButton.isSelected()) {
-            this.gender = "nu";
-        }
     }//GEN-LAST:event_radiobuttonnuStateChanged
 
     private void radiobuttonnuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radiobuttonnuActionPerformed
@@ -416,41 +335,18 @@ public class ViewInfo extends javax.swing.JPanel {
     }//GEN-LAST:event_txtNameActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-        ConnectCard connect = new ConnectCard();
-        String Data =  connect.ReadInformation();
-        String[] arrOfStr = Data.split(",");
-        String dataImg = arrOfStr[arrOfStr.length-1];
-        String id = arrOfStr[0];
-        String name = arrOfStr[1];
-        String ngaysinh = arrOfStr[2];
-        txtID.setText(id);
-        txtName.setText(name);
-        txtDate.setText(ngaysinh);
-        avatarContain.setText("");
-        byte[] bytes = Base64.getDecoder().decode(dataImg);
-        ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
-        try {
-            BufferedImage image  = ImageIO.read(bais);
-            avatarContain.setIcon(new ImageIcon(image));
-        } catch (Exception e) {
-            System.err.println("Error image");
-        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
-        // TODO add your handling code here:
-        this.dispose();
+    
     }//GEN-LAST:event_jLabel1MouseClicked
 
     private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
-        // TODO add your handling code here:
-        this.dispose();
+        // TODO add your handl   this.dispose();
     }//GEN-LAST:event_jLabel5MouseClicked
 
     private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseClicked
         // TODO add your handling code here:
-        this.dispose();
     }//GEN-LAST:event_jLabel6MouseClicked
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
