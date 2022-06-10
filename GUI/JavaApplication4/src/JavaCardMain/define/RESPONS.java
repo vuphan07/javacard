@@ -16,9 +16,9 @@ public class RESPONS {
     
     public final static String  SW_INVALID_PARAMETER = "9C0F";
     //card block
-    public final static String  SW_IDENTITY_BLOCKED = "9C0C";
+    public final static String  SW_IDENTITY_BLOCKED = "6999";
     //error pin
-    public final static String  SW_AUTH_FAILED = "9C02";
+    public final static String  SW_AUTH_FAILED = "6300";
     //
     public final static String  SW_OPERATION_NOT_ALLOWED = "9C03";
     // Kiểm soát lỗi

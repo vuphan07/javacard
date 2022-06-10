@@ -23,8 +23,9 @@ public class LoginForm extends javax.swing.JFrame {
     /**
      * Creates new form LoginForm
      */
-    public LoginForm() {
+    public LoginForm(int Connectstatus) {
         initComponents();
+        login_status = Connectstatus;
         if(login_status == 0){
             jlbLogin.setEnabled(false);
             txtPIN.setEnabled(false);
@@ -135,7 +136,7 @@ public class LoginForm extends javax.swing.JFrame {
         getContentPane().add(jlbLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 130, 350, 390));
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/LM logo.jpg"))); // NOI18N
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, -1, -1));
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -5, -1, 690));
 
         pack();
         setLocationRelativeTo(null);
@@ -155,17 +156,17 @@ public class LoginForm extends javax.swing.JFrame {
         String pin = txtPIN.getText();
         ConnectCard connect = new ConnectCard();
         String isNewUser = connect.verifyPin(pin);
-        System.out.println(isNewUser);
+        System.out.println(isNewUser.toString());
         if (isNewUser != "") {
             if ( isNewUser.equalsIgnoreCase("1")) {
-                PinForm pinform = new PinForm();
+                PinForm pinform = new PinForm("1234");
                 pinform.setVisible(true);
                 this.dispose();
                 
             } else {
-                HomeForm home = new HomeForm();
-                home.setVisible(true);
-                this.dispose();
+                ViewInfo info = new ViewInfo();
+                info.setVisible(true);
+//                this.dispose();
             }
             login_status = 1;
         } else {
@@ -185,7 +186,6 @@ public class LoginForm extends javax.swing.JFrame {
                 txtPIN.setEnabled(true);
                 checkbox.setEnabled(true);
                 btnLogin.setEnabled(true);
-//                connect.setUp();
             } else {
                 JOptionPane.showMessageDialog(null, "Kết nối bị lỗi");
             }
@@ -237,7 +237,7 @@ public class LoginForm extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new LoginForm().setVisible(true);
+                new LoginForm(0).setVisible(true);
             }
         });
     }

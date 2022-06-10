@@ -29,10 +29,14 @@ public class CardUser extends Applet implements ExtendedLength
 	final static byte VERIFY = (byte) 0x01;
 	final static byte INIT_DATA = (byte) 0x2f;
 	final static byte GET_INFO = (byte) 0x3f;
-
-	final static byte CREATE_USER = (byte) 0x02;
+	final static byte CREATE_NAME =(byte)0x22;
+	final static byte CREATE_BIRTHDAY =(byte)0x33;
+	final static byte CREATE_GENDER =(byte)0x44;
+	final static byte CREATE_IMAGE =(byte)0x55;
+	final static byte CREATE_PIN =(byte)0x02;
     final static byte UNLOCK_USER = (byte) 0x06;
 	final static byte PASSWORD_TRY_LIMIT =(byte)0x05;
+
 	final static byte MAX_PASS_SIZE =(byte)0x08;
 	   // signal that the PIN verification failed
     final static short SW_VERIFICATION_FAILED = 0x6300;
@@ -78,20 +82,14 @@ public class CardUser extends Applet implements ExtendedLength
         // The installation parameters contain the PIN
         // initialization value
 		isNewUser= (byte)'1';
-		pin.update(PIN_INIT_VALUE, (short) 0, (byte)PIN_INIT_VALUE.length);
         register();
 	}
 	
 	 public boolean select() {
-        
-        // The applet declines to be selected
-        // if the pin is blocked.
         if ( pin.getTriesRemaining() == 0 )
            return false;
-        
         return true;
-        
-    }// end of select method
+    }
     
      public void deselect() {
         // reset the pin value
@@ -123,6 +121,21 @@ public class CardUser extends Applet implements ExtendedLength
 		
 		switch (buf[ISO7816.OFFSET_INS])
 		{
+		case (byte) CREATE_PIN:
+			createPin(apdu,buf);
+			break;
+		case (byte) CREATE_NAME:
+			createName(apdu,buf);
+			break;
+		case (byte) CREATE_GENDER:
+			createGender(apdu,buf);
+			break;
+		case (byte) CREATE_BIRTHDAY:
+			createBirthDay(apdu,buf);
+			break;
+		case (byte) CREATE_IMAGE:
+			createImage(apdu,buf,byteRead);
+			break;
 		case (byte) INIT_DATA:
 			initInformation(apdu,buf,byteRead);
 			break;
@@ -211,11 +224,65 @@ public class CardUser extends Applet implements ExtendedLength
 		 avatar = new byte[lengthAvatar];
 		 Util.arrayCopy(temp, dataOffsetInput, avatar, (short)0,(short)avatar.length);
 		 dataOffsetInput = (short)(avatar.length + lengthAvatar +1);
+		 pin.update(PIN_INIT_VALUE, (short) 0, (byte)PIN_INIT_VALUE.length);
 		JCSystem.commitTransaction();	
 	}
 	
+	public void createName(APDU apdu,byte[] buf){
+		short dataOffset = apdu.getOffsetCdata();
+		short datalength = apdu.getIncomingLength();
+		usernameLength = datalength;
+		userName = new byte[128];
+		byte[] tempUsername = new byte[usernameLength];
+		Util.arrayCopy(buf, dataOffset, tempUsername, (short)0,(short)usernameLength);
+		byte[] dataEncrypt = encrypt(tempUsername);
+		Util.arrayCopy(dataEncrypt, (short)0x00, userName, (short)0,(short)dataEncrypt.length);
+	}
+	
+	public void createBirthDay(APDU apdu,byte[] buf){
+		short dataOffset = apdu.getOffsetCdata();
+		short datalength = apdu.getIncomingLength();
+		birthDayLength = datalength;
+		birthDay = new byte[128];
+		byte[] tempUsername = new byte[birthDayLength];
+		Util.arrayCopy(buf, dataOffset, tempUsername, (short)0,(short)birthDayLength);
+		byte[] dataEncrypt = encrypt(tempUsername);
+		Util.arrayCopy(dataEncrypt, (short)0x00, birthDay, (short)0,(short)dataEncrypt.length);
+	}
+	
+	public void createGender(APDU apdu,byte[] buf){
+		short dataOffset = apdu.getOffsetCdata();
+		short datalength = apdu.getIncomingLength();
+		genderLength = datalength;
+		gender = new byte[128];
+		byte[] tempUsername = new byte[usernameLength];
+		Util.arrayCopy(buf, dataOffset, tempUsername, (short)0,(short)genderLength);
+		byte[] dataEncrypt = encrypt(tempUsername);
+		Util.arrayCopy(dataEncrypt, (short)0x00, gender, (short)0,(short)dataEncrypt.length);
+	}
+	
+	public void createImage(APDU apdu,byte[] buf,short recvLen){
+		short pointer = 0;
+		short dataOffset = apdu.getOffsetCdata();
+		short datalength = apdu.getIncomingLength();
+		byte[] temp=new byte[datalength];
+			short lengthAvatar = datalength;
+		 avatar = new byte[lengthAvatar];
+		while (recvLen > 0)
+		{
+			Util.arrayCopy(buf, dataOffset, avatar, pointer,recvLen);
+			pointer += recvLen;
+			recvLen = apdu.receiveBytes(dataOffset);
+		}
+	
+		 // Util.arrayCopy(temp, (short)0, avatar, (short)0,(short)avatar.length);
+	}
+	
 	public void showInformation(APDU apdu) {
-
+		// if(!pin.isValidated()) {
+			// ISOException.throwIt(SW_PIN_VERIFICATION_REQUIRED);
+			// return;
+		// }
 		byte[] decryptUserId = decrypt(userId,userIdLength);
 		byte[] decryptUsername = decrypt(userName,usernameLength);
 		byte[] decryptBirthday = decrypt(birthDay,birthDayLength);
@@ -259,6 +326,45 @@ public class CardUser extends Applet implements ExtendedLength
         }
 	}
 	
+	public void createPin(APDU apdu,byte[] buf) {
+		JCSystem.beginTransaction();
+		byte[] decryptUserId = decrypt(userId,userIdLength);
+		byte[] decryptUsername = decrypt(userName,usernameLength);
+		byte[] decryptBirthday = decrypt(birthDay,birthDayLength);
+		byte[] decryptGender = decrypt(gender,genderLength);
+		short dataOffset = apdu.getOffsetCdata();
+		short datalength = apdu.getIncomingLength();
+		byte[] newPin = new byte[datalength];
+		Util.arrayCopy(buf,dataOffset,newPin,(short)0,(short)datalength);
+		
+		byte[] keyBytes = JCSystem.makeTransientByteArray(LENGTH_BLOCK_AES, JCSystem.CLEAR_ON_DESELECT);
+        try {
+            HMacSHA512.computeHmacSha512(newPin,(short)0x00,(short)newPin.length,keyBytes,(short)0);
+            aesKey.setKey(keyBytes, (short) 0);
+        } finally {
+            Util.arrayFillNonAtomic(keyBytes, (short) 0, LENGTH_BLOCK_AES, (byte) 0);
+        }
+        pin.update(newPin,(short)0,(byte)newPin.length);
+		//
+		//
+		byte[] dataEncrypt = new byte[128];
+		dataEncrypt = encrypt(decryptUserId);
+		Util.arrayCopy(dataEncrypt,(short)0x00, userId, (short)0,(short)dataEncrypt.length);
+		//
+		dataEncrypt = encrypt(decryptUsername);
+		Util.arrayCopy(dataEncrypt, (short)0x00, userName, (short)0,(short)dataEncrypt.length);
+		//
+		dataEncrypt = encrypt(decryptBirthday);
+		Util.arrayCopy(dataEncrypt, (short)0x00, birthDay, (short)0,(short)dataEncrypt.length);
+		//
+		gender = new byte[128];
+		dataEncrypt = encrypt(decryptGender);
+		Util.arrayCopy(dataEncrypt, (short)0x00, gender, (short)0,(short)dataEncrypt.length);
+		//
+		isNewUser= (byte)'0';
+		JCSystem.commitTransaction();
+	}
+	
 	public byte[] encrypt(byte[] encryptData) {
         aesCipher.init(aesKey, Cipher.MODE_ENCRYPT);
         short flag = (short) 1;
@@ -273,9 +379,7 @@ public class CardUser extends Applet implements ExtendedLength
     			}
     		}
     	}
-        // short newLength = addPadding(temp, (short) 0, (short) encryptData.length);
         byte[] dataEncrypted; 
-        
         try{
 				dataEncrypted = JCSystem.makeTransientByteArray((short) 128, JCSystem.CLEAR_ON_DESELECT);
 			} catch(SystemException e){
@@ -306,8 +410,32 @@ public class CardUser extends Applet implements ExtendedLength
     }
 	
 	private void verify(APDU apdu,byte[] buf,byte length) {
-		if ( pin.check(buf, ISO7816.OFFSET_CDATA,length) == false ) 
+		if ( pin.check(buf, ISO7816.OFFSET_CDATA,length) == false ) {
+			byte[] count = new byte[1];
+			switch(pin.getTriesRemaining()){
+				case (byte) 0x01:
+					count[0] = (byte)'1';
+					break;
+				case (byte) 0x02:
+					count[0] = (byte)'2';
+					break;
+				case (byte) 0x03:
+					count[0] = (byte)'3';
+					break;
+				case (byte) 0x04:
+					count[0] = (byte)'4';
+					break;
+				case (byte) 0x00:
+					count[0] = (byte)'0';
+					break;
+			}
+			
+			short le = apdu.setOutgoing();
+			apdu.setOutgoingLength((short)1);
+			apdu.sendBytesLong(count, (short)0, (short)1);
 			ISOException.throwIt(SW_VERIFICATION_FAILED);
+		}
+
 			byte[] status = new byte[1];
 			status[0] = isNewUser;
 			short le = apdu.setOutgoing();

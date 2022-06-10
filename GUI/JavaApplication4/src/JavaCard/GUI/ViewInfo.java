@@ -1,23 +1,94 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package JavaCard.GUI;
 
+import static JavaCard.GUI.HomeForm.encodeToString;
 import JavaCardMain.connect.ConnectCard;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.util.Base64;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileFilter;
 
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ */
 /**
  *
  * @author quang
  */
-public class ViewInfo extends javax.swing.JPanel {
+public class ViewInfo extends javax.swing.JFrame {
+
+    private String id;
+    private String name;
+    private String birthDay;
+    private BufferedImage bufferImage;
+    private String gender;
+    private String newGender;
+    private BufferedImage newBufferImage;
 
     /**
-     * Creates new form ViewInfo
+     * Creates new form ViewInfo2
      */
     public ViewInfo() {
         initComponents();
+        hiddenButton(buttonSubmitChangeName);
+        hiddenButton(buttonSubmitChangeGender);
+        hiddenButton(buttonSubmitChangeBirthDay);
+
+        ConnectCard connect = new ConnectCard();
+        String Data = connect.ReadInformation();
+        String[] arrOfStr = Data.split(",");
+        if(arrOfStr.length <= 0 || Data.equals("")) {
+            return;
+        }
+        String dataImg = arrOfStr[arrOfStr.length - 1];
+        this.id = arrOfStr[0];
+        this.name = arrOfStr[1];
+        this.birthDay = arrOfStr[2];
+        this.gender = arrOfStr[3];
+        txtID.setText(this.id);
+        txtID.setEditable(false);
+        txtID.setEnabled(false);
+        txtName.setText(this.name);
+        txtName.setEditable(false);
+        txtName.setEnabled(false);
+        txtDate.setText(this.birthDay);
+        txtDate.setEditable(false);
+        txtDate.setEnabled(false);
+        jButton5.setVisible(false);
+        jButton6.setVisible(false);
+        if (this.gender.equals("nam")) {
+            radiobuttonnam.setSelected(true);
+        } else {
+            radiobuttonnu.setSelected(true);
+        }
+
+        avatarContain.setText("");
+
+        byte[] bytes = Base64.getDecoder().decode(dataImg);
+        ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+        try {
+            BufferedImage image = ImageIO.read(bais);
+            this.bufferImage = image;
+            avatarContain.setIcon(new ImageIcon(image));
+        } catch (Exception e) {
+            System.err.println("Error image");
+        }
+    }
+
+    public void hiddenButton(javax.swing.JLabel button) {
+        button.setVisible(false);
+    }
+
+    public void displayButton(javax.swing.JLabel button) {
+        button.setVisible(true);
     }
 
     /**
@@ -29,6 +100,8 @@ public class ViewInfo extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
+        jPanel1 = new javax.swing.JPanel();
         jpnInfo = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
@@ -43,13 +116,21 @@ public class ViewInfo extends javax.swing.JPanel {
         radiobuttonnam = new javax.swing.JRadioButton();
         radiobuttonnu = new javax.swing.JRadioButton();
         txtName = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
+        buttonEditName = new javax.swing.JLabel();
+        buttonEditBirthDay = new javax.swing.JLabel();
+        buttonSubmitChangeName = new javax.swing.JLabel();
+        buttonSubmitChangeGender = new javax.swing.JLabel();
+        buttonSubmitChangeBirthDay = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jpnInfo.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -75,6 +156,11 @@ public class ViewInfo extends javax.swing.JPanel {
 
         txtID.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         txtID.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)));
+        txtID.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtIDActionPerformed(evt);
+            }
+        });
 
         txtDate.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         txtDate.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)));
@@ -87,7 +173,7 @@ public class ViewInfo extends javax.swing.JPanel {
         jButton1.setBackground(new java.awt.Color(0, 102, 153));
         jButton1.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Khởi tạo");
+        jButton1.setText("Đổi mã pin");
         jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jButton1MouseClicked(evt);
@@ -99,7 +185,12 @@ public class ViewInfo extends javax.swing.JPanel {
             }
         });
 
-        jButton5.setText("Sửa");
+        jButton5.setText("Hủy");
+        jButton5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton5MouseClicked(evt);
+            }
+        });
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);
@@ -107,8 +198,14 @@ public class ViewInfo extends javax.swing.JPanel {
         });
 
         avatarContain.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        avatarContain.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                avatarContainMouseClicked(evt);
+            }
+        });
 
         radiobuttonnam.setBackground(new java.awt.Color(255, 255, 255));
+        buttonGroup1.add(radiobuttonnam);
         radiobuttonnam.setText("Nam");
         radiobuttonnam.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -122,6 +219,7 @@ public class ViewInfo extends javax.swing.JPanel {
         });
 
         radiobuttonnu.setBackground(new java.awt.Color(255, 255, 255));
+        buttonGroup1.add(radiobuttonnu);
         radiobuttonnu.setText("Nữ");
         radiobuttonnu.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -142,13 +240,6 @@ public class ViewInfo extends javax.swing.JPanel {
             }
         });
 
-        jButton2.setText("getinfo");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
         jButton6.setText("Lưu");
         jButton6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -156,37 +247,82 @@ public class ViewInfo extends javax.swing.JPanel {
             }
         });
 
+        buttonEditName.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons8-edit-24.png"))); // NOI18N
+        buttonEditName.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                buttonEditNameMouseClicked(evt);
+            }
+        });
+
+        buttonEditBirthDay.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons8-edit-24.png"))); // NOI18N
+        buttonEditBirthDay.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                buttonEditBirthDayMouseClicked(evt);
+            }
+        });
+
+        buttonSubmitChangeName.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons8-ok-24.png"))); // NOI18N
+        buttonSubmitChangeName.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                buttonSubmitChangeNameMouseClicked(evt);
+            }
+        });
+
+        buttonSubmitChangeGender.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons8-ok-24.png"))); // NOI18N
+        buttonSubmitChangeGender.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                buttonSubmitChangeGenderMouseClicked(evt);
+            }
+        });
+
+        buttonSubmitChangeBirthDay.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons8-ok-24.png"))); // NOI18N
+        buttonSubmitChangeBirthDay.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                buttonSubmitChangeBirthDayMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jpnInfoLayout = new javax.swing.GroupLayout(jpnInfo);
         jpnInfo.setLayout(jpnInfoLayout);
         jpnInfoLayout.setHorizontalGroup(
             jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpnInfoLayout.createSequentialGroup()
-                .addGap(33, 33, 33)
-                .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
-                    .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jpnInfoLayout.createSequentialGroup()
                 .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jpnInfoLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2))
+                        .addGap(33, 33, 33)
+                        .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
+                            .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(jpnInfoLayout.createSequentialGroup()
-                        .addGap(77, 77, 77)
-                        .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(txtName, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE)
-                                .addComponent(txtDate)
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpnInfoLayout.createSequentialGroup()
-                                    .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGroup(jpnInfoLayout.createSequentialGroup()
-                                            .addComponent(radiobuttonnam, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(radiobuttonnu)))
-                                    .addGap(62, 62, 62))))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(61, 61, 61)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(29, 29, 29)
+                .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(txtName, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE)
+                        .addComponent(txtDate)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpnInfoLayout.createSequentialGroup()
+                            .addGap(25, 25, 25)
+                            .addComponent(radiobuttonnam, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(radiobuttonnu)
+                            .addGap(18, 18, 18)
+                            .addComponent(buttonSubmitChangeGender)
+                            .addGap(20, 20, 20))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jpnInfoLayout.createSequentialGroup()
+                        .addComponent(buttonEditName)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(buttonSubmitChangeName))
+                    .addGroup(jpnInfoLayout.createSequentialGroup()
+                        .addComponent(buttonEditBirthDay)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(buttonSubmitChangeBirthDay, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
                 .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jpnInfoLayout.createSequentialGroup()
                         .addComponent(jButton5)
@@ -203,17 +339,25 @@ public class ViewInfo extends javax.swing.JPanel {
                 .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jpnInfoLayout.createSequentialGroup()
                         .addGap(37, 37, 37)
-                        .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(33, 33, 33)
-                        .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jpnInfoLayout.createSequentialGroup()
+                                .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(43, 43, 43)
+                                .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(buttonEditName)))
+                            .addComponent(buttonSubmitChangeName))
                         .addGap(38, 38, 38)
-                        .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(buttonEditBirthDay, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(buttonSubmitChangeBirthDay, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jpnInfoLayout.createSequentialGroup()
                         .addGap(45, 45, 45)
                         .addComponent(avatarContain, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -224,24 +368,26 @@ public class ViewInfo extends javax.swing.JPanel {
                     .addComponent(jButton5)
                     .addComponent(jButton6))
                 .addGap(2, 2, 2)
-                .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(radiobuttonnam)
-                    .addComponent(radiobuttonnu))
-                .addGap(42, 42, 42)
-                .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(radiobuttonnam)
+                        .addComponent(radiobuttonnu))
+                    .addComponent(buttonSubmitChangeGender, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(44, 44, 44)
+                .addComponent(jButton1)
                 .addContainerGap(61, Short.MAX_VALUE))
         );
 
-        jPanel1.setBackground(new java.awt.Color(0, 102, 153));
-        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPanel1.add(jpnInfo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 110, 780, -1));
+
+        jPanel2.setBackground(new java.awt.Color(0, 102, 153));
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(102, 204, 255));
         jLabel2.setText("Thông tin");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 30, -1, -1));
+        jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 30, -1, -1));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
@@ -251,7 +397,7 @@ public class ViewInfo extends javax.swing.JPanel {
                 jLabel1MouseClicked(evt);
             }
         });
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 10, 20, 30));
+        jPanel2.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 10, 20, 30));
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
@@ -261,7 +407,7 @@ public class ViewInfo extends javax.swing.JPanel {
                 jLabel5MouseClicked(evt);
             }
         });
-        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(860, 10, 30, 20));
+        jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(860, 10, 30, 20));
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
@@ -271,30 +417,37 @@ public class ViewInfo extends javax.swing.JPanel {
                 jLabel6MouseClicked(evt);
             }
         });
-        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 10, 20, 20));
+        jPanel2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 10, 20, 20));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 780, 110));
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 780, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jpnInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+            .addGap(0, 800, Short.MAX_VALUE)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 800, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jpnInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addGap(0, 544, Short.MAX_VALUE)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 544, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
         );
+
+        pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void txtIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIDActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtIDActionPerformed
 
     private void txtDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDateActionPerformed
         // TODO add your handling code here:
@@ -306,20 +459,86 @@ public class ViewInfo extends javax.swing.JPanel {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
+        new PinForm("1234").setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    public class JPEGImageFileFilter extends FileFilter {
+
+        @Override
+        public boolean accept(File f) {
+            if (f.getName().toLowerCase().endsWith(".jpeg")) {
+                return true;
+            }
+            if (f.getName().toLowerCase().endsWith(".jpg")) {
+                return true;
+            }
+            return f.isDirectory();
+        }
+
+        @Override
+        public String getDescription() {
+            return "JPEG files";
+        }
+
+    }
+
+    public static String encodeToString(BufferedImage image, String type) {
+        String imageString = null;
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
+        try {
+            ImageIO.write(image, type, bos);
+            byte[] imageBytes = bos.toByteArray();
+            Base64.Encoder encoder = Base64.getEncoder();
+            imageString = encoder.encodeToString(imageBytes);
+
+            bos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return imageString;
+    }
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
-        
+        // TODO add your handling code here:
+//        JFileChooser jfc = new JFileChooser();
+//        jfc.setFileFilter(new ViewInfo.JPEGImageFileFilter());
+//        jfc.showOpenDialog(this);
+//        File file = jfc.getSelectedFile();
+//
+//        if (file != null) {
+//            if (file.length() > 1000000) {
+//                JOptionPane.showMessageDialog(null, "Kích thước quá lớn. Vui lòng chọn ảnh khác!");
+//                return;
+//            }
+//            try {
+//                BufferedImage myPicture = ImageIO.read(file);
+//                this.newBufferImage = myPicture;
+//                avatarContain.setIcon(new ImageIcon(myPicture.getScaledInstance(125, 155, Image.SCALE_SMOOTH)));
+//                avatarContain.setText("");
+//            } catch (IOException ex) {
+//                System.out.println(ex);
+//            }
+//        }
+        avatarContain.setIcon(new ImageIcon(this.bufferImage.getScaledInstance(125, 155, Image.SCALE_SMOOTH)));
+        this.newBufferImage = null;
+        jButton5.setVisible(false);
+        jButton6.setVisible(false);
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void radiobuttonnamStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_radiobuttonnamStateChanged
         // TODO add your handling code here:
-
     }//GEN-LAST:event_radiobuttonnamStateChanged
 
     private void radiobuttonnamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radiobuttonnamActionPerformed
         // TODO add your handling code here:
+        this.newGender = "nam";
+        if (this.newGender.equals(this.gender)) {
+            buttonSubmitChangeGender.setVisible(false);
+        } else {
+            buttonSubmitChangeGender.setVisible(true);
+        }
     }//GEN-LAST:event_radiobuttonnamActionPerformed
 
     private void radiobuttonnuStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_radiobuttonnuStateChanged
@@ -328,17 +547,36 @@ public class ViewInfo extends javax.swing.JPanel {
 
     private void radiobuttonnuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radiobuttonnuActionPerformed
         // TODO add your handling code here:
+        this.newGender = "nu";
+        if (this.newGender.equals(this.gender)) {
+            buttonSubmitChangeGender.setVisible(false);
+        } else {
+            buttonSubmitChangeGender.setVisible(true);
+        }
     }//GEN-LAST:event_radiobuttonnuActionPerformed
 
     private void txtNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNameActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNameActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-    }//GEN-LAST:event_jButton2ActionPerformed
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        // TODO add your handling code here:
+        String valueAvatar = encodeToString(this.newBufferImage, "jpg");
+        byte[] bytesImage = valueAvatar.getBytes();
+        ConnectCard connect = new ConnectCard();
+        if (connect.EditImage(bytesImage)) {
+            this.bufferImage = this.newBufferImage;
+            this.newBufferImage = null;
+            jButton5.setVisible(false);
+            jButton6.setVisible(false);
+
+        } else {
+            System.out.println("Sending Error");
+        }
+    }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
-    
+
     }//GEN-LAST:event_jLabel1MouseClicked
 
     private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
@@ -347,17 +585,182 @@ public class ViewInfo extends javax.swing.JPanel {
 
     private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseClicked
         // TODO add your handling code here:
+        this.dispose();
     }//GEN-LAST:event_jLabel6MouseClicked
 
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+    private void buttonEditNameMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonEditNameMouseClicked
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton6ActionPerformed
+        if (buttonSubmitChangeName.isVisible()) {
+            this.hiddenButton(buttonSubmitChangeName);
+            txtName.setText(this.name);
+            txtName.setEditable(false);
+            txtName.setEnabled(false);
+            buttonEditName.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons8-edit-24.png")));
+        } else {
+            txtName.setEditable(true);
+            txtName.setEnabled(true);
+            this.displayButton(buttonSubmitChangeName);
+            buttonEditName.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons8-cancel-24.png")));
+        }
+    }//GEN-LAST:event_buttonEditNameMouseClicked
 
+    private void buttonSubmitChangeNameMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonSubmitChangeNameMouseClicked
+        // TODO add your handling code here:
+        if (txtName.getText().equals(this.name)) {
+            this.hiddenButton(buttonSubmitChangeName);
+            txtName.setEditable(false);
+            txtName.setEnabled(false);
+            buttonEditName.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons8-edit-24.png")));
+            return;
+        }
+        byte[] byteName = txtName.getText().getBytes();
+        if (!(byteName.length > 0)) {
+            JOptionPane.showMessageDialog(null, "Tên không hợp lệ");
+            return;
+        }
+        ConnectCard connect = new ConnectCard();
+        if (connect.EditName(byteName)) {
+            this.hiddenButton(buttonSubmitChangeName);
+            txtName.setEditable(false);
+            txtName.setEnabled(false);
+            this.name = txtName.getText();
+            buttonEditName.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons8-edit-24.png")));
+        } else {
+            System.out.println("Sending Error");
+        }
+    }//GEN-LAST:event_buttonSubmitChangeNameMouseClicked
+
+    private void buttonSubmitChangeGenderMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonSubmitChangeGenderMouseClicked
+        // TODO add your handling code here:
+        ConnectCard connect = new ConnectCard();
+        byte[] byteName = this.newGender.getBytes();
+
+        if (connect.EditName(byteName)) {
+            this.hiddenButton(buttonSubmitChangeGender);
+            this.gender = this.newGender;
+        } else {
+            System.out.println("Sending Error");
+        }
+    }//GEN-LAST:event_buttonSubmitChangeGenderMouseClicked
+
+    private void buttonEditBirthDayMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonEditBirthDayMouseClicked
+        // TODO add your handling code here:
+
+        if (buttonSubmitChangeBirthDay.isVisible()) {
+            this.hiddenButton(buttonSubmitChangeBirthDay);
+            txtDate.setText(this.birthDay);
+            txtDate.setEditable(false);
+            txtDate.setEnabled(false);
+            buttonEditBirthDay.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons8-edit-24.png")));
+        } else {
+            txtDate.setEditable(true);
+            txtDate.setEnabled(true);
+            this.displayButton(buttonSubmitChangeBirthDay);
+            buttonEditBirthDay.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons8-cancel-24.png")));
+        }
+    }//GEN-LAST:event_buttonEditBirthDayMouseClicked
+
+    private void buttonSubmitChangeBirthDayMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonSubmitChangeBirthDayMouseClicked
+        // TODO add your handling code here:
+        if (txtDate.getText().equals(this.birthDay)) {
+            this.hiddenButton(buttonSubmitChangeBirthDay);
+            txtDate.setEditable(false);
+            txtDate.setEnabled(false);
+            buttonEditBirthDay.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons8-edit-24.png")));
+            return;
+        }
+        byte[] byteName = txtDate.getText().getBytes();
+        if (!(byteName.length > 0)) {
+            JOptionPane.showMessageDialog(null, "ngày sinh không hợp lệ");
+            return;
+        }
+        ConnectCard connect = new ConnectCard();
+        if (connect.EditBirthDay(byteName)) {
+            this.hiddenButton(buttonSubmitChangeBirthDay);
+            txtDate.setEditable(false);
+            txtDate.setEnabled(false);
+            this.birthDay = txtDate.getText();
+            buttonEditBirthDay.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons8-edit-24.png")));
+        } else {
+            System.out.println("Sending Error");
+        }
+    }//GEN-LAST:event_buttonSubmitChangeBirthDayMouseClicked
+
+    private void avatarContainMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_avatarContainMouseClicked
+        // TODO add your handling code here:
+        JFileChooser jfc = new JFileChooser();
+        jfc.setFileFilter(new ViewInfo.JPEGImageFileFilter());
+        jfc.showOpenDialog(this);
+        File file = jfc.getSelectedFile();
+
+        if (file != null) {
+            if (file.length() > 10000) {
+                JOptionPane.showMessageDialog(null, "Kích thước quá lớn. Vui lòng chọn ảnh khác!");
+                return;
+            }
+            try {
+                BufferedImage myPicture = ImageIO.read(file);
+                this.newBufferImage = myPicture;
+                avatarContain.setIcon(new ImageIcon(myPicture.getScaledInstance(125, 155, Image.SCALE_SMOOTH)));
+                avatarContain.setText("");
+                jButton5.setVisible(true);
+                jButton6.setVisible(true);
+            } catch (IOException ex) {
+                System.out.println("change image error");
+                System.out.println(ex);
+            }
+        }
+    }//GEN-LAST:event_avatarContainMouseClicked
+
+    private void jButton5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton5MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton5MouseClicked
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(ViewInfo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(ViewInfo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(ViewInfo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(ViewInfo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new ViewInfo().setVisible(true);
+            }
+        });
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel avatarContain;
+    private javax.swing.JLabel buttonEditBirthDay;
+    private javax.swing.JLabel buttonEditName;
+    private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JLabel buttonSubmitChangeBirthDay;
+    private javax.swing.JLabel buttonSubmitChangeGender;
+    private javax.swing.JLabel buttonSubmitChangeName;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
@@ -370,6 +773,7 @@ public class ViewInfo extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jpnInfo;
     private javax.swing.JRadioButton radiobuttonnam;
     private javax.swing.JRadioButton radiobuttonnu;

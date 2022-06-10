@@ -19,80 +19,86 @@ import java.util.Arrays;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 import JavaCardMain.define.*;
+
 /**
  *
  * @author Spark_Mac
  */
 public class ConnectCard {
-    public byte [] data;
+
+    public byte[] data;
     public String message;
     public String strID;
     public String strName;
     public String strDate;
     public String strPhone;
-    
+
     private Card card;
     private TerminalFactory factory;
     public CardChannel channel;
     private CardTerminal terminal;
     private List<CardTerminal> terminals;
-    
+
     private static ConnectCard instance;
+
     public static ConnectCard getInstance() {
         if (instance == null) {
             instance = new ConnectCard();
         }
         return instance;
     }
-    public String connectapplet(){
-        try{
+
+    public String connectapplet() {
+        try {
             factory = TerminalFactory.getDefault();
             terminals = factory.terminals().list();
-            
+
             terminal = terminals.get(0);
-            
+
             card = terminal.connect("T=1");
-            
+
             channel = card.getBasicChannel();
-            
-            ResponseAPDU answer = channel.transmit(new CommandAPDU(APPLET.CLA,0xA4,0x04,0x00,APPLET.AID_APPLET));
+
+            ResponseAPDU answer = channel.transmit(new CommandAPDU(APPLET.CLA, 0xA4, 0x04, 0x00, APPLET.AID_APPLET));
             String kq = answer.toString();
             data = answer.getData();
-            System.out.println("Connect thành công");            
+            System.out.println("Connect thành công");
             System.out.println(kq);
 
             return kq;
-            
-        }
-        catch(Exception ex){
+
+        } catch (Exception ex) {
             System.err.println("Connect thất bại");
             return "Error";
         }
     }
-    
-    
-    public String verifyPin(String pin){
+
+    public String verifyPin(String pin) {
         connectapplet();
-        byte[] pinbyte =  pin.getBytes();
-        try{
-            
+        byte[] pinbyte = pin.getBytes();
+        try {
+
             TerminalFactory factory = TerminalFactory.getDefault();
             List<CardTerminal> terminals = factory.terminals().list();
-            
+
             CardTerminal terminal = terminals.get(0);
-            
+
             Card card = terminal.connect("T=1");
-            
+
             CardChannel channel = card.getBasicChannel();
-            
-            ResponseAPDU answer = channel.transmit(new CommandAPDU(APPLET.CLA,APPLET.INS_VERIFY_PIN,0x00,0x00,pinbyte));
+
+            ResponseAPDU answer = channel.transmit(new CommandAPDU(APPLET.CLA, APPLET.INS_VERIFY_PIN, 0x00, 0x00, pinbyte));
             message = Integer.toHexString(answer.getSW());
-                  String strData = new String(answer.getData());
+            String strData = new String(answer.getData());
+
             switch (message.toUpperCase()) {
                 case RESPONS.SW_NO_ERROR:
                     return strData;
                 case RESPONS.SW_AUTH_FAILED:
-                    JOptionPane.showMessageDialog(null, "Bạn đã nhập sai PIN");
+                    if (strData == "0") {
+                        JOptionPane.showMessageDialog(null, "Tài khoản của bạn đã bị khóa");
+                    }
+                    JOptionPane.showMessageDialog(null, "Bạn đã nhập sai mã PIN bạn còn " + strData + " lượt thử lại");
                     return "";
                 case RESPONS.SW_IDENTITY_BLOCKED:
                     JOptionPane.showMessageDialog(null, "Bạn đã nhập sai quá số lần thử!Thẻ đã bị khoá");
@@ -103,36 +109,27 @@ public class ConnectCard {
                 default:
                     return "";
             }
-            
-        }
-        catch(Exception ex){
+
+        } catch (Exception ex) {
             return "";
         }
     }
-    
-    public boolean createPIN(String pin){
-        
-        byte[] pinbyte =  pin.getBytes();
-        byte lengt = (byte) pinbyte.length;
-        
-        byte[] send = new byte[lengt+1];
-        send[0] = lengt;
-        for(int i =1;i<send.length;i++){
-            send[i] = pinbyte[i-1];
-        }
-        try{
-            
+
+    public boolean createPIN(String pin) {
+        byte[] pinbyte = pin.getBytes();
+        try {
+
             TerminalFactory factory = TerminalFactory.getDefault();
             List<CardTerminal> terminals = factory.terminals().list();
-            
+
             CardTerminal terminal = terminals.get(0);
-            
+
             Card card = terminal.connect("T=1");
-            
+
             CardChannel channel = card.getBasicChannel();
-            
-            ResponseAPDU answer = channel.transmit(new CommandAPDU(APPLET.CLA,APPLET.INS_CREATE_PIN,0x00,0x03,send));
-            
+
+            ResponseAPDU answer = channel.transmit(new CommandAPDU(APPLET.CLA, APPLET.INS_CREATE_PIN, 0x00, 0x03, pinbyte));
+
             message = answer.toString();
             switch (((message.split("="))[1]).toUpperCase()) {
                 case RESPONS.SW_NO_ERROR:
@@ -146,43 +143,42 @@ public class ConnectCard {
                 default:
                     return false;
             }
-            
-        }
-        catch(Exception ex){
+
+        } catch (Exception ex) {
             return false;
         }
     }
-    
-    public boolean ChangePIN(String oldPin,String newPin){
+
+    public boolean ChangePIN(String oldPin, String newPin) {
         connectapplet();
-        byte[] pinOldByte =  oldPin.getBytes();
+        byte[] pinOldByte = oldPin.getBytes();
         byte lengtOld = (byte) pinOldByte.length;
-        
-        byte[] pinNewByte =  newPin.getBytes();
+
+        byte[] pinNewByte = newPin.getBytes();
         byte lengtNew = (byte) pinNewByte.length;
-        
-        byte[] send = new byte[lengtNew+lengtOld+2];
+
+        byte[] send = new byte[lengtNew + lengtOld + 2];
         int offSet = 0;
         send[offSet] = lengtOld;
-        offSet+=1;
+        offSet += 1;
         System.arraycopy(pinOldByte, 0, send, offSet, lengtOld);
-        offSet+=lengtOld;
+        offSet += lengtOld;
         send[offSet] = lengtNew;
-        offSet+=1;
+        offSet += 1;
         System.arraycopy(pinNewByte, 0, send, offSet, lengtNew);
-        try{
-            
+        try {
+
             TerminalFactory factory = TerminalFactory.getDefault();
             List<CardTerminal> terminals = factory.terminals().list();
-            
+
             CardTerminal terminal = terminals.get(0);
-            
+
             Card card = terminal.connect("T=1");
-            
+
             CardChannel channel = card.getBasicChannel();
-            
-            ResponseAPDU answer = channel.transmit(new CommandAPDU(APPLET.CLA,APPLET.INS_CHANGE_PIN,0x00,0x00,send));
-            
+
+            ResponseAPDU answer = channel.transmit(new CommandAPDU(APPLET.CLA, APPLET.INS_CHANGE_PIN, 0x00, 0x00, send));
+
             message = answer.toString();
             switch (((message.split("="))[1]).toUpperCase()) {
                 case RESPONS.SW_NO_ERROR:
@@ -197,32 +193,32 @@ public class ConnectCard {
                 default:
                     return false;
             }
-            
-        }
-        catch(Exception ex){
+
+        } catch (Exception ex) {
             return false;
         }
     }
-    public boolean UnblockPin(byte [] aid){
-        try{
-            
+
+    public boolean UnblockPin(byte[] aid) {
+        try {
+
             TerminalFactory factory = TerminalFactory.getDefault();
             List<CardTerminal> terminals = factory.terminals().list();
-            
+
             CardTerminal terminal = terminals.get(0);
-            
+
             Card card = terminal.connect("T=1");
-            
+
             CardChannel channel = card.getBasicChannel();
-            
-            ResponseAPDU selectBlockcard = channel.transmit(new CommandAPDU(0x00,0xA4,0x00,0x00,aid));
-            
+
+            ResponseAPDU selectBlockcard = channel.transmit(new CommandAPDU(0x00, 0xA4, 0x00, 0x00, aid));
+
             String check = Integer.toHexString(selectBlockcard.getSW());
-            
-            if(check.equals(RESPONS.SW_NO_ERROR)){
+
+            if (check.equals(RESPONS.SW_NO_ERROR)) {
                 CardChannel channel2 = card.getBasicChannel();
-            
-            ResponseAPDU unblockCard = channel2.transmit(new CommandAPDU(APPLET.CLA,APPLET.INS_UNBLOCK_PIN,0x00,0x00));
+
+                ResponseAPDU unblockCard = channel2.transmit(new CommandAPDU(APPLET.CLA, APPLET.INS_UNBLOCK_PIN, 0x00, 0x00));
                 message = unblockCard.toString();
                 switch (((message.split("="))[1]).toUpperCase()) {
                     case RESPONS.SW_NO_ERROR:
@@ -234,48 +230,45 @@ public class ConnectCard {
                     default:
                         return false;
                 }
-            }
-            else{
+            } else {
                 return false;
             }
-        }
-        catch(Exception ex){
+        } catch (Exception ex) {
             return false;
         }
     }
-    
-    public void setUp(){
-        
-        try{
-            
+
+    public void setUp() {
+
+        try {
+
             TerminalFactory factory = TerminalFactory.getDefault();
             List<CardTerminal> terminals = factory.terminals().list();
-            
+
             CardTerminal terminal = terminals.get(0);
-            
+
             Card card = terminal.connect("T=1");
-            
+
             CardChannel channel = card.getBasicChannel();
-            
-            ResponseAPDU answer = channel.transmit(new CommandAPDU(APPLET.CLA,APPLET.INS_SETUP,0x00,0x00));
-            
-        }
-        catch(Exception ex){
+
+            ResponseAPDU answer = channel.transmit(new CommandAPDU(APPLET.CLA, APPLET.INS_SETUP, 0x00, 0x00));
+
+        } catch (Exception ex) {
             //return "Error";
         }
-    
+
     }
-    
-    public boolean EditInformation(byte [] data){
-        try{
+
+    public boolean EditInformation(byte[] data) {
+        try {
             connectapplet();
             TerminalFactory factory = TerminalFactory.getDefault();
             List<CardTerminal> terminals = factory.terminals().list();
-            
+
             CardTerminal terminal = terminals.get(0);
             Card card = terminal.connect("T=1");
             CardChannel channel = card.getBasicChannel();
-            ResponseAPDU answer = channel.transmit(new CommandAPDU(APPLET.CLA,APPLET.INIT_INFO,0x00,0x00,data));
+            ResponseAPDU answer = channel.transmit(new CommandAPDU(APPLET.CLA, APPLET.INIT_INFO, 0x00, 0x00, data));
 
             message = answer.toString();
             switch (((message.split("="))[1]).toUpperCase()) {
@@ -288,37 +281,153 @@ public class ConnectCard {
                 default:
                     return false;
             }
-            
-        }
-        catch(Exception ex){
+
+        } catch (Exception ex) {
             return false;
         }
     }
-    public String ReadInformation(){
-        try{
-             connectapplet();
+
+    public boolean EditName(byte[] data) {
+        try {
+            connectapplet();
             TerminalFactory factory = TerminalFactory.getDefault();
             List<CardTerminal> terminals = factory.terminals().list();
-            
+
             CardTerminal terminal = terminals.get(0);
-            
             Card card = terminal.connect("T=1");
-            
+            CardChannel channel = card.getBasicChannel();
+            ResponseAPDU answer = channel.transmit(new CommandAPDU(APPLET.CLA, APPLET.INS_NAME, 0x00, 0x00, data));
+
+            message = answer.toString();
+            switch (((message.split("="))[1]).toUpperCase()) {
+                case "9000":
+                    JOptionPane.showMessageDialog(null, "Cập nhật thông tin thành công!");
+                    return true;
+                case RESPONS.SW_WRONG_LENGTH:
+                    JOptionPane.showMessageDialog(null, "Dữ liệu quá lớn, vui lòng kiểm tra lại!");
+                    return false;
+                default:
+                    return false;
+            }
+
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+
+    public boolean EditBirthDay(byte[] data) {
+        try {
+            connectapplet();
+            TerminalFactory factory = TerminalFactory.getDefault();
+            List<CardTerminal> terminals = factory.terminals().list();
+
+            CardTerminal terminal = terminals.get(0);
+            Card card = terminal.connect("T=1");
+            CardChannel channel = card.getBasicChannel();
+            ResponseAPDU answer = channel.transmit(new CommandAPDU(APPLET.CLA, APPLET.INS_BIRTHDAY, 0x00, 0x00, data));
+
+            message = answer.toString();
+            switch (((message.split("="))[1]).toUpperCase()) {
+                case "9000":
+                    JOptionPane.showMessageDialog(null, "Cập nhật thông tin thành công!");
+                    return true;
+                case RESPONS.SW_WRONG_LENGTH:
+                    JOptionPane.showMessageDialog(null, "Dữ liệu quá lớn, vui lòng kiểm tra lại!");
+                    return false;
+                default:
+                    return false;
+            }
+
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+
+    public boolean EditGender(byte[] data) {
+        try {
+            connectapplet();
+            TerminalFactory factory = TerminalFactory.getDefault();
+            List<CardTerminal> terminals = factory.terminals().list();
+
+            CardTerminal terminal = terminals.get(0);
+            Card card = terminal.connect("T=1");
+            CardChannel channel = card.getBasicChannel();
+            ResponseAPDU answer = channel.transmit(new CommandAPDU(APPLET.CLA, APPLET.INS_GENDER, 0x00, 0x00, data));
+
+            message = answer.toString();
+            switch (((message.split("="))[1]).toUpperCase()) {
+                case "9000":
+                    JOptionPane.showMessageDialog(null, "Cập nhật thông tin thành công!");
+                    return true;
+                case RESPONS.SW_WRONG_LENGTH:
+                    JOptionPane.showMessageDialog(null, "Dữ liệu quá lớn, vui lòng kiểm tra lại!");
+                    return false;
+                default:
+                    return false;
+            }
+
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+
+    public boolean EditImage(byte[] data) {
+        try {
+            connectapplet();
+            TerminalFactory factory = TerminalFactory.getDefault();
+            List<CardTerminal> terminals = factory.terminals().list();
+
+            CardTerminal terminal = terminals.get(0);
+            Card card = terminal.connect("T=1");
+            CardChannel channel = card.getBasicChannel();
+            ResponseAPDU answer = channel.transmit(new CommandAPDU(APPLET.CLA, APPLET.INS_IMAGE, 0x00, 0x00, data));
+
+            message = answer.toString();
+            switch (((message.split("="))[1]).toUpperCase()) {
+                case "9000":
+                    JOptionPane.showMessageDialog(null, "Cập nhật thông tin thành công!");
+                    return true;
+                case RESPONS.SW_WRONG_LENGTH:
+                    JOptionPane.showMessageDialog(null, "Dữ liệu quá lớn, vui lòng kiểm tra lại!");
+                    return false;
+                default:
+                    return false;
+            }
+
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+
+    public String ReadInformation() {
+        try {
+            connectapplet();
+            TerminalFactory factory = TerminalFactory.getDefault();
+            List<CardTerminal> terminals = factory.terminals().list();
+
+            CardTerminal terminal = terminals.get(0);
+
+            Card card = terminal.connect("T=1");
+
             CardChannel channel = card.getBasicChannel();
             System.out.println("begin get info");
-            ResponseAPDU answerID = channel.transmit(new CommandAPDU(APPLET.CLA,APPLET.READ_INFO,0x00,0x00));
+            ResponseAPDU answerID = channel.transmit(new CommandAPDU(APPLET.CLA, APPLET.READ_INFO, 0x00, 0x00));
 
             String strData = new String(answerID.getData());
+            System.out.println(strData);
+
             return strData;
-        }
-        catch(Exception ex){
+        } catch (Exception ex) {           
+            System.out.println("ERROR");
+
+            
             return "";
         }
-    }   
-        
+    }
+
     public static void main(String[] args) {
         System.out.println("begin connect");
         new ConnectCard().connectapplet();
     }
-    
+
 }

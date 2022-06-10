@@ -7,6 +7,7 @@ package JavaCard.GUI;
 
 import JavaCardMain.connect.ConnectCard;
 import java.awt.Color;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -90,6 +91,7 @@ public class HomeForm extends javax.swing.JFrame {
         }
         return check;
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -121,7 +123,6 @@ public class HomeForm extends javax.swing.JFrame {
         radiobuttonnam = new javax.swing.JRadioButton();
         radiobuttonnu = new javax.swing.JRadioButton();
         txtName = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setLocationByPlatform(true);
@@ -264,13 +265,6 @@ public class HomeForm extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("getinfo");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jpnInfoLayout = new javax.swing.GroupLayout(jpnInfo);
         jpnInfo.setLayout(jpnInfoLayout);
         jpnInfoLayout.setHorizontalGroup(
@@ -282,30 +276,25 @@ public class HomeForm extends javax.swing.JFrame {
                     .addComponent(jLabel10)
                     .addComponent(jLabel11)
                     .addComponent(jLabel12))
-                .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jpnInfoLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2))
-                    .addGroup(jpnInfoLayout.createSequentialGroup()
-                        .addGap(77, 77, 77)
-                        .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(txtName, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE)
-                                .addComponent(txtDate)
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpnInfoLayout.createSequentialGroup()
-                                    .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGroup(jpnInfoLayout.createSequentialGroup()
-                                            .addComponent(radiobuttonnam, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(radiobuttonnu)))
-                                    .addGap(59, 59, 59))))))
+                .addGap(77, 77, 77)
+                .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(txtName, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE)
+                        .addComponent(txtDate)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpnInfoLayout.createSequentialGroup()
+                            .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(jpnInfoLayout.createSequentialGroup()
+                                    .addComponent(radiobuttonnam, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(radiobuttonnu)))
+                            .addGap(59, 59, 59))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 102, Short.MAX_VALUE)
                 .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(avatarContain, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(avatarContain, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpnInfoLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jButton5)
@@ -345,9 +334,7 @@ public class HomeForm extends javax.swing.JFrame {
                     .addComponent(radiobuttonnam)
                     .addComponent(radiobuttonnu))
                 .addGap(48, 48, 48)
-                .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                .addComponent(jButton1)
                 .addContainerGap(54, Short.MAX_VALUE))
         );
 
@@ -400,13 +387,14 @@ public class HomeForm extends javax.swing.JFrame {
         File file = jfc.getSelectedFile();
 
         if (file != null) {
-            if (file.length() > 1000000) {
+            if (file.length() > 10000) {
                 JOptionPane.showMessageDialog(null, "Kích thước quá lớn. Vui lòng chọn ảnh khác!");
                 return;
             }
             try {
                 BufferedImage myPicture = ImageIO.read(file);
-                avatarContain.setIcon(new ImageIcon(myPicture));
+
+                avatarContain.setIcon(new ImageIcon(myPicture.getScaledInstance(125, 155, Image.SCALE_SMOOTH)));
                 String valueAvatar = encodeToString(myPicture, "jpg");
                 this.imageBuffer = valueAvatar;
                 this.isUploadAvatar = true;
@@ -433,13 +421,11 @@ public class HomeForm extends javax.swing.JFrame {
 
             String strName = txtName.getText();
             String strDate = txtDate.getText();
-//            String strImage = "123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890";
             byte[] byteID = strId.getBytes();
             byte[] byteName = strName.getBytes();
             byte[] byteDate = strDate.getBytes();
             byte[] byteGender = this.gender.getBytes();
             byte[] byteAvatar = this.imageBuffer.getBytes();
-//            byte[] byteAvatar = strImage.getBytes();
 
             if (!(byteAvatar.length > 0) || !(byteID.length > 0) || !(byteName.length > 0) || !(byteDate.length > 0) || !(byteGender.length > 0)) {
                 JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin!");
@@ -467,16 +453,9 @@ public class HomeForm extends javax.swing.JFrame {
             offSet += 1;
             System.arraycopy(byteAvatar, 0, data, offSet, byteAvatar.length);
             if (connect.EditInformation(data)) {
-//            try {
-//                PublicKey publicKeys = RSAAppletHelper.getInstance(
-//                        ConnectCard.getInstance().channel).getPublicKey();
-//            } catch (CardException ex) {
-//                Logger.getLogger(HomeForm.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-                HomeForm home = new HomeForm();
-                home.setVisible(true);
+                LoginForm login = new LoginForm(1);
+                login.setVisible(true);
                 this.dispose();
-
                 System.out.println("Success");
             } else {
                 System.out.println("Sending Error");
@@ -512,29 +491,6 @@ public class HomeForm extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_radiobuttonnuStateChanged
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-        ConnectCard connect = new ConnectCard();
-       String Data =  connect.ReadInformation();
-        String[] arrOfStr = Data.split(",");
-        String dataImg = arrOfStr[arrOfStr.length-1];       
-        String id = arrOfStr[0];
-        String name = arrOfStr[1];
-        String ngaysinh = arrOfStr[2];
-        txtID.setText(id);
-        txtName.setText(name);
-        txtDate.setText(ngaysinh);
-        avatarContain.setText("");
-        byte[] bytes = Base64.getDecoder().decode(dataImg);
-         ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
-                try {
-                    BufferedImage image  = ImageIO.read(bais);
-                     avatarContain.setIcon(new ImageIcon(image));
-                } catch (Exception e) {
-                    System.err.println("Error image");
-                }
-    }//GEN-LAST:event_jButton2ActionPerformed
-
     private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
         // TODO add your handling code here:
         this.dispose();
@@ -564,61 +520,65 @@ public class HomeForm extends javax.swing.JFrame {
 
     }
 
-    public boolean strImageToFile(String imgStr, String path) { 
-        if (imgStr == null) return false;  
-        
-        
-        try {  
+    public boolean strImageToFile(String imgStr, String path) {
+        if (imgStr == null) {
+            return false;
+        }
+
+        try {
             // Decode
             byte[] bytes = Base64.getDecoder().decode(imgStr);
 
-            for (int i = 0; i < bytes.length; ++i) {  
-                if (bytes[i] < 0) bytes[i] += 256;  
-            }  
-            
+            for (int i = 0; i < bytes.length; ++i) {
+                if (bytes[i] < 0) {
+                    bytes[i] += 256;
+                }
+            }
+
             // Save image 
-            OutputStream out = new FileOutputStream(path);  
-            out.write(bytes);  
-            out.flush();  
-            out.close();  
-            
-            return true;  
-        } catch (Exception e) {  
-            return false;  
-        }  
-    }  
-    
-    public String getImageStr(String path) {  
-        byte[] data = null;  
+            OutputStream out = new FileOutputStream(path);
+            out.write(bytes);
+            out.flush();
+            out.close();
+
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public String getImageStr(String path) {
+        byte[] data = null;
         // read byte array  
-        try {  
-            InputStream in = new FileInputStream(path);  
-            data = new byte[in.available()];  
-            in.read(data);  
-            in.close();  
-        } catch (IOException e) {  
-            e.printStackTrace();  
-        }  
+        try {
+            InputStream in = new FileInputStream(path);
+            data = new byte[in.available()];
+            in.read(data);
+            in.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         // Encode
         return Base64.getEncoder().encodeToString(data);
     }
-    
- public static String encodeToString(BufferedImage image, String type) {
-    String imageString = null;
-    ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
-    try {
-        ImageIO.write(image, type, bos);
-        byte[] imageBytes = bos.toByteArray();
-        Base64.Encoder encoder = Base64.getEncoder();
-        imageString = encoder.encodeToString(imageBytes);
+    public static String encodeToString(BufferedImage image, String type) {
+        String imageString = null;
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
-        bos.close();
-    } catch (IOException e) {
-        e.printStackTrace();
+        try {
+            ImageIO.write(image, type, bos);
+            byte[] imageBytes = bos.toByteArray();
+            Base64.Encoder encoder = Base64.getEncoder();
+            imageString = encoder.encodeToString(imageBytes);
+
+            bos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return imageString;
     }
-    return imageString;
-    }
+
     /**
      * @param args the command line arguments
      */
@@ -660,7 +620,6 @@ public class HomeForm extends javax.swing.JFrame {
     private javax.swing.JLabel avatarContain;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
