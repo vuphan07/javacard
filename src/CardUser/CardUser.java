@@ -12,6 +12,8 @@ import javacard.security.RSAPrivateCrtKey;
 import javacard.security.RSAPrivateKey;
 import javacard.security.RSAPublicKey;
 import javacardx.apdu.ExtendedLength;
+import javacard.security.*;
+import javacardx.crypto.*;
 public class CardUser extends Applet implements ExtendedLength
 {
 	public static byte[] userId;
@@ -19,7 +21,7 @@ public class CardUser extends Applet implements ExtendedLength
 	public static byte[] gender;
 	public static byte[] avatar;
 	public static byte[] birthDay;
-	public static short usernameLength,userIdLength,genderLength,birthDayLength;
+	public static short usernameLength,userIdLength,genderLength,birthDayLength,avatarLength;
 	
 	final static byte marker =(byte)0x2c;
 	
@@ -44,8 +46,16 @@ public class CardUser extends Applet implements ExtendedLength
     final static short SW_PIN_VERIFICATION_REQUIRED = 0x6301;
 	/* instance variables declaration */
 	static OwnerPIN pin;
+	private MessageDigest sha;
 	private static Cipher aesCipher;
 	private static AESKey aesKey;
+	private RSAPrivateKey rsaPrivKey;
+	private RSAPublicKey rsaPubKey;
+	private Signature rsaSig;
+	private short sigLen;
+	private static final byte INS_SIGN = (byte)0x0f;
+	private static final byte INS_VERIFY = (byte)0x1f;
+	private byte[] s1, s2, s3, sig_buffer;
 	private final static byte[] PIN_INIT_VALUE={(byte)'1',(byte)'2',(byte)'3',(byte)'4'};
 	private static short LENGTH_BLOCK_AES = (short)64;
 
@@ -67,14 +77,28 @@ public class CardUser extends Applet implements ExtendedLength
 		} catch (SystemException e) {
 			tmpBuffer = new byte[(short) 256];
 		}
-		
+		s1 = new byte[]{0x01, 0x02, 0x03};
+		s2 = new byte[]{0x04, 0x05};
+		s3 = new byte[]{0x06, 0x07, 0x08};
+		sigLen = (short)(KeyBuilder.LENGTH_RSA_1024/8);
+		sig_buffer = new byte[sigLen];
+		rsaSig = Signature.getInstance(Signature.ALG_RSA_SHA_PKCS1,false);
+		rsaPrivKey =(RSAPrivateKey)KeyBuilder.buildKey(KeyBuilder.TYPE_RSA_PRIVATE,(short)(8*sigLen),false);
+		rsaPubKey = (RSAPublicKey)KeyBuilder.buildKey(KeyBuilder.TYPE_RSA_PUBLIC,(short)(8*sigLen), false);
+
+		KeyPair keyPair = new KeyPair(KeyPair.ALG_RSA,(short)(8*sigLen));
+		keyPair.genKeyPair();
+		rsaPrivKey = (RSAPrivateKey)keyPair.getPrivate();
+		rsaPubKey = (RSAPublicKey)keyPair.getPublic();
+		sha = MessageDigest.getInstance(MessageDigest.ALG_MD5,false);
 		aesCipher = Cipher.getInstance(Cipher.ALG_AES_BLOCK_128_CBC_NOPAD, false);
         aesKey = (AESKey) KeyBuilder.buildKey(KeyBuilder.TYPE_AES, KeyBuilder.LENGTH_AES_128, false);
-        Sha512.init();
-		HMacSHA512.init(tmpBuffer);
+        // Sha512.init();
+		// HMacSHA512.init(tmpBuffer);
         byte[] keyBytes = JCSystem.makeTransientByteArray(LENGTH_BLOCK_AES, JCSystem.CLEAR_ON_DESELECT);
         try {
-            HMacSHA512.computeHmacSha512(PIN_INIT_VALUE,(short)0x00,(short)PIN_INIT_VALUE.length,keyBytes,(short)0);
+        	short shalen = sha.doFinal(PIN_INIT_VALUE, (short)0,(short)PIN_INIT_VALUE.length, keyBytes, (short)0);
+            // HMacSHA512.computeHmacSha512(PIN_INIT_VALUE,(short)0x00,(short)PIN_INIT_VALUE.length,keyBytes,(short)0);
             aesKey.setKey(keyBytes, (short) 0);
         } finally {
             Util.arrayFillNonAtomic(keyBytes, (short) 0, LENGTH_BLOCK_AES, (byte) 0);
@@ -86,8 +110,6 @@ public class CardUser extends Applet implements ExtendedLength
 	}
 	
 	 public boolean select() {
-        if ( pin.getTriesRemaining() == 0 )
-           return false;
         return true;
     }
     
@@ -113,8 +135,8 @@ public class CardUser extends Applet implements ExtendedLength
 		short byteRead = (short)(apdu.setIncomingAndReceive());
 		short dataLen = (short)(buf[ISO7816.OFFSET_LC]&0xff);
 		
-		if ( pin.getTriesRemaining() == 0 ) 
-			ISOException.throwIt(SW_CARD_IS_BLOCKED);
+		// if ( pin.getTriesRemaining() == 0 ) 
+			// ISOException.throwIt(SW_CARD_IS_BLOCKED);
 		
 		if (buf[ISO7816.OFFSET_CLA] != USER_CLA)
 			 ISOException.throwIt(ISO7816.SW_CLA_NOT_SUPPORTED);
@@ -177,6 +199,7 @@ public class CardUser extends Applet implements ExtendedLength
 		byte[] temp=new byte[datalength];
         short dataOffsetInput = 0;
         byte[] dataEncrypt = new byte[128];
+        short numberEncrypt = 0;
 		while (recvLen > 0)
 		{
 			Util.arrayCopy(buf, dataOffset, temp, pointer,recvLen);
@@ -186,53 +209,69 @@ public class CardUser extends Applet implements ExtendedLength
 		//
 		short lengthUserId = getLengthWithMaker(temp,dataOffsetInput,(short)temp.length);
 		userIdLength = lengthUserId;
-		userId = new byte[128];
+		numberEncrypt = (short)(userIdLength/128 +1);
+		userId = new byte[(short)(128*numberEncrypt)];
 		byte[] tempUserId = new byte[lengthUserId];
 		Util.arrayCopy(temp, dataOffsetInput, tempUserId, (short)0,(short)lengthUserId);
 		dataEncrypt = encrypt(tempUserId);
 		Util.arrayCopy(dataEncrypt,(short)0x00, userId, (short)0,(short)dataEncrypt.length);
-		dataOffsetInput = (short)(tempUserId.length +  dataOffsetInput +1);
+		dataOffsetInput = (short)(lengthUserId +  dataOffsetInput +1);
 		//
 		short lengthUsername = getLengthWithMaker(temp,dataOffsetInput,(short)temp.length);
 		usernameLength = lengthUsername;
-		userName = new byte[128];
+		numberEncrypt = (short)(lengthUsername/128 +1);
+		userName = new byte[(short)(128*numberEncrypt)];
 		byte[] tempUsername = new byte[lengthUsername];
 		Util.arrayCopy(temp, dataOffsetInput, tempUsername, (short)0,(short)lengthUsername);
 		dataEncrypt = encrypt(tempUsername);
 		Util.arrayCopy(dataEncrypt, (short)0x00, userName, (short)0,(short)dataEncrypt.length);
-		dataOffsetInput = (short)(tempUsername.length +  dataOffsetInput +1);
+		dataOffsetInput = (short)(lengthUsername +  dataOffsetInput +1);
 		//
 		short lengthBirthDay = getLengthWithMaker(temp,dataOffsetInput,(short)temp.length);
 		birthDayLength = lengthBirthDay;
-		birthDay = new byte[128];
+		numberEncrypt = (short)(birthDayLength/128 +1);
+		birthDay = new byte[(short)(128*numberEncrypt)];
 		byte[] tempBirthDay = new byte[lengthBirthDay];
 		Util.arrayCopy(temp, dataOffsetInput, tempBirthDay, (short)0,(short)lengthBirthDay);
 		dataEncrypt = encrypt(tempBirthDay);
 		Util.arrayCopy(dataEncrypt, (short)0x00, birthDay, (short)0,(short)dataEncrypt.length);
-		dataOffsetInput = (short)(tempBirthDay.length +  dataOffsetInput +1);
+		dataOffsetInput = (short)(lengthBirthDay +  dataOffsetInput +1);
 		//
 		short lengthGender = getLengthWithMaker(temp,dataOffsetInput,(short)temp.length);
 		genderLength = lengthGender;
-		gender = new byte[128];
+		numberEncrypt = (short)(genderLength/128 +1);
+		gender = new byte[(short)(128*numberEncrypt)];
 		byte[] tempGender = new byte[lengthGender];
 		Util.arrayCopy(temp, dataOffsetInput, tempGender, (short)0,(short)lengthGender);
 		dataEncrypt = encrypt(tempGender);
 		Util.arrayCopy(dataEncrypt, (short)0x00, gender, (short)0,(short)dataEncrypt.length);
-		dataOffsetInput = (short)(tempGender.length +  dataOffsetInput +1);
+		dataOffsetInput = (short)(lengthGender +  dataOffsetInput +1);
 		//
 		short lengthAvatar = getLengthWithMaker(temp,dataOffsetInput,(short)temp.length);
-		 avatar = new byte[lengthAvatar];
-		 Util.arrayCopy(temp, dataOffsetInput, avatar, (short)0,(short)avatar.length);
+		avatarLength = lengthAvatar;
+		 numberEncrypt = (short)(lengthAvatar/128 +1);
+		 byte[] tempAvatar = new byte[lengthAvatar];
+		 avatar = new byte[(short)(128*numberEncrypt)];
+		 Util.arrayCopy(temp, dataOffsetInput, tempAvatar, (short)0,(short)lengthAvatar);
+		 dataEncrypt = encrypt(tempAvatar);
+		 Util.arrayCopy(dataEncrypt, (short)0x00, avatar, (short)0,(short)dataEncrypt.length);
 		 dataOffsetInput = (short)(avatar.length + lengthAvatar +1);
 		 pin.update(PIN_INIT_VALUE, (short) 0, (byte)PIN_INIT_VALUE.length);
 		JCSystem.commitTransaction();	
 	}
 	
 	public void createName(APDU apdu,byte[] buf){
+			 // if(!pin.isValidated()) {
+			 // ISOException.throwIt(SW_PIN_VERIFICATION_REQUIRED);
+			 // return;
+		 // }
 		short dataOffset = apdu.getOffsetCdata();
 		short datalength = apdu.getIncomingLength();
 		usernameLength = datalength;
-		userName = new byte[128];
+
+		short numberEncrypt = (short)(datalength/128 +1);
+		userName = new byte[(short)(128*numberEncrypt)];
+
 		byte[] tempUsername = new byte[usernameLength];
 		Util.arrayCopy(buf, dataOffset, tempUsername, (short)0,(short)usernameLength);
 		byte[] dataEncrypt = encrypt(tempUsername);
@@ -240,10 +279,15 @@ public class CardUser extends Applet implements ExtendedLength
 	}
 	
 	public void createBirthDay(APDU apdu,byte[] buf){
+			 // if(!pin.isValidated()) {
+			 // ISOException.throwIt(SW_PIN_VERIFICATION_REQUIRED);
+			 // return;
+		 // }
 		short dataOffset = apdu.getOffsetCdata();
 		short datalength = apdu.getIncomingLength();
 		birthDayLength = datalength;
-		birthDay = new byte[128];
+		short numberEncrypt = (short)(datalength/128 +1);
+		birthDay = new byte[(short)(128*numberEncrypt)];
 		byte[] tempUsername = new byte[birthDayLength];
 		Util.arrayCopy(buf, dataOffset, tempUsername, (short)0,(short)birthDayLength);
 		byte[] dataEncrypt = encrypt(tempUsername);
@@ -251,10 +295,15 @@ public class CardUser extends Applet implements ExtendedLength
 	}
 	
 	public void createGender(APDU apdu,byte[] buf){
+			 // if(!pin.isValidated()) {
+			 // ISOException.throwIt(SW_PIN_VERIFICATION_REQUIRED);
+			 // return;
+		 // }
 		short dataOffset = apdu.getOffsetCdata();
 		short datalength = apdu.getIncomingLength();
 		genderLength = datalength;
-		gender = new byte[128];
+		short numberEncrypt = (short)(datalength/128 +1);
+		gender = new byte[(short)(128*numberEncrypt)];
 		byte[] tempUsername = new byte[usernameLength];
 		Util.arrayCopy(buf, dataOffset, tempUsername, (short)0,(short)genderLength);
 		byte[] dataEncrypt = encrypt(tempUsername);
@@ -262,36 +311,47 @@ public class CardUser extends Applet implements ExtendedLength
 	}
 	
 	public void createImage(APDU apdu,byte[] buf,short recvLen){
+			 // if(!pin.isValidated()) {
+			 // ISOException.throwIt(SW_PIN_VERIFICATION_REQUIRED);
+			 // return;
+		 // }
 		short pointer = 0;
 		short dataOffset = apdu.getOffsetCdata();
 		short datalength = apdu.getIncomingLength();
+			
 		byte[] temp=new byte[datalength];
-			short lengthAvatar = datalength;
-		 avatar = new byte[lengthAvatar];
+		short lengthAvatar = datalength;
+		short numberEncrypt = (short)(datalength/128 +1);
+
+
 		while (recvLen > 0)
 		{
-			Util.arrayCopy(buf, dataOffset, avatar, pointer,recvLen);
+			Util.arrayCopy(buf, dataOffset, temp, pointer,recvLen);
 			pointer += recvLen;
 			recvLen = apdu.receiveBytes(dataOffset);
 		}
-	
-		 // Util.arrayCopy(temp, (short)0, avatar, (short)0,(short)avatar.length);
+		avatar = new byte[(short)(128*numberEncrypt)];
+		byte[] dataEncrypt = encrypt(temp);
+		short lenData = (short)dataEncrypt.length;
+		short countCopy = (short)(lenData/128);
+		for(short i = 0; i< (short) dataEncrypt.length; i++ )
+		{
+			avatar[i] = dataEncrypt[i];
+		}
+		// Util.arrayCopy(dataEncrypt, (short)0x00, avatar, (short)0,(short)dataEncrypt.length);
 	}
 	
 	public void showInformation(APDU apdu) {
-		// if(!pin.isValidated()) {
-			// ISOException.throwIt(SW_PIN_VERIFICATION_REQUIRED);
-			// return;
-		// }
 		byte[] decryptUserId = decrypt(userId,userIdLength);
 		byte[] decryptUsername = decrypt(userName,usernameLength);
 		byte[] decryptBirthday = decrypt(birthDay,birthDayLength);
 		byte[] decryptGender = decrypt(gender,genderLength);
+		byte[] decryptAvatar = decrypt(avatar,avatarLength);
 		short lengthUserId = (short)decryptUserId.length;
 		short lengthName = (short)decryptUsername.length;
         short lengthBirthDay = (short)decryptBirthday.length;
         short lengthGender = (short)decryptGender.length;
-        short lengthAvatar = (short)avatar.length;
+        short lengthAvatar = (short)decryptAvatar.length;
 		short toSend = (short)(lengthName + lengthBirthDay +lengthGender +lengthAvatar+lengthUserId + 4);
         byte[] temp = new byte[toSend];
         Util.arrayCopy(decryptUserId, (short)0, temp, (short)0,(short)lengthUserId);
@@ -307,9 +367,9 @@ public class CardUser extends Applet implements ExtendedLength
 		short soduCopImg = (short)(lengthAvatar%255);
 		
 		for(short i = 0;i<solanCopImg;i++) {
-			Util.arrayCopy(avatar, (short)(i*255), temp, (short)(lengthBirthDay+lengthName+lengthGender+lengthUserId+4 + i*255),(short)255);
+			Util.arrayCopy(decryptAvatar, (short)(i*255), temp, (short)(lengthBirthDay+lengthName+lengthGender+lengthUserId+4 + i*255),(short)255);
 		}
-		Util.arrayCopy(avatar, (short)(solanCopImg*255), temp, (short)(lengthBirthDay+lengthName+lengthGender+lengthUserId+4 + solanCopImg*255),(short)soduCopImg);
+		Util.arrayCopy(decryptAvatar, (short)(solanCopImg*255), temp, (short)(lengthBirthDay+lengthName+lengthGender+lengthUserId+4 + solanCopImg*255),(short)soduCopImg);
 
         // Util.arrayCopy(avatar, (short)0, temp, (short)(lengthBirthDay+lengthName+lengthGender+lengthUserId+4),(short)255);
         short le = apdu.setOutgoing(); // do dai du lieu toi da gui len may tinh
@@ -327,87 +387,206 @@ public class CardUser extends Applet implements ExtendedLength
 	}
 	
 	public void createPin(APDU apdu,byte[] buf) {
+			 if(!pin.isValidated()) {
+			 ISOException.throwIt(SW_PIN_VERIFICATION_REQUIRED);
+			 return;
+		 }
 		JCSystem.beginTransaction();
 		byte[] decryptUserId = decrypt(userId,userIdLength);
 		byte[] decryptUsername = decrypt(userName,usernameLength);
 		byte[] decryptBirthday = decrypt(birthDay,birthDayLength);
 		byte[] decryptGender = decrypt(gender,genderLength);
+		byte[] decryptAvatar = decrypt(avatar,avatarLength);
 		short dataOffset = apdu.getOffsetCdata();
 		short datalength = apdu.getIncomingLength();
+		short numberEncrypt = 0;
 		byte[] newPin = new byte[datalength];
 		Util.arrayCopy(buf,dataOffset,newPin,(short)0,(short)datalength);
+		byte[] keyBytes1;
+		try {
+			keyBytes1 = JCSystem.makeTransientByteArray((short) LENGTH_BLOCK_AES, JCSystem.CLEAR_ON_DESELECT);
+		} catch (SystemException e) {
+			keyBytes1 = new byte[(short)LENGTH_BLOCK_AES];
+		}
 		
-		byte[] keyBytes = JCSystem.makeTransientByteArray(LENGTH_BLOCK_AES, JCSystem.CLEAR_ON_DESELECT);
         try {
-            HMacSHA512.computeHmacSha512(newPin,(short)0x00,(short)newPin.length,keyBytes,(short)0);
-            aesKey.setKey(keyBytes, (short) 0);
+            // HMacSHA512.computeHmacSha512(newPin,(short)0x00,(short)newPin.length,keyBytes,(short)0);
+            short shalen = sha.doFinal(newPin, (short)0,(short)newPin.length, keyBytes1, (short)0);
+            aesKey.setKey(keyBytes1, (short) 0);
         } finally {
-            Util.arrayFillNonAtomic(keyBytes, (short) 0, LENGTH_BLOCK_AES, (byte) 0);
+            Util.arrayFillNonAtomic(keyBytes1, (short) 0, LENGTH_BLOCK_AES, (byte) 0);
         }
         pin.update(newPin,(short)0,(byte)newPin.length);
 		//
 		//
-		byte[] dataEncrypt = new byte[128];
+		byte[] dataEncrypt;
+		numberEncrypt = (short)(decryptUserId.length/128 +1);
+		userId = new byte[(short)(128*numberEncrypt)];
 		dataEncrypt = encrypt(decryptUserId);
 		Util.arrayCopy(dataEncrypt,(short)0x00, userId, (short)0,(short)dataEncrypt.length);
 		//
+		numberEncrypt = (short)(decryptUsername.length/128 +1);
+		userName = new byte[(short)(128*numberEncrypt)];
 		dataEncrypt = encrypt(decryptUsername);
 		Util.arrayCopy(dataEncrypt, (short)0x00, userName, (short)0,(short)dataEncrypt.length);
 		//
+		numberEncrypt = (short)(decryptBirthday.length/128 +1);
+		birthDay = new byte[(short)(128*numberEncrypt)];
 		dataEncrypt = encrypt(decryptBirthday);
 		Util.arrayCopy(dataEncrypt, (short)0x00, birthDay, (short)0,(short)dataEncrypt.length);
 		//
-		gender = new byte[128];
+		numberEncrypt = (short)(decryptGender.length/128 +1);
+		gender = new byte[(short)(128*numberEncrypt)];
 		dataEncrypt = encrypt(decryptGender);
 		Util.arrayCopy(dataEncrypt, (short)0x00, gender, (short)0,(short)dataEncrypt.length);
 		//
+		numberEncrypt = (short)(decryptAvatar.length/128 +1);
+		avatar = new byte[(short)(128*numberEncrypt)];
+		dataEncrypt = encrypt(decryptAvatar);
+		Util.arrayCopy(dataEncrypt, (short)0x00, avatar, (short)0,(short)dataEncrypt.length);
+		//
 		isNewUser= (byte)'0';
+		pin.check(newPin,(short)0,(byte)newPin.length);
 		JCSystem.commitTransaction();
 	}
 	
 	public byte[] encrypt(byte[] encryptData) {
         aesCipher.init(aesKey, Cipher.MODE_ENCRYPT);
-        short flag = (short) 1;
-	    byte[] temp = new byte[128];
-    	while(flag == (short)1){
-    		for(short i=0;i<=(short) encryptData.length;i++){
-    			if(i!=(short) encryptData.length){
-					temp[i] = encryptData[i];
-    			}
-    			else{
-	    			flag = (short) 0;
-    			}
-    		}
-    	}
-        byte[] dataEncrypted; 
-        try{
-				dataEncrypted = JCSystem.makeTransientByteArray((short) 128, JCSystem.CLEAR_ON_DESELECT);
-			} catch(SystemException e){
-				dataEncrypted = new byte[(short)128];
-			}
-        aesCipher.doFinal(temp, (short) 0 , (short)128, dataEncrypted, (short) 0x00);
+        short lengDataEncrypt = (short)encryptData.length;
+        short countEncrypt =	(short) (lengDataEncrypt/128 +1);       
+        short lengtDataEncryptEnd = (short) (lengDataEncrypt%128);
+		byte[] temp = new byte[128];
+		byte[] dataEncrypted; 
+		try{
+			 dataEncrypted = JCSystem.makeTransientByteArray((short) (128*countEncrypt), JCSystem.CLEAR_ON_DESELECT);
+		} catch(SystemException e){
+			 dataEncrypted = new byte[(short)(128*countEncrypt)];
+		}
+
+        for(short count = 0; count < (short)countEncrypt; count ++) {
+
+            if(count == (short)(countEncrypt - 1)) {
+                for(short i=0;i<(short) lengtDataEncryptEnd;i++){
+                    temp[i] = encryptData[(short)(128*count+i)];
+                }
+            }else {
+                for(short i=0;i<(short) 128;i++){
+                    temp[i] = encryptData[(short)(128*count+i)];
+                }
+            }
+            aesCipher.doFinal(temp, (short) 0 , (short)128, dataEncrypted, (short)(128*count));
+        }
+
+        // while(countEncrypt > 0) {
+        //     if(countEncrypt === (short)1) {
+        //         for(short i=0;i<(short) lengtDataEncryptEnd;i++){
+        //             temp[i] = encryptData[(short)(128*(countEncrypt-1)+i)];
+        //         }
+        //     }
+         
+        //     countEncrypt = (short)(countEncrypt - 1);
+        // }
+
+
+        // short flag = (short) 1;
+	    // byte[] temp = new byte[128];
+    	// while(flag == (short)1){
+    	// 	for(short i=0;i<=(short) encryptData.length;i++){
+    	// 		if(i!=(short) encryptData.length){
+		// 			temp[i] = encryptData[i];
+    	// 		}
+    	// 		else{
+	    // 			flag = (short) 0;
+    	// 		}
+    	// 	}
+    	// }
+        // byte[] dataEncrypted; 
+        // try{
+		// 		dataEncrypted = JCSystem.makeTransientByteArray((short) 128, JCSystem.CLEAR_ON_DESELECT);
+		// 	} catch(SystemException e){
+		// 		dataEncrypted = new byte[(short)128];
+		// 	}
+        // aesCipher.doFinal(temp, (short) 0 , (short)128, dataEncrypted, (short) 0x00);
+          // Util.arrayFillNonAtomic(dataEncrypted, (short) 0, 128, (byte) 0);
         return dataEncrypted;
     }
     
     private static byte[] decrypt(byte[] decryptData, short length) {
     	if(length != (short)0){
 			aesCipher.init(aesKey, Cipher.MODE_DECRYPT);
-			byte[] dataDecrypted;
-			try{
-				dataDecrypted = JCSystem.makeTransientByteArray((short) 128, JCSystem.CLEAR_ON_DESELECT);
+			byte[] dataDecrypted = new byte[length];
+            short countDecrypt =	(short) (length/128 +1);       
+            short lengtDataDecryptEnd = (short) (length%128);
+			byte[] temp,temp1;
+            try{
+				temp = JCSystem.makeTransientByteArray((short) 128, JCSystem.CLEAR_ON_DESELECT);				
+				temp1 = JCSystem.makeTransientByteArray((short) 128, JCSystem.CLEAR_ON_DESELECT);
+
 			} catch(SystemException e){
-				dataDecrypted = new byte[(short)128];
+				temp = new byte[(short)128];
+				temp1 = new byte[(short)128];
 			}
-			aesCipher.doFinal(decryptData, (short) 0, (short) 128, dataDecrypted, (short) 0x00);
-			byte[] temp = new byte[length];
-			Util.arrayCopy(dataDecrypted, (short)0x00,temp,(short)0,(short) length);
-			return temp;
+            for(short count = 0; count < (short)countDecrypt; count ++) {
+
+                if(count == (short)(countDecrypt - 1)) {
+                    for(short i=0;i<(short) 128;i++){
+                        temp[i] = decryptData[(short)(128*count+i)];
+                    }
+			        aesCipher.doFinal(temp, (short) 0, (short) 128, temp1, (short)0x00);
+					Util.arrayCopy(temp1, (short)0x00,dataDecrypted,(short) (count*128),(short)lengtDataDecryptEnd);
+                    // aesCipher.doFinal(decryptData, (short) (count*128), (short) (count*128 +lengtDataDecryptEnd), temp,(short) (count*128));
+                }else {
+                    for(short i=0;i<(short) 128;i++){
+                        temp[i] = decryptData[(short)(128*count+i)];
+                    }
+                     aesCipher.doFinal(temp, (short) 0, (short) 128, temp1, (short)0x00);
+			       Util.arrayCopy(temp1, (short)0x00,dataDecrypted,(short) (count*128),(short)128);
+
+                    // aesCipher.doFinal(decryptData, (short) (count*128), (short) (count*128 +128), temp,(short) (count*128));
+                }
+            }
+    
+			// byte[] dataDecrypted;
+			// try{
+			// 	dataDecrypted = JCSystem.makeTransientByteArray((short) 128, JCSystem.CLEAR_ON_DESELECT);
+			// } catch(SystemException e){
+			// 	dataDecrypted = new byte[(short)128];
+			// }
+			// aesCipher.doFinal(decryptData, (short) 0, (short) 128, dataDecrypted, (short) 0x00);
+			// byte[] temp = new byte[length];
+			// Util.arrayCopy(dataDecrypted, (short)0x00,temp,(short)0,(short) length);
+			return dataDecrypted;
     	}
     	else{
     		byte[] dataDecrypted = new byte[1];
 	    	return dataDecrypted;
     	}
     }
+    
+    private void rsaSign(APDU apdu)
+	{
+		rsaSig.init(rsaPrivKey, Signature.MODE_SIGN);
+		rsaSig.update(s1, (short)0, (short)(s1.length));
+		rsaSig.update(s2, (short)0, (short)(s2.length));
+		rsaSig.sign(s3, (short)0, (short)(s3.length),
+		sig_buffer, (short)0);
+		apdu.setOutgoing();
+		apdu.setOutgoingLength(sigLen);
+
+		apdu.sendBytesLong(sig_buffer, (short)0, sigLen);
+	}
+	private void rsaVerify(APDU apdu)
+	{
+		byte [] buf = apdu.getBuffer();
+		rsaSig.init(rsaPubKey, Signature.MODE_VERIFY);
+		rsaSig.update(s1, (short)0, (short)(s1.length));
+		rsaSig.update(s2, (short)0, (short)(s2.length));
+		boolean ret = rsaSig.verify(s3, (short)0,
+		(short)(s3.length), sig_buffer, (short)0, sigLen);
+
+		buf[(short)0] = ret ? (byte)1 : (byte)0;
+		apdu.setOutgoingAndSend((short)0, (short)1);
+	}
 	
 	private void verify(APDU apdu,byte[] buf,byte length) {
 		if ( pin.check(buf, ISO7816.OFFSET_CDATA,length) == false ) {

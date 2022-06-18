@@ -95,8 +95,9 @@ public class ConnectCard {
                 case RESPONS.SW_NO_ERROR:
                     return strData;
                 case RESPONS.SW_AUTH_FAILED:
-                    if (strData == "0") {
+                    if (strData.equals("0")) {
                         JOptionPane.showMessageDialog(null, "Tài khoản của bạn đã bị khóa");
+                        return "";
                     }
                     JOptionPane.showMessageDialog(null, "Bạn đã nhập sai mã PIN bạn còn " + strData + " lượt thử lại");
                     return "";
@@ -149,56 +150,6 @@ public class ConnectCard {
         }
     }
 
-    public boolean ChangePIN(String oldPin, String newPin) {
-        connectapplet();
-        byte[] pinOldByte = oldPin.getBytes();
-        byte lengtOld = (byte) pinOldByte.length;
-
-        byte[] pinNewByte = newPin.getBytes();
-        byte lengtNew = (byte) pinNewByte.length;
-
-        byte[] send = new byte[lengtNew + lengtOld + 2];
-        int offSet = 0;
-        send[offSet] = lengtOld;
-        offSet += 1;
-        System.arraycopy(pinOldByte, 0, send, offSet, lengtOld);
-        offSet += lengtOld;
-        send[offSet] = lengtNew;
-        offSet += 1;
-        System.arraycopy(pinNewByte, 0, send, offSet, lengtNew);
-        try {
-
-            TerminalFactory factory = TerminalFactory.getDefault();
-            List<CardTerminal> terminals = factory.terminals().list();
-
-            CardTerminal terminal = terminals.get(0);
-
-            Card card = terminal.connect("T=1");
-
-            CardChannel channel = card.getBasicChannel();
-
-            ResponseAPDU answer = channel.transmit(new CommandAPDU(APPLET.CLA, APPLET.INS_CHANGE_PIN, 0x00, 0x00, send));
-
-            message = answer.toString();
-            switch (((message.split("="))[1]).toUpperCase()) {
-                case RESPONS.SW_NO_ERROR:
-                    JOptionPane.showMessageDialog(null, "Cập nhật PIN thành công!");
-                    return true;
-                case RESPONS.SW_AUTH_FAILED:
-                    JOptionPane.showMessageDialog(null, "Bạn đã nhập sai PIN");
-                    return false;
-                case RESPONS.SW_IDENTITY_BLOCKED:
-                    JOptionPane.showMessageDialog(null, "Bạn đã nhập sai quá số lần thử!Thẻ đã bị khoá");
-                    return false;
-                default:
-                    return false;
-            }
-
-        } catch (Exception ex) {
-            return false;
-        }
-    }
-
     public boolean UnblockPin(byte[] aid) {
         try {
 
@@ -209,29 +160,19 @@ public class ConnectCard {
 
             Card card = terminal.connect("T=1");
 
-            CardChannel channel = card.getBasicChannel();
+            CardChannel channel2 = card.getBasicChannel();
 
-            ResponseAPDU selectBlockcard = channel.transmit(new CommandAPDU(0x00, 0xA4, 0x00, 0x00, aid));
-
-            String check = Integer.toHexString(selectBlockcard.getSW());
-
-            if (check.equals(RESPONS.SW_NO_ERROR)) {
-                CardChannel channel2 = card.getBasicChannel();
-
-                ResponseAPDU unblockCard = channel2.transmit(new CommandAPDU(APPLET.CLA, APPLET.INS_UNBLOCK_PIN, 0x00, 0x00));
-                message = unblockCard.toString();
-                switch (((message.split("="))[1]).toUpperCase()) {
-                    case RESPONS.SW_NO_ERROR:
-                        JOptionPane.showMessageDialog(null, "Mở khoá thẻ thành công");
-                        return true;
-                    case RESPONS.SW_OPERATION_NOT_ALLOWED:
-                        JOptionPane.showMessageDialog(null, "Thẻ không bị khoá vui lòng kiểm tra lại!");
-                        return false;
-                    default:
-                        return false;
-                }
-            } else {
-                return false;
+            ResponseAPDU unblockCard = channel2.transmit(new CommandAPDU(APPLET.CLA, APPLET.INS_UNBLOCK_PIN, 0x00, 0x00));
+            message = unblockCard.toString();
+            switch (((message.split("="))[1]).toUpperCase()) {
+                case RESPONS.SW_NO_ERROR:
+                    JOptionPane.showMessageDialog(null, "Mở khoá thẻ thành công");
+                    return true;
+                case RESPONS.SW_OPERATION_NOT_ALLOWED:
+                    JOptionPane.showMessageDialog(null, "Thẻ không bị khoá vui lòng kiểm tra lại!");
+                    return false;
+                default:
+                    return false;
             }
         } catch (Exception ex) {
             return false;
@@ -417,10 +358,9 @@ public class ConnectCard {
             System.out.println(strData);
 
             return strData;
-        } catch (Exception ex) {           
+        } catch (Exception ex) {
             System.out.println("ERROR");
 
-            
             return "";
         }
     }

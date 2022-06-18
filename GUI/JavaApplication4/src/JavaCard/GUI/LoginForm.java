@@ -58,6 +58,7 @@ public class LoginForm extends javax.swing.JFrame {
         btnLogin = new javax.swing.JButton();
         btnConnect = new javax.swing.JButton();
         jlbLogin = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -72,7 +73,7 @@ public class LoginForm extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 550, -1, -1));
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 550, -1, -1));
 
         txtPIN.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         txtPIN.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)));
@@ -133,10 +134,19 @@ public class LoginForm extends javax.swing.JFrame {
         getContentPane().add(btnConnect, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 540, 350, -1));
 
         jlbLogin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Trang.jpg"))); // NOI18N
-        getContentPane().add(jlbLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 130, 350, 390));
+        getContentPane().add(jlbLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 140, 350, 390));
+
+        jButton2.setBackground(new java.awt.Color(0, 255, 255));
+        jButton2.setText("Reset Pin");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 550, -1, -1));
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/LM logo.jpg"))); // NOI18N
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -5, -1, 690));
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -10, -1, 690));
 
         pack();
         setLocationRelativeTo(null);
@@ -206,6 +216,18 @@ public class LoginForm extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnConnectActionPerformed
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        ConnectCard connect = new ConnectCard();
+        byte[] a = {1,2,3};
+        if (connect.UnblockPin(a)) {
+            JOptionPane.showMessageDialog(null, "Đổi mã pin thành công");
+            ViewInfo info = new ViewInfo();
+            info.setVisible(true);
+            this.dispose();
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -247,6 +269,7 @@ public class LoginForm extends javax.swing.JFrame {
     private javax.swing.JButton btnLogin;
     private javax.swing.JCheckBox checkbox;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

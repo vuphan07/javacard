@@ -35,7 +35,7 @@ public class APPLET {
     public final static byte INS_CREATE_PIN = (byte) 0x02;
     public final static byte INS_VERIFY_PIN = (byte) 0x01;
     public final static byte INS_CHANGE_PIN = (byte) 0x44;
-    public final static byte INS_UNBLOCK_PIN = (byte) 0x46;
+    public final static byte INS_UNBLOCK_PIN = (byte) 0x06;
 
     public final static byte INS_CHANGE_INFORMATION = (byte) 0x52;
     public final static byte INS_CREATE_INFORMATION = (byte) 0x50;
