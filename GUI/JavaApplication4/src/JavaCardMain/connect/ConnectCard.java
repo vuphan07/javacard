@@ -19,6 +19,9 @@ import java.util.Arrays;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 import JavaCardMain.define.*;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -355,7 +358,7 @@ public class ConnectCard {
             ResponseAPDU answerID = channel.transmit(new CommandAPDU(APPLET.CLA, APPLET.READ_INFO, 0x00, 0x00));
 
             String strData = new String(answerID.getData());
-            System.out.println(strData);
+            
 
             return strData;
         } catch (Exception ex) {
@@ -363,6 +366,35 @@ public class ConnectCard {
 
             return "";
         }
+    }
+    
+    public byte[] requestSign(byte[] data) throws CardException, IOException {
+        try {
+            connectapplet();
+            TerminalFactory factory = TerminalFactory.getDefault();
+            List<CardTerminal> terminals = factory.terminals().list();
+            
+            CardTerminal terminal = terminals.get(0);
+            
+            Card card = terminal.connect("*");
+            
+            CardChannel channel = card.getBasicChannel();
+            ResponseAPDU response = channel.transmit(new CommandAPDU(APPLET.CLA,RSA.INS_SIGN,0x00,0x00,data));
+            String dataString = new String(response.getData());
+            System.out.println(dataString);           
+            System.out.println(response.getData().length);
+
+                String check = Integer.toHexString(response.getSW());
+                if (check.equals(RESPONS.SW_NO_ERROR)) {
+                    ConvertData.writeToFile("RSA/publicKey", response.getData());
+                      return response.getData();
+                }
+
+        } catch (CardException ex) {
+            System.out.println(ex);
+            throw ex;
+        }
+        return null;
     }
 
     public static void main(String[] args) {

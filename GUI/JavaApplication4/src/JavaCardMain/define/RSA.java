@@ -12,5 +12,5 @@ package JavaCardMain.define;
 public class RSA {
     public static final byte INS_GET_PUB_MODULUS= (byte)0x00;
     public static final byte INS_GET_PUB_EXPONENT= (byte)0x01;
-    public static final byte INS_SIGN= (byte)0x02;
+    public static final byte INS_SIGN= (byte)0x0f;
 }

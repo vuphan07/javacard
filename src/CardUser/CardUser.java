@@ -28,13 +28,13 @@ public class CardUser extends Applet implements ExtendedLength
 	public static byte isNewUser;
 
 	final static byte USER_CLA =(byte)0x00;
-	final static byte VERIFY = (byte) 0x01;
 	final static byte INIT_DATA = (byte) 0x2f;
 	final static byte GET_INFO = (byte) 0x3f;
 	final static byte CREATE_NAME =(byte)0x22;
 	final static byte CREATE_BIRTHDAY =(byte)0x33;
 	final static byte CREATE_GENDER =(byte)0x44;
 	final static byte CREATE_IMAGE =(byte)0x55;
+	final static byte VERIFY =(byte)0x01;
 	final static byte CREATE_PIN =(byte)0x02;
     final static byte UNLOCK_USER = (byte) 0x06;
 	final static byte PASSWORD_TRY_LIMIT =(byte)0x05;
@@ -169,6 +169,9 @@ public class CardUser extends Applet implements ExtendedLength
 			break;
 		case (byte)UNLOCK_USER: pin.resetAndUnblock();
 			return;
+		case (byte) INS_SIGN:
+			rsaSign(apdu,buf);
+			break;
 		default:
 			ISOException.throwIt(ISO7816.SW_INS_NOT_SUPPORTED);
 		}
@@ -257,6 +260,9 @@ public class CardUser extends Applet implements ExtendedLength
 		 Util.arrayCopy(dataEncrypt, (short)0x00, avatar, (short)0,(short)dataEncrypt.length);
 		 dataOffsetInput = (short)(avatar.length + lengthAvatar +1);
 		 pin.update(PIN_INIT_VALUE, (short) 0, (byte)PIN_INIT_VALUE.length);
+
+		short lenExponent  = rsaPubKey.getModulus(buf, (short) 0);
+		apdu.setOutgoingAndSend((short)0, lenExponent);
 		JCSystem.commitTransaction();	
 	}
 	
@@ -563,24 +569,22 @@ public class CardUser extends Applet implements ExtendedLength
     	}
     }
     
-    private void rsaSign(APDU apdu)
+    private void rsaSign(APDU apdu,byte[] buf)
 	{
+		short dataOffset = apdu.getOffsetCdata();
+		short datalength = apdu.getIncomingLength();
 		rsaSig.init(rsaPrivKey, Signature.MODE_SIGN);
-		rsaSig.update(s1, (short)0, (short)(s1.length));
-		rsaSig.update(s2, (short)0, (short)(s2.length));
-		rsaSig.sign(s3, (short)0, (short)(s3.length),
-		sig_buffer, (short)0);
+		rsaSig.sign(buf, dataOffset, (short)(datalength),sig_buffer, (short)0);
 		apdu.setOutgoing();
 		apdu.setOutgoingLength(sigLen);
 
 		apdu.sendBytesLong(sig_buffer, (short)0, sigLen);
 	}
-	private void rsaVerify(APDU apdu)
+	private void rsaVerify(APDU apdu,byte[] buf)
 	{
-		byte [] buf = apdu.getBuffer();
+		short dataOffset = apdu.getOffsetCdata();
+		short datalength = apdu.getIncomingLength();
 		rsaSig.init(rsaPubKey, Signature.MODE_VERIFY);
-		rsaSig.update(s1, (short)0, (short)(s1.length));
-		rsaSig.update(s2, (short)0, (short)(s2.length));
 		boolean ret = rsaSig.verify(s3, (short)0,
 		(short)(s3.length), sig_buffer, (short)0, sigLen);
 

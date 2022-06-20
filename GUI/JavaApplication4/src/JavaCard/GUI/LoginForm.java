@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import JavaCardMain.connect.ConnectCard;
+import JavaCardMain.utils.ConvertData;
 //import javacard.connect.RSAAppletHelper;
 import javax.smartcardio.CardException;
 
@@ -18,7 +19,8 @@ import javax.smartcardio.CardException;
  * @author Bawcs
  */
 public class LoginForm extends javax.swing.JFrame {
-    private static int login_status = 0; 
+
+    private static int login_status = 0;
 
     /**
      * Creates new form LoginForm
@@ -26,13 +28,12 @@ public class LoginForm extends javax.swing.JFrame {
     public LoginForm(int Connectstatus) {
         initComponents();
         login_status = Connectstatus;
-        if(login_status == 0){
+        if (login_status == 0) {
             jlbLogin.setEnabled(false);
             txtPIN.setEnabled(false);
             checkbox.setEnabled(false);
             btnLogin.setEnabled(false);
-        }
-        else{
+        } else {
             jlbLogin.setEnabled(true);
             txtPIN.setEnabled(true);
             checkbox.setEnabled(true);
@@ -57,6 +58,8 @@ public class LoginForm extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         btnLogin = new javax.swing.JButton();
         btnConnect = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
         jlbLogin = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
@@ -133,6 +136,22 @@ public class LoginForm extends javax.swing.JFrame {
         });
         getContentPane().add(btnConnect, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 540, 350, -1));
 
+        jButton3.setText("jButton3");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 450, -1, -1));
+
+        jButton4.setText("jButton4");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 490, -1, -1));
+
         jlbLogin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Trang.jpg"))); // NOI18N
         getContentPane().add(jlbLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 140, 350, 390));
 
@@ -168,11 +187,11 @@ public class LoginForm extends javax.swing.JFrame {
         String isNewUser = connect.verifyPin(pin);
         System.out.println(isNewUser.toString());
         if (isNewUser != "") {
-            if ( isNewUser.equalsIgnoreCase("1")) {
+            if (isNewUser.equalsIgnoreCase("1")) {
                 PinForm pinform = new PinForm("1234");
                 pinform.setVisible(true);
                 this.dispose();
-                
+
             } else {
                 ViewInfo info = new ViewInfo();
                 info.setVisible(true);
@@ -219,7 +238,7 @@ public class LoginForm extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         ConnectCard connect = new ConnectCard();
-        byte[] a = {1,2,3};
+        byte[] a = {1, 2, 3};
         if (connect.UnblockPin(a)) {
             JOptionPane.showMessageDialog(null, "Đổi mã pin thành công");
             ViewInfo info = new ViewInfo();
@@ -228,10 +247,37 @@ public class LoginForm extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        try {
+
+            ConnectCard connect = new ConnectCard();
+            String dataRandom = ConvertData.generateString();
+            byte[] data = connect.requestSign(dataRandom.getBytes());
+            if (data.length > 0) {
+                JOptionPane.showMessageDialog(null, "request thanh cong");
+//                ViewInfo info = new ViewInfo();
+//                info.setVisible(true);
+//                this.dispose();
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        try {
+            ConvertData.ReadfromFile("RSA/publicKey");
+        } catch (Exception e) {
+            System.out.println("JavaCard.GUI.LoginForm.jButton4ActionPerformed()");
+        }
+    }//GEN-LAST:event_jButton4ActionPerformed
+
     /**
      * @param args the command line arguments
      */
-        public static void main(String args[]) {
+    public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -255,7 +301,7 @@ public class LoginForm extends javax.swing.JFrame {
         }
         //</editor-fold>
         //</editor-fold>
-
+        System.out.println("className.methodName()");
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -270,6 +316,8 @@ public class LoginForm extends javax.swing.JFrame {
     private javax.swing.JCheckBox checkbox;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
