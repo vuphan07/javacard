@@ -6,6 +6,8 @@
 package JavaCard.GUI;
 
 import JavaCardMain.connect.ConnectCard;
+import JavaCardMain.utils.Database;
+import JavaCardMain.utils.User;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -61,12 +63,14 @@ public class HomeForm extends javax.swing.JFrame {
 
     public HomeForm() {
         initComponents();
+        int idDefault = new Database().countNumber();
+        txtID.setText(Integer.toString(idDefault));
         ConnectCard connect = new ConnectCard();
         jpnInfo.setVisible(true);
         avatarContain.setHorizontalAlignment(JTextField.CENTER);
         avatarContain.setText("Chưa cập nhật");
         txtID.setEnabled(false);
-        txtID.setText("001");
+//        txtID.setText("001");
     }
 
     public boolean hasObject(File f) {
@@ -123,6 +127,7 @@ public class HomeForm extends javax.swing.JFrame {
         radiobuttonnam = new javax.swing.JRadioButton();
         radiobuttonnu = new javax.swing.JRadioButton();
         txtName = new javax.swing.JTextField();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setLocationByPlatform(true);
@@ -265,18 +270,38 @@ public class HomeForm extends javax.swing.JFrame {
             }
         });
 
+        jButton2.setBackground(new java.awt.Color(0, 102, 153));
+        jButton2.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        jButton2.setForeground(new java.awt.Color(255, 255, 255));
+        jButton2.setText("Login");
+        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton2MouseClicked(evt);
+            }
+        });
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jpnInfoLayout = new javax.swing.GroupLayout(jpnInfo);
         jpnInfo.setLayout(jpnInfoLayout);
         jpnInfoLayout.setHorizontalGroup(
             jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpnInfoLayout.createSequentialGroup()
-                .addGap(33, 33, 33)
                 .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel10)
-                    .addComponent(jLabel11)
-                    .addComponent(jLabel12))
-                .addGap(77, 77, 77)
+                    .addGroup(jpnInfoLayout.createSequentialGroup()
+                        .addGap(33, 33, 33)
+                        .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel10)
+                            .addComponent(jLabel11)
+                            .addComponent(jLabel12)))
+                    .addGroup(jpnInfoLayout.createSequentialGroup()
+                        .addGap(66, 66, 66)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(24, 24, 24)
                 .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -334,7 +359,9 @@ public class HomeForm extends javax.swing.JFrame {
                     .addComponent(radiobuttonnam)
                     .addComponent(radiobuttonnu))
                 .addGap(48, 48, 48)
-                .addComponent(jButton1)
+                .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
                 .addContainerGap(54, Short.MAX_VALUE))
         );
 
@@ -453,6 +480,9 @@ public class HomeForm extends javax.swing.JFrame {
             offSet += 1;
             System.arraycopy(byteAvatar, 0, data, offSet, byteAvatar.length);
             if (connect.EditInformation(data)) {
+                PublicKey publickey = connect.getPublicKey();
+                User user = new User(Integer.parseInt(strId),Base64.getEncoder().encodeToString(publickey.getEncoded()));
+                new Database().save(user);
                 LoginForm login = new LoginForm(1);
                 login.setVisible(true);
                 this.dispose();
@@ -500,6 +530,15 @@ public class HomeForm extends javax.swing.JFrame {
         // TODO add your handling code here:
         this.dispose();
     }//GEN-LAST:event_jLabel6MouseClicked
+
+    private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
+        // TODO add your handling code here:
+        new LoginForm(0).setVisible(true);
+    }//GEN-LAST:event_jButton2MouseClicked
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2ActionPerformed
     public class JPEGImageFileFilter extends FileFilter {
 
         @Override
@@ -620,6 +659,7 @@ public class HomeForm extends javax.swing.JFrame {
     private javax.swing.JLabel avatarContain;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;

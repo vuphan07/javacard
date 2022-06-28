@@ -1,5 +1,5 @@
 // converted by version  [v3.0.4]
-// on Sun Jun 19 01:00:12 ICT 2022
+// on Tue Jun 21 12:48:58 ICT 2022
 
 .package CardUser {
 	.aid 0x88:0x88:0x88:0x88:0x88;
@@ -153,102 +153,108 @@
 			.descriptor	Ljavacard/framework/APDU;	0.10;
 
 		// 52
-		staticMethodRef 0.8.1()V;		// javacard/framework/JCSystem.beginTransaction()V
+		staticMethodRef CardUser/exportPublicModulus(Ljavacard/framework/APDU;)V;
+			.descriptor	Ljavacard/framework/APDU;	0.10;
+
 		// 53
-		virtualMethodRef 0.10.16()S;		// getOffsetCdata()S
+		staticMethodRef CardUser/exportPublicExponent(Ljavacard/framework/APDU;)V;
+			.descriptor	Ljavacard/framework/APDU;	0.10;
+
 		// 54
-		virtualMethodRef 0.10.15()S;		// getIncomingLength()S
+		staticMethodRef 0.8.1()V;		// javacard/framework/JCSystem.beginTransaction()V
 		// 55
-		staticMethodRef 0.16.1([BS[BSS)S;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+		virtualMethodRef 0.10.16()S;		// getOffsetCdata()S
 		// 56
-		virtualMethodRef 0.10.3(S)S;		// receiveBytes(S)S
+		virtualMethodRef 0.10.15()S;		// getIncomingLength()S
 		// 57
-		staticMethodRef CardUser/getLengthWithMaker([BSS)S;
+		staticMethodRef 0.16.1([BS[BSS)S;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 		// 58
-		staticFieldRef short CardUser/userIdLength;
+		virtualMethodRef 0.10.3(S)S;		// receiveBytes(S)S
 		// 59
-		staticFieldRef byte[] CardUser/userId;
+		staticMethodRef CardUser/getLengthWithMaker([BSS)S;
 		// 60
-		virtualMethodRef CardUser/encrypt([B)[B;
+		staticFieldRef short CardUser/userIdLength;
 		// 61
-		staticFieldRef short CardUser/usernameLength;
+		staticFieldRef byte[] CardUser/userId;
 		// 62
-		staticFieldRef byte[] CardUser/userName;
+		virtualMethodRef CardUser/encrypt([B)[B;
 		// 63
-		staticFieldRef short CardUser/birthDayLength;
+		staticFieldRef short CardUser/usernameLength;
 		// 64
-		staticFieldRef byte[] CardUser/birthDay;
+		staticFieldRef byte[] CardUser/userName;
 		// 65
-		staticFieldRef short CardUser/genderLength;
+		staticFieldRef short CardUser/birthDayLength;
 		// 66
-		staticFieldRef byte[] CardUser/gender;
+		staticFieldRef byte[] CardUser/birthDay;
 		// 67
-		staticFieldRef short CardUser/avatarLength;
+		staticFieldRef short CardUser/genderLength;
 		// 68
-		staticFieldRef byte[] CardUser/avatar;
+		staticFieldRef byte[] CardUser/gender;
 		// 69
-		virtualMethodRef 0.9.8([BSB)V;		// update([BSB)V
+		staticFieldRef short CardUser/avatarLength;
 		// 70
-		virtualMethodRef 0.10.8(SS)V;		// setOutgoingAndSend(SS)V
+		staticFieldRef byte[] CardUser/avatar;
 		// 71
-		staticMethodRef 0.8.2()V;		// javacard/framework/JCSystem.commitTransaction()V
+		virtualMethodRef 0.9.8([BSB)V;		// update([BSB)V
 		// 72
-		staticMethodRef CardUser/decrypt([BS)[B;
+		virtualMethodRef 0.10.8(SS)V;		// setOutgoingAndSend(SS)V
 		// 73
-		virtualMethodRef 0.10.7()S;		// setOutgoing()S
+		staticMethodRef 0.8.2()V;		// javacard/framework/JCSystem.commitTransaction()V
 		// 74
-		virtualMethodRef 0.10.9(S)V;		// setOutgoingLength(S)V
+		staticMethodRef CardUser/decrypt([BS)[B;
 		// 75
-		virtualMethodRef 0.10.5([BSS)V;		// sendBytesLong([BSS)V
+		virtualMethodRef 0.10.7()S;		// setOutgoing()S
 		// 76
-		virtualMethodRef 0.9.4()Z;		// isValidated()Z
+		virtualMethodRef 0.10.9(S)V;		// setOutgoingLength(S)V
 		// 77
-		virtualMethodRef 0.9.1([BSB)Z;		// check([BSB)Z
+		virtualMethodRef 0.10.5([BSS)V;		// sendBytesLong([BSS)V
 		// 78
+		virtualMethodRef 0.9.1([BSB)Z;		// check([BSB)Z
+		// 79
 		virtualMethodRef 3.1.3(Ljavacard/security/Key;B)V;		// init(Ljavacard/security/Key;B)V
 			.descriptor	Ljavacard/security/Key;	2.0;
 
-		// 79
-		virtualMethodRef 3.1.1([BSS[BS)S;		// doFinal([BSS[BS)S
 		// 80
+		virtualMethodRef 3.1.1([BSS[BS)S;		// doFinal([BSS[BS)S
+		// 81
 		virtualMethodRef 2.15.3(Ljavacard/security/Key;B)V;		// init(Ljavacard/security/Key;B)V
 			.descriptor	Ljavacard/security/Key;	2.0;
 
-		// 81
-		virtualMethodRef 2.15.5([BSS[BS)S;		// sign([BSS[BS)S
 		// 82
-		virtualMethodRef 2.15.7([BSS[BSS)Z;		// verify([BSS[BSS)Z
+		virtualMethodRef 2.15.5([BSS[BS)S;		// sign([BSS[BS)S
 		// 83
-		virtualMethodRef 0.9.2()B;		// getTriesRemaining()B
+		virtualMethodRef 2.15.7([BSS[BSS)Z;		// verify([BSS[BSS)Z
 		// 84
-		staticMethodRef 4.0.0()V;		// java/lang/Object.<init>()V
+		virtualMethodRef 0.9.2()B;		// getTriesRemaining()B
 		// 85
-		staticFieldRef byte[] HMacSHA512/data;
+		staticMethodRef 4.0.0()V;		// java/lang/Object.<init>()V
 		// 86
-		staticMethodRef Sha512/resetUpdateDoFinal([BSS[BS)S;
+		staticFieldRef byte[] HMacSHA512/data;
 		// 87
-		staticMethodRef 0.8.15(SB)[S;		// javacard/framework/JCSystem.makeTransientShortArray(SB)[S
+		staticMethodRef Sha512/resetUpdateDoFinal([BSS[BS)S;
 		// 88
-		staticFieldRef short[] Sha512/w_short;
+		staticMethodRef 0.8.15(SB)[S;		// javacard/framework/JCSystem.makeTransientShortArray(SB)[S
 		// 89
-		staticFieldRef short[] Sha512/h_short;
+		staticFieldRef short[] Sha512/w_short;
 		// 90
-		staticFieldRef short[] Sha512/hashState;
+		staticFieldRef short[] Sha512/h_short;
 		// 91
-		staticFieldRef byte[] Sha512/buffer;
+		staticFieldRef short[] Sha512/hashState;
 		// 92
-		staticMethodRef 0.16.4([BS)S;		// javacard/framework/Util.getShort([BS)S
+		staticFieldRef byte[] Sha512/buffer;
 		// 93
-		staticFieldRef short[] Sha512/K_SHORT;
+		staticMethodRef 0.16.4([BS)S;		// javacard/framework/Util.getShort([BS)S
 		// 94
-		staticFieldRef short Sha512/bufferOff;
+		staticFieldRef short[] Sha512/K_SHORT;
 		// 95
-		staticFieldRef short Sha512/bufferLeft;
+		staticFieldRef short Sha512/bufferOff;
 		// 96
-		staticMethodRef 0.16.2([BS[BSS)S;		// javacard/framework/Util.arrayCopyNonAtomic([BS[BSS)S
+		staticFieldRef short Sha512/bufferLeft;
 		// 97
-		staticFieldRef short[] Sha512/H_INIT_SHORT;
+		staticMethodRef 0.16.2([BS[BSS)S;		// javacard/framework/Util.arrayCopyNonAtomic([BS[BSS)S
 		// 98
+		staticFieldRef short[] Sha512/H_INIT_SHORT;
+		// 99
 		staticMethodRef Sha512/CompressionFunction([SS[BS)V;
 	}
 
@@ -287,6 +293,8 @@
 			static final byte CREATE_PIN = 2;		// B
 			static final byte UNLOCK_USER = 6;		// B
 			static final byte PASSWORD_TRY_LIMIT = 5;		// B
+			static final byte GET_EXPORT_PUBLIC_MODUL = 95;		// B
+			static final byte GET_EXPORT_PUBLIC_EXPONENT = 111;		// B
 			static final byte MAX_PASS_SIZE = 8;		// B
 			static final short SW_VERIFICATION_FAILED = 25344;		// S
 			static final short SW_CARD_IS_BLOCKED = 25346;		// S
@@ -316,6 +324,7 @@
 			createImage(Ljavacard/framework/APDU;[BS)V;
 			showInformation(Ljavacard/framework/APDU;)V;
 			createPin(Ljavacard/framework/APDU;[B)V;
+			resetPin(Ljavacard/framework/APDU;)V;
 			encrypt([B)[B;
 		}
 
@@ -590,50 +599,50 @@
 				L7:	aload_2;
 					sconst_1;
 					baload;
-					slookupswitch L18 10 1 L15 2 L8 6 L16 15 L17 34 L9 47 L13 51 L11 63 L14 68 L10 85 L12;
+					slookupswitch L20 12 1 L15 2 L8 6 L16 15 L17 34 L9 47 L13 51 L11 63 L14 68 L10 85 L12 95 L18 111 L19;
 				L8:	aload_0;
 					aload_1;
 					aload_2;
 					invokevirtual 42;		// createPin(Ljavacard/framework/APDU;[B)V
-					goto L19;
+					goto L21;
 				L9:	aload_0;
 					aload_1;
 					aload_2;
 					invokevirtual 43;		// createName(Ljavacard/framework/APDU;[B)V
-					goto L19;
+					goto L21;
 				L10:	aload_0;
 					aload_1;
 					aload_2;
 					invokevirtual 44;		// createGender(Ljavacard/framework/APDU;[B)V
-					goto L19;
+					goto L21;
 				L11:	aload_0;
 					aload_1;
 					aload_2;
 					invokevirtual 45;		// createBirthDay(Ljavacard/framework/APDU;[B)V
-					goto L19;
+					goto L21;
 				L12:	aload_0;
 					aload_1;
 					aload_2;
 					sload_3;
 					invokevirtual 46;		// createImage(Ljavacard/framework/APDU;[BS)V
-					goto L19;
+					goto L21;
 				L13:	aload_0;
 					aload_1;
 					aload_2;
 					sload_3;
 					invokevirtual 47;		// initInformation(Ljavacard/framework/APDU;[BS)V
-					goto L19;
+					goto L21;
 				L14:	aload_0;
 					aload_1;
 					invokevirtual 48;		// showInformation(Ljavacard/framework/APDU;)V
-					goto L19;
+					goto L21;
 				L15:	aload_0;
 					aload_1;
 					aload_2;
 					sload_3;
 					s2b;
 					invokespecial 49;		// CardUser/CardUser.verify(Ljavacard/framework/APDU;[BB)V
-					goto L19;
+					goto L21;
 				L16:	getstatic_a 10;		// reference CardUser/CardUser.pin
 					invokevirtual 50;		// resetAndUnblock()V
 					return;
@@ -641,10 +650,18 @@
 					aload_1;
 					aload_2;
 					invokespecial 51;		// CardUser/CardUser.rsaSign(Ljavacard/framework/APDU;[B)V
-					goto L19;
-				L18:	sspush 27904;
+					goto L21;
+				L18:	aload_0;
+					aload_1;
+					invokespecial 52;		// CardUser/CardUser.exportPublicModulus(Ljavacard/framework/APDU;)V
+					goto L21;
+				L19:	aload_0;
+					aload_1;
+					invokespecial 53;		// CardUser/CardUser.exportPublicExponent(Ljavacard/framework/APDU;)V
+					goto L21;
+				L20:	sspush 27904;
 					invokestatic 41;		// javacard/framework/ISOException.throwIt(S)V
-				L19:	return;
+				L21:	return;
 		}
 
 		.method public static getLengthWithMaker([BSS)S 1 {
@@ -693,14 +710,14 @@
 
 			.descriptor	Ljavacard/framework/APDU;	0.10;
 
-				L0:	invokestatic 52;		// javacard/framework/JCSystem.beginTransaction()V
+				L0:	invokestatic 54;		// javacard/framework/JCSystem.beginTransaction()V
 					sconst_0;
 					sstore 4;
 				L1:	aload_1;
-					invokevirtual 53;		// getOffsetCdata()S
+					invokevirtual 55;		// getOffsetCdata()S
 					sstore 5;
 				L2:	aload_1;
-					invokevirtual 54;		// getIncomingLength()S
+					invokevirtual 56;		// getIncomingLength()S
 					sstore 6;
 				L3:	sload 6;
 					newarray 11;
@@ -719,7 +736,7 @@
 					aload 7;
 					sload 4;
 					sload_3;
-					invokestatic 55;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					invokestatic 57;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
 					sload 4;
 					sload_3;
@@ -727,18 +744,18 @@
 					sstore 4;
 					aload_1;
 					sload 5;
-					invokevirtual 56;		// receiveBytes(S)S
+					invokevirtual 58;		// receiveBytes(S)S
 					sstore_3;
 					goto L7;
 				L9:	aload 7;
 					sload 8;
 					aload 7;
 					arraylength;
-					invokestatic 57;		// CardUser/CardUser.getLengthWithMaker([BSS)S
+					invokestatic 59;		// CardUser/CardUser.getLengthWithMaker([BSS)S
 					sstore 11;
 				L10:	sload 11;
-					putstatic_s 58;		// short CardUser/CardUser.userIdLength
-					getstatic_s 58;		// short CardUser/CardUser.userIdLength
+					putstatic_s 60;		// short CardUser/CardUser.userIdLength
+					getstatic_s 60;		// short CardUser/CardUser.userIdLength
 					sspush 128;
 					sdiv;
 					sconst_1;
@@ -748,7 +765,7 @@
 					sload 10;
 					smul;
 					newarray 11;
-					putstatic_a 59;		// reference CardUser/CardUser.userId
+					putstatic_a 61;		// reference CardUser/CardUser.userId
 					sload 11;
 					newarray 11;
 					astore 12;
@@ -757,19 +774,19 @@
 					aload 12;
 					sconst_0;
 					sload 11;
-					invokestatic 55;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					invokestatic 57;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
 					aload_0;
 					aload 12;
-					invokevirtual 60;		// encrypt([B)[B
+					invokevirtual 62;		// encrypt([B)[B
 					astore 9;
 					aload 9;
 					sconst_0;
-					getstatic_a 59;		// reference CardUser/CardUser.userId
+					getstatic_a 61;		// reference CardUser/CardUser.userId
 					sconst_0;
 					aload 9;
 					arraylength;
-					invokestatic 55;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					invokestatic 57;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
 					sload 11;
 					sload 8;
@@ -781,10 +798,10 @@
 					sload 8;
 					aload 7;
 					arraylength;
-					invokestatic 57;		// CardUser/CardUser.getLengthWithMaker([BSS)S
+					invokestatic 59;		// CardUser/CardUser.getLengthWithMaker([BSS)S
 					sstore 13;
 				L12:	sload 13;
-					putstatic_s 61;		// short CardUser/CardUser.usernameLength
+					putstatic_s 63;		// short CardUser/CardUser.usernameLength
 					sload 13;
 					sspush 128;
 					sdiv;
@@ -795,7 +812,7 @@
 					sload 10;
 					smul;
 					newarray 11;
-					putstatic_a 62;		// reference CardUser/CardUser.userName
+					putstatic_a 64;		// reference CardUser/CardUser.userName
 					sload 13;
 					newarray 11;
 					astore 14;
@@ -804,19 +821,19 @@
 					aload 14;
 					sconst_0;
 					sload 13;
-					invokestatic 55;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					invokestatic 57;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
 					aload_0;
 					aload 14;
-					invokevirtual 60;		// encrypt([B)[B
+					invokevirtual 62;		// encrypt([B)[B
 					astore 9;
 					aload 9;
 					sconst_0;
-					getstatic_a 62;		// reference CardUser/CardUser.userName
+					getstatic_a 64;		// reference CardUser/CardUser.userName
 					sconst_0;
 					aload 9;
 					arraylength;
-					invokestatic 55;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					invokestatic 57;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
 					sload 13;
 					sload 8;
@@ -828,11 +845,11 @@
 					sload 8;
 					aload 7;
 					arraylength;
-					invokestatic 57;		// CardUser/CardUser.getLengthWithMaker([BSS)S
+					invokestatic 59;		// CardUser/CardUser.getLengthWithMaker([BSS)S
 					sstore 15;
 				L14:	sload 15;
-					putstatic_s 63;		// short CardUser/CardUser.birthDayLength
-					getstatic_s 63;		// short CardUser/CardUser.birthDayLength
+					putstatic_s 65;		// short CardUser/CardUser.birthDayLength
+					getstatic_s 65;		// short CardUser/CardUser.birthDayLength
 					sspush 128;
 					sdiv;
 					sconst_1;
@@ -842,7 +859,7 @@
 					sload 10;
 					smul;
 					newarray 11;
-					putstatic_a 64;		// reference CardUser/CardUser.birthDay
+					putstatic_a 66;		// reference CardUser/CardUser.birthDay
 					sload 15;
 					newarray 11;
 					astore 16;
@@ -851,19 +868,19 @@
 					aload 16;
 					sconst_0;
 					sload 15;
-					invokestatic 55;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					invokestatic 57;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
 					aload_0;
 					aload 16;
-					invokevirtual 60;		// encrypt([B)[B
+					invokevirtual 62;		// encrypt([B)[B
 					astore 9;
 					aload 9;
 					sconst_0;
-					getstatic_a 64;		// reference CardUser/CardUser.birthDay
+					getstatic_a 66;		// reference CardUser/CardUser.birthDay
 					sconst_0;
 					aload 9;
 					arraylength;
-					invokestatic 55;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					invokestatic 57;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
 					sload 15;
 					sload 8;
@@ -875,11 +892,11 @@
 					sload 8;
 					aload 7;
 					arraylength;
-					invokestatic 57;		// CardUser/CardUser.getLengthWithMaker([BSS)S
+					invokestatic 59;		// CardUser/CardUser.getLengthWithMaker([BSS)S
 					sstore 17;
 				L16:	sload 17;
-					putstatic_s 65;		// short CardUser/CardUser.genderLength
-					getstatic_s 65;		// short CardUser/CardUser.genderLength
+					putstatic_s 67;		// short CardUser/CardUser.genderLength
+					getstatic_s 67;		// short CardUser/CardUser.genderLength
 					sspush 128;
 					sdiv;
 					sconst_1;
@@ -889,7 +906,7 @@
 					sload 10;
 					smul;
 					newarray 11;
-					putstatic_a 66;		// reference CardUser/CardUser.gender
+					putstatic_a 68;		// reference CardUser/CardUser.gender
 					sload 17;
 					newarray 11;
 					astore 18;
@@ -898,19 +915,19 @@
 					aload 18;
 					sconst_0;
 					sload 17;
-					invokestatic 55;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					invokestatic 57;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
 					aload_0;
 					aload 18;
-					invokevirtual 60;		// encrypt([B)[B
+					invokevirtual 62;		// encrypt([B)[B
 					astore 9;
 					aload 9;
 					sconst_0;
-					getstatic_a 66;		// reference CardUser/CardUser.gender
+					getstatic_a 68;		// reference CardUser/CardUser.gender
 					sconst_0;
 					aload 9;
 					arraylength;
-					invokestatic 55;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					invokestatic 57;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
 					sload 17;
 					sload 8;
@@ -922,10 +939,10 @@
 					sload 8;
 					aload 7;
 					arraylength;
-					invokestatic 57;		// CardUser/CardUser.getLengthWithMaker([BSS)S
+					invokestatic 59;		// CardUser/CardUser.getLengthWithMaker([BSS)S
 					sstore 19;
 				L18:	sload 19;
-					putstatic_s 67;		// short CardUser/CardUser.avatarLength
+					putstatic_s 69;		// short CardUser/CardUser.avatarLength
 					sload 19;
 					sspush 128;
 					sdiv;
@@ -939,27 +956,27 @@
 					sload 10;
 					smul;
 					newarray 11;
-					putstatic_a 68;		// reference CardUser/CardUser.avatar
+					putstatic_a 70;		// reference CardUser/CardUser.avatar
 					aload 7;
 					sload 8;
 					aload 20;
 					sconst_0;
 					sload 19;
-					invokestatic 55;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					invokestatic 57;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
 					aload_0;
 					aload 20;
-					invokevirtual 60;		// encrypt([B)[B
+					invokevirtual 62;		// encrypt([B)[B
 					astore 9;
 					aload 9;
 					sconst_0;
-					getstatic_a 68;		// reference CardUser/CardUser.avatar
+					getstatic_a 70;		// reference CardUser/CardUser.avatar
 					sconst_0;
 					aload 9;
 					arraylength;
-					invokestatic 55;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					invokestatic 57;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
-					getstatic_a 68;		// reference CardUser/CardUser.avatar
+					getstatic_a 70;		// reference CardUser/CardUser.avatar
 					arraylength;
 					sload 19;
 					sadd;
@@ -972,7 +989,7 @@
 					getstatic_a 30;		// reference CardUser/CardUser.PIN_INIT_VALUE
 					arraylength;
 					s2b;
-					invokevirtual 69;		// update([BSB)V
+					invokevirtual 71;		// update([BSB)V
 					getfield_a_this 7;		// reference CardUser/CardUser.rsaPubKey
 					aload_2;
 					sconst_0;
@@ -981,8 +998,8 @@
 				L20:	aload_1;
 					sconst_0;
 					sload 21;
-					invokevirtual 70;		// setOutgoingAndSend(SS)V
-					invokestatic 71;		// javacard/framework/JCSystem.commitTransaction()V
+					invokevirtual 72;		// setOutgoingAndSend(SS)V
+					invokestatic 73;		// javacard/framework/JCSystem.commitTransaction()V
 					return;
 		}
 
@@ -993,13 +1010,13 @@
 			.descriptor	Ljavacard/framework/APDU;	0.10;
 
 				L0:	aload_1;
-					invokevirtual 53;		// getOffsetCdata()S
+					invokevirtual 55;		// getOffsetCdata()S
 					sstore_3;
 				L1:	aload_1;
-					invokevirtual 54;		// getIncomingLength()S
+					invokevirtual 56;		// getIncomingLength()S
 					sstore 4;
 				L2:	sload 4;
-					putstatic_s 61;		// short CardUser/CardUser.usernameLength
+					putstatic_s 63;		// short CardUser/CardUser.usernameLength
 					sload 4;
 					sspush 128;
 					sdiv;
@@ -1010,28 +1027,28 @@
 					sload 5;
 					smul;
 					newarray 11;
-					putstatic_a 62;		// reference CardUser/CardUser.userName
-					getstatic_s 61;		// short CardUser/CardUser.usernameLength
+					putstatic_a 64;		// reference CardUser/CardUser.userName
+					getstatic_s 63;		// short CardUser/CardUser.usernameLength
 					newarray 11;
 					astore 6;
 				L4:	aload_2;
 					sload_3;
 					aload 6;
 					sconst_0;
-					getstatic_s 61;		// short CardUser/CardUser.usernameLength
-					invokestatic 55;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					getstatic_s 63;		// short CardUser/CardUser.usernameLength
+					invokestatic 57;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
 					aload_0;
 					aload 6;
-					invokevirtual 60;		// encrypt([B)[B
+					invokevirtual 62;		// encrypt([B)[B
 					astore 7;
 				L5:	aload 7;
 					sconst_0;
-					getstatic_a 62;		// reference CardUser/CardUser.userName
+					getstatic_a 64;		// reference CardUser/CardUser.userName
 					sconst_0;
 					aload 7;
 					arraylength;
-					invokestatic 55;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					invokestatic 57;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
 					return;
 		}
@@ -1043,13 +1060,13 @@
 			.descriptor	Ljavacard/framework/APDU;	0.10;
 
 				L0:	aload_1;
-					invokevirtual 53;		// getOffsetCdata()S
+					invokevirtual 55;		// getOffsetCdata()S
 					sstore_3;
 				L1:	aload_1;
-					invokevirtual 54;		// getIncomingLength()S
+					invokevirtual 56;		// getIncomingLength()S
 					sstore 4;
 				L2:	sload 4;
-					putstatic_s 63;		// short CardUser/CardUser.birthDayLength
+					putstatic_s 65;		// short CardUser/CardUser.birthDayLength
 					sload 4;
 					sspush 128;
 					sdiv;
@@ -1060,28 +1077,28 @@
 					sload 5;
 					smul;
 					newarray 11;
-					putstatic_a 64;		// reference CardUser/CardUser.birthDay
-					getstatic_s 63;		// short CardUser/CardUser.birthDayLength
+					putstatic_a 66;		// reference CardUser/CardUser.birthDay
+					getstatic_s 65;		// short CardUser/CardUser.birthDayLength
 					newarray 11;
 					astore 6;
 				L4:	aload_2;
 					sload_3;
 					aload 6;
 					sconst_0;
-					getstatic_s 63;		// short CardUser/CardUser.birthDayLength
-					invokestatic 55;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					getstatic_s 65;		// short CardUser/CardUser.birthDayLength
+					invokestatic 57;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
 					aload_0;
 					aload 6;
-					invokevirtual 60;		// encrypt([B)[B
+					invokevirtual 62;		// encrypt([B)[B
 					astore 7;
 				L5:	aload 7;
 					sconst_0;
-					getstatic_a 64;		// reference CardUser/CardUser.birthDay
+					getstatic_a 66;		// reference CardUser/CardUser.birthDay
 					sconst_0;
 					aload 7;
 					arraylength;
-					invokestatic 55;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					invokestatic 57;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
 					return;
 		}
@@ -1093,13 +1110,13 @@
 			.descriptor	Ljavacard/framework/APDU;	0.10;
 
 				L0:	aload_1;
-					invokevirtual 53;		// getOffsetCdata()S
+					invokevirtual 55;		// getOffsetCdata()S
 					sstore_3;
 				L1:	aload_1;
-					invokevirtual 54;		// getIncomingLength()S
+					invokevirtual 56;		// getIncomingLength()S
 					sstore 4;
 				L2:	sload 4;
-					putstatic_s 65;		// short CardUser/CardUser.genderLength
+					putstatic_s 67;		// short CardUser/CardUser.genderLength
 					sload 4;
 					sspush 128;
 					sdiv;
@@ -1110,28 +1127,28 @@
 					sload 5;
 					smul;
 					newarray 11;
-					putstatic_a 66;		// reference CardUser/CardUser.gender
-					getstatic_s 61;		// short CardUser/CardUser.usernameLength
+					putstatic_a 68;		// reference CardUser/CardUser.gender
+					getstatic_s 63;		// short CardUser/CardUser.usernameLength
 					newarray 11;
 					astore 6;
 				L4:	aload_2;
 					sload_3;
 					aload 6;
 					sconst_0;
-					getstatic_s 65;		// short CardUser/CardUser.genderLength
-					invokestatic 55;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					getstatic_s 67;		// short CardUser/CardUser.genderLength
+					invokestatic 57;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
 					aload_0;
 					aload 6;
-					invokevirtual 60;		// encrypt([B)[B
+					invokevirtual 62;		// encrypt([B)[B
 					astore 7;
 				L5:	aload 7;
 					sconst_0;
-					getstatic_a 66;		// reference CardUser/CardUser.gender
+					getstatic_a 68;		// reference CardUser/CardUser.gender
 					sconst_0;
 					aload 7;
 					arraylength;
-					invokestatic 55;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					invokestatic 57;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
 					return;
 		}
@@ -1145,10 +1162,10 @@
 				L0:	sconst_0;
 					sstore 4;
 				L1:	aload_1;
-					invokevirtual 53;		// getOffsetCdata()S
+					invokevirtual 55;		// getOffsetCdata()S
 					sstore 5;
 				L2:	aload_1;
-					invokevirtual 54;		// getIncomingLength()S
+					invokevirtual 56;		// getIncomingLength()S
 					sstore 6;
 				L3:	sload 6;
 					newarray 11;
@@ -1168,7 +1185,7 @@
 					aload 7;
 					sload 4;
 					sload_3;
-					invokestatic 55;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					invokestatic 57;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
 					sload 4;
 					sload_3;
@@ -1176,17 +1193,17 @@
 					sstore 4;
 					aload_1;
 					sload 5;
-					invokevirtual 56;		// receiveBytes(S)S
+					invokevirtual 58;		// receiveBytes(S)S
 					sstore_3;
 					goto L6;
 				L8:	sspush 128;
 					sload 9;
 					smul;
 					newarray 11;
-					putstatic_a 68;		// reference CardUser/CardUser.avatar
+					putstatic_a 70;		// reference CardUser/CardUser.avatar
 					aload_0;
 					aload 7;
-					invokevirtual 60;		// encrypt([B)[B
+					invokevirtual 62;		// encrypt([B)[B
 					astore 10;
 				L9:	aload 10;
 					arraylength;
@@ -1201,7 +1218,7 @@
 					aload 10;
 					arraylength;
 					if_scmpge L14;
-				L13:	getstatic_a 68;		// reference CardUser/CardUser.avatar
+				L13:	getstatic_a 70;		// reference CardUser/CardUser.avatar
 					sload 13;
 					aload 10;
 					sload 13;
@@ -1218,25 +1235,25 @@
 
 			.descriptor	Ljavacard/framework/APDU;	0.10;
 
-				L0:	getstatic_a 59;		// reference CardUser/CardUser.userId
-					getstatic_s 58;		// short CardUser/CardUser.userIdLength
-					invokestatic 72;		// CardUser/CardUser.decrypt([BS)[B
+				L0:	getstatic_a 61;		// reference CardUser/CardUser.userId
+					getstatic_s 60;		// short CardUser/CardUser.userIdLength
+					invokestatic 74;		// CardUser/CardUser.decrypt([BS)[B
 					astore_2;
-				L1:	getstatic_a 62;		// reference CardUser/CardUser.userName
-					getstatic_s 61;		// short CardUser/CardUser.usernameLength
-					invokestatic 72;		// CardUser/CardUser.decrypt([BS)[B
+				L1:	getstatic_a 64;		// reference CardUser/CardUser.userName
+					getstatic_s 63;		// short CardUser/CardUser.usernameLength
+					invokestatic 74;		// CardUser/CardUser.decrypt([BS)[B
 					astore_3;
-				L2:	getstatic_a 64;		// reference CardUser/CardUser.birthDay
-					getstatic_s 63;		// short CardUser/CardUser.birthDayLength
-					invokestatic 72;		// CardUser/CardUser.decrypt([BS)[B
+				L2:	getstatic_a 66;		// reference CardUser/CardUser.birthDay
+					getstatic_s 65;		// short CardUser/CardUser.birthDayLength
+					invokestatic 74;		// CardUser/CardUser.decrypt([BS)[B
 					astore 4;
-				L3:	getstatic_a 66;		// reference CardUser/CardUser.gender
-					getstatic_s 65;		// short CardUser/CardUser.genderLength
-					invokestatic 72;		// CardUser/CardUser.decrypt([BS)[B
+				L3:	getstatic_a 68;		// reference CardUser/CardUser.gender
+					getstatic_s 67;		// short CardUser/CardUser.genderLength
+					invokestatic 74;		// CardUser/CardUser.decrypt([BS)[B
 					astore 5;
-				L4:	getstatic_a 68;		// reference CardUser/CardUser.avatar
-					getstatic_s 67;		// short CardUser/CardUser.avatarLength
-					invokestatic 72;		// CardUser/CardUser.decrypt([BS)[B
+				L4:	getstatic_a 70;		// reference CardUser/CardUser.avatar
+					getstatic_s 69;		// short CardUser/CardUser.avatarLength
+					invokestatic 74;		// CardUser/CardUser.decrypt([BS)[B
 					astore 6;
 				L5:	aload_2;
 					arraylength;
@@ -1273,7 +1290,7 @@
 					aload 13;
 					sconst_0;
 					sload 7;
-					invokestatic 55;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					invokestatic 57;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
 					aload 13;
 					sload 7;
@@ -1286,7 +1303,7 @@
 					sconst_1;
 					sadd;
 					sload 8;
-					invokestatic 55;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					invokestatic 57;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
 					aload 13;
 					sload 8;
@@ -1305,7 +1322,7 @@
 					sconst_2;
 					sadd;
 					sload 9;
-					invokestatic 55;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					invokestatic 57;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
 					aload 13;
 					sload 9;
@@ -1328,7 +1345,7 @@
 					sconst_3;
 					sadd;
 					sload 10;
-					invokestatic 55;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					invokestatic 57;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
 					aload 13;
 					sload 10;
@@ -1374,7 +1391,7 @@
 					smul;
 					sadd;
 					sspush 255;
-					invokestatic 55;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					invokestatic 57;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
 					sinc 16 1;
 					goto L15;
@@ -1397,14 +1414,14 @@
 					smul;
 					sadd;
 					sload 15;
-					invokestatic 55;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					invokestatic 57;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
 					aload_1;
-					invokevirtual 73;		// setOutgoing()S
+					invokevirtual 75;		// setOutgoing()S
 					sstore 16;
 				L18:	aload_1;
 					sload 12;
-					invokevirtual 74;		// setOutgoingLength(S)V
+					invokevirtual 76;		// setOutgoingLength(S)V
 					sconst_0;
 					sstore 17;
 				L19:	sconst_0;
@@ -1422,7 +1439,7 @@
 					aload 13;
 					sload 18;
 					sload 17;
-					invokevirtual 75;		// sendBytesLong([BSS)V
+					invokevirtual 77;		// sendBytesLong([BSS)V
 					sload 12;
 					sload 17;
 					ssub;
@@ -1441,61 +1458,55 @@
 
 			.descriptor	Ljavacard/framework/APDU;	0.10;
 
-				L0:	getstatic_a 10;		// reference CardUser/CardUser.pin
-					invokevirtual 76;		// isValidated()Z
-					ifne L2;
-				L1:	sspush 25345;
-					invokestatic 41;		// javacard/framework/ISOException.throwIt(S)V
-					return;
-				L2:	invokestatic 52;		// javacard/framework/JCSystem.beginTransaction()V
-					getstatic_a 59;		// reference CardUser/CardUser.userId
-					getstatic_s 58;		// short CardUser/CardUser.userIdLength
-					invokestatic 72;		// CardUser/CardUser.decrypt([BS)[B
+				L0:	invokestatic 54;		// javacard/framework/JCSystem.beginTransaction()V
+					getstatic_a 61;		// reference CardUser/CardUser.userId
+					getstatic_s 60;		// short CardUser/CardUser.userIdLength
+					invokestatic 74;		// CardUser/CardUser.decrypt([BS)[B
 					astore_3;
-				L3:	getstatic_a 62;		// reference CardUser/CardUser.userName
-					getstatic_s 61;		// short CardUser/CardUser.usernameLength
-					invokestatic 72;		// CardUser/CardUser.decrypt([BS)[B
+				L1:	getstatic_a 64;		// reference CardUser/CardUser.userName
+					getstatic_s 63;		// short CardUser/CardUser.usernameLength
+					invokestatic 74;		// CardUser/CardUser.decrypt([BS)[B
 					astore 4;
-				L4:	getstatic_a 64;		// reference CardUser/CardUser.birthDay
-					getstatic_s 63;		// short CardUser/CardUser.birthDayLength
-					invokestatic 72;		// CardUser/CardUser.decrypt([BS)[B
+				L2:	getstatic_a 66;		// reference CardUser/CardUser.birthDay
+					getstatic_s 65;		// short CardUser/CardUser.birthDayLength
+					invokestatic 74;		// CardUser/CardUser.decrypt([BS)[B
 					astore 5;
-				L5:	getstatic_a 66;		// reference CardUser/CardUser.gender
-					getstatic_s 65;		// short CardUser/CardUser.genderLength
-					invokestatic 72;		// CardUser/CardUser.decrypt([BS)[B
+				L3:	getstatic_a 68;		// reference CardUser/CardUser.gender
+					getstatic_s 67;		// short CardUser/CardUser.genderLength
+					invokestatic 74;		// CardUser/CardUser.decrypt([BS)[B
 					astore 6;
-				L6:	getstatic_a 68;		// reference CardUser/CardUser.avatar
-					getstatic_s 67;		// short CardUser/CardUser.avatarLength
-					invokestatic 72;		// CardUser/CardUser.decrypt([BS)[B
+				L4:	getstatic_a 70;		// reference CardUser/CardUser.avatar
+					getstatic_s 69;		// short CardUser/CardUser.avatarLength
+					invokestatic 74;		// CardUser/CardUser.decrypt([BS)[B
 					astore 7;
-				L7:	aload_1;
-					invokevirtual 53;		// getOffsetCdata()S
+				L5:	aload_1;
+					invokevirtual 55;		// getOffsetCdata()S
 					sstore 8;
-				L8:	aload_1;
-					invokevirtual 54;		// getIncomingLength()S
+				L6:	aload_1;
+					invokevirtual 56;		// getIncomingLength()S
 					sstore 9;
-				L9:	sconst_0;
+				L7:	sconst_0;
 					sstore 10;
-				L10:	sload 9;
+				L8:	sload 9;
 					newarray 11;
 					astore 11;
-				L11:	aload_2;
+				L9:	aload_2;
 					sload 8;
 					aload 11;
 					sconst_0;
 					sload 9;
-					invokestatic 55;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					invokestatic 57;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
-				L12:	getstatic_s 29;		// short CardUser/CardUser.LENGTH_BLOCK_AES
+				L10:	getstatic_s 29;		// short CardUser/CardUser.LENGTH_BLOCK_AES
 					sconst_2;
 					invokestatic 12;		// javacard/framework/JCSystem.makeTransientByteArray(SB)[B
 					astore 12;
-				L13:	goto L16;
-				L14:	astore 13;
-				L15:	getstatic_s 29;		// short CardUser/CardUser.LENGTH_BLOCK_AES
+				L11:	goto L14;
+				L12:	astore 13;
+				L13:	getstatic_s 29;		// short CardUser/CardUser.LENGTH_BLOCK_AES
 					newarray 11;
 					astore 12;
-				L16:	getfield_a_this 8;		// reference CardUser/CardUser.sha
+				L14:	getfield_a_this 8;		// reference CardUser/CardUser.sha
 					aload 11;
 					sconst_0;
 					aload 11;
@@ -1504,19 +1515,19 @@
 					sconst_0;
 					invokevirtual 31;		// doFinal([BSS[BS)S
 					sstore 13;
-				L17:	getstatic_a 28;		// reference CardUser/CardUser.aesKey
+				L15:	getstatic_a 28;		// reference CardUser/CardUser.aesKey
 					aload 12;
 					sconst_0;
 					invokeinterface 3 27 4;		// javacard/security/AESKey
-				L18:	aload 12;
+				L16:	aload 12;
 					sconst_0;
 					getstatic_s 29;		// short CardUser/CardUser.LENGTH_BLOCK_AES
 					sconst_0;
 					invokestatic 32;		// javacard/framework/Util.arrayFillNonAtomic([BSSB)S
 					pop;
-					goto L21;
-				L19:	astore 14;
-				L20:	aload 12;
+					goto L19;
+				L17:	astore 14;
+				L18:	aload 12;
 					sconst_0;
 					getstatic_s 29;		// short CardUser/CardUser.LENGTH_BLOCK_AES
 					sconst_0;
@@ -1524,13 +1535,13 @@
 					pop;
 					aload 14;
 					athrow;
-				L21:	getstatic_a 10;		// reference CardUser/CardUser.pin
+				L19:	getstatic_a 10;		// reference CardUser/CardUser.pin
 					aload 11;
 					sconst_0;
 					aload 11;
 					arraylength;
 					s2b;
-					invokevirtual 69;		// update([BSB)V
+					invokevirtual 71;		// update([BSB)V
 					aload_3;
 					arraylength;
 					sspush 128;
@@ -1542,18 +1553,18 @@
 					sload 10;
 					smul;
 					newarray 11;
-					putstatic_a 59;		// reference CardUser/CardUser.userId
+					putstatic_a 61;		// reference CardUser/CardUser.userId
 					aload_0;
 					aload_3;
-					invokevirtual 60;		// encrypt([B)[B
+					invokevirtual 62;		// encrypt([B)[B
 					astore 13;
-				L22:	aload 13;
+				L20:	aload 13;
 					sconst_0;
-					getstatic_a 59;		// reference CardUser/CardUser.userId
+					getstatic_a 61;		// reference CardUser/CardUser.userId
 					sconst_0;
 					aload 13;
 					arraylength;
-					invokestatic 55;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					invokestatic 57;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
 					aload 4;
 					arraylength;
@@ -1566,18 +1577,18 @@
 					sload 10;
 					smul;
 					newarray 11;
-					putstatic_a 62;		// reference CardUser/CardUser.userName
+					putstatic_a 64;		// reference CardUser/CardUser.userName
 					aload_0;
 					aload 4;
-					invokevirtual 60;		// encrypt([B)[B
+					invokevirtual 62;		// encrypt([B)[B
 					astore 13;
 					aload 13;
 					sconst_0;
-					getstatic_a 62;		// reference CardUser/CardUser.userName
+					getstatic_a 64;		// reference CardUser/CardUser.userName
 					sconst_0;
 					aload 13;
 					arraylength;
-					invokestatic 55;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					invokestatic 57;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
 					aload 5;
 					arraylength;
@@ -1590,18 +1601,18 @@
 					sload 10;
 					smul;
 					newarray 11;
-					putstatic_a 64;		// reference CardUser/CardUser.birthDay
+					putstatic_a 66;		// reference CardUser/CardUser.birthDay
 					aload_0;
 					aload 5;
-					invokevirtual 60;		// encrypt([B)[B
+					invokevirtual 62;		// encrypt([B)[B
 					astore 13;
 					aload 13;
 					sconst_0;
-					getstatic_a 64;		// reference CardUser/CardUser.birthDay
+					getstatic_a 66;		// reference CardUser/CardUser.birthDay
 					sconst_0;
 					aload 13;
 					arraylength;
-					invokestatic 55;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					invokestatic 57;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
 					aload 6;
 					arraylength;
@@ -1614,18 +1625,18 @@
 					sload 10;
 					smul;
 					newarray 11;
-					putstatic_a 66;		// reference CardUser/CardUser.gender
+					putstatic_a 68;		// reference CardUser/CardUser.gender
 					aload_0;
 					aload 6;
-					invokevirtual 60;		// encrypt([B)[B
+					invokevirtual 62;		// encrypt([B)[B
 					astore 13;
 					aload 13;
 					sconst_0;
-					getstatic_a 66;		// reference CardUser/CardUser.gender
+					getstatic_a 68;		// reference CardUser/CardUser.gender
 					sconst_0;
 					aload 13;
 					arraylength;
-					invokestatic 55;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					invokestatic 57;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
 					aload 7;
 					arraylength;
@@ -1638,18 +1649,18 @@
 					sload 10;
 					smul;
 					newarray 11;
-					putstatic_a 68;		// reference CardUser/CardUser.avatar
+					putstatic_a 70;		// reference CardUser/CardUser.avatar
 					aload_0;
 					aload 7;
-					invokevirtual 60;		// encrypt([B)[B
+					invokevirtual 62;		// encrypt([B)[B
 					astore 13;
 					aload 13;
 					sconst_0;
-					getstatic_a 68;		// reference CardUser/CardUser.avatar
+					getstatic_a 70;		// reference CardUser/CardUser.avatar
 					sconst_0;
 					aload 13;
 					arraylength;
-					invokestatic 55;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					invokestatic 57;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
 					bspush 48;
 					putstatic_b 33;		// byte CardUser/CardUser.isNewUser
@@ -1659,26 +1670,68 @@
 					aload 11;
 					arraylength;
 					s2b;
-					invokevirtual 77;		// check([BSB)Z
+					invokevirtual 78;		// check([BSB)Z
 					pop;
-					invokestatic 71;		// javacard/framework/JCSystem.commitTransaction()V
+					invokestatic 73;		// javacard/framework/JCSystem.commitTransaction()V
 					return;
 			.exceptionTable {
 				// start_block end_block handler_block catch_type_index
-				L12 L13 L14 17;
-				L16 L18 L19 0;
-				L19 L20 L19 0;
+				L10 L11 L12 17;
+				L14 L16 L17 0;
+				L17 L18 L17 0;
 			}
 		}
 
-		.method public encrypt([B)[B 15 {
+		.method public resetPin(Ljavacard/framework/APDU;)V 15 {
+			.stack 2;
+			.locals 9;
+
+			.descriptor	Ljavacard/framework/APDU;	0.10;
+
+				L0:	invokestatic 54;		// javacard/framework/JCSystem.beginTransaction()V
+					getstatic_a 61;		// reference CardUser/CardUser.userId
+					getstatic_s 60;		// short CardUser/CardUser.userIdLength
+					invokestatic 74;		// CardUser/CardUser.decrypt([BS)[B
+					astore_2;
+				L1:	getstatic_a 64;		// reference CardUser/CardUser.userName
+					getstatic_s 63;		// short CardUser/CardUser.usernameLength
+					invokestatic 74;		// CardUser/CardUser.decrypt([BS)[B
+					astore_3;
+				L2:	getstatic_a 66;		// reference CardUser/CardUser.birthDay
+					getstatic_s 65;		// short CardUser/CardUser.birthDayLength
+					invokestatic 74;		// CardUser/CardUser.decrypt([BS)[B
+					astore 4;
+				L3:	getstatic_a 68;		// reference CardUser/CardUser.gender
+					getstatic_s 67;		// short CardUser/CardUser.genderLength
+					invokestatic 74;		// CardUser/CardUser.decrypt([BS)[B
+					astore 5;
+				L4:	getstatic_a 70;		// reference CardUser/CardUser.avatar
+					getstatic_s 69;		// short CardUser/CardUser.avatarLength
+					invokestatic 74;		// CardUser/CardUser.decrypt([BS)[B
+					astore 6;
+				L5:	aload_1;
+					invokevirtual 55;		// getOffsetCdata()S
+					sstore 7;
+				L6:	aload_1;
+					invokevirtual 56;		// getIncomingLength()S
+					sstore 8;
+				L7:	sconst_0;
+					sstore 9;
+				L8:	getstatic_a 30;		// reference CardUser/CardUser.PIN_INIT_VALUE
+					arraylength;
+					newarray 11;
+					astore 10;
+				L9:	return;
+		}
+
+		.method public encrypt([B)[B 16 {
 			.stack 7;
 			.locals 7;
 
 				L0:	getstatic_a 26;		// reference CardUser/CardUser.aesCipher
 					getstatic_a 28;		// reference CardUser/CardUser.aesKey
 					sconst_2;
-					invokevirtual 78;		// init(Ljavacard/security/Key;B)V
+					invokevirtual 79;		// init(Ljavacard/security/Key;B)V
 					aload_1;
 					arraylength;
 					sstore_2;
@@ -1761,7 +1814,7 @@
 					sspush 128;
 					sload 7;
 					smul;
-					invokevirtual 79;		// doFinal([BSS[BS)S
+					invokevirtual 80;		// doFinal([BSS[BS)S
 					pop;
 					sinc 7 1;
 					goto L9;
@@ -1782,7 +1835,7 @@
 				L1:	getstatic_a 26;		// reference CardUser/CardUser.aesCipher
 					getstatic_a 28;		// reference CardUser/CardUser.aesKey
 					sconst_1;
-					invokevirtual 78;		// init(Ljavacard/security/Key;B)V
+					invokevirtual 79;		// init(Ljavacard/security/Key;B)V
 					sload_1;
 					newarray 11;
 					astore_2;
@@ -1845,7 +1898,7 @@
 					sspush 128;
 					aload 6;
 					sconst_0;
-					invokevirtual 79;		// doFinal([BSS[BS)S
+					invokevirtual 80;		// doFinal([BSS[BS)S
 					pop;
 					aload 6;
 					sconst_0;
@@ -1854,7 +1907,7 @@
 					sspush 128;
 					smul;
 					sload 4;
-					invokestatic 55;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					invokestatic 57;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
 					goto L20;
 				L16:	sconst_0;
@@ -1880,7 +1933,7 @@
 					sspush 128;
 					aload 6;
 					sconst_0;
-					invokevirtual 79;		// doFinal([BSS[BS)S
+					invokevirtual 80;		// doFinal([BSS[BS)S
 					pop;
 					aload 6;
 					sconst_0;
@@ -1889,7 +1942,7 @@
 					sspush 128;
 					smul;
 					sspush 128;
-					invokestatic 55;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					invokestatic 57;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
 				L20:	sinc 7 1;
 					goto_w L10;
@@ -1913,34 +1966,34 @@
 			.descriptor	Ljavacard/framework/APDU;	0.10;
 
 				L0:	aload_1;
-					invokevirtual 53;		// getOffsetCdata()S
+					invokevirtual 55;		// getOffsetCdata()S
 					sstore_3;
 				L1:	aload_1;
-					invokevirtual 54;		// getIncomingLength()S
+					invokevirtual 56;		// getIncomingLength()S
 					sstore 4;
 				L2:	getfield_a_this 5;		// reference CardUser/CardUser.rsaSig
 					getfield_a_this 6;		// reference CardUser/CardUser.rsaPrivKey
 					sconst_1;
-					invokevirtual 80;		// init(Ljavacard/security/Key;B)V
+					invokevirtual 81;		// init(Ljavacard/security/Key;B)V
 					getfield_a_this 5;		// reference CardUser/CardUser.rsaSig
 					aload_2;
 					sload_3;
 					sload 4;
 					getfield_a_this 4;		// reference CardUser/CardUser.sig_buffer
 					sconst_0;
-					invokevirtual 81;		// sign([BSS[BS)S
+					invokevirtual 82;		// sign([BSS[BS)S
 					pop;
 					aload_1;
-					invokevirtual 73;		// setOutgoing()S
+					invokevirtual 75;		// setOutgoing()S
 					pop;
 					aload_1;
 					getfield_s_this 3;		// short CardUser/CardUser.sigLen
-					invokevirtual 74;		// setOutgoingLength(S)V
+					invokevirtual 76;		// setOutgoingLength(S)V
 					aload_1;
 					getfield_a_this 4;		// reference CardUser/CardUser.sig_buffer
 					sconst_0;
 					getfield_s_this 3;		// short CardUser/CardUser.sigLen
-					invokevirtual 75;		// sendBytesLong([BSS)V
+					invokevirtual 77;		// sendBytesLong([BSS)V
 					return;
 		}
 
@@ -1951,15 +2004,15 @@
 			.descriptor	Ljavacard/framework/APDU;	0.10;
 
 				L0:	aload_1;
-					invokevirtual 53;		// getOffsetCdata()S
+					invokevirtual 55;		// getOffsetCdata()S
 					sstore_3;
 				L1:	aload_1;
-					invokevirtual 54;		// getIncomingLength()S
+					invokevirtual 56;		// getIncomingLength()S
 					sstore 4;
 				L2:	getfield_a_this 5;		// reference CardUser/CardUser.rsaSig
 					getfield_a_this 7;		// reference CardUser/CardUser.rsaPubKey
 					sconst_2;
-					invokevirtual 80;		// init(Ljavacard/security/Key;B)V
+					invokevirtual 81;		// init(Ljavacard/security/Key;B)V
 					getfield_a_this 5;		// reference CardUser/CardUser.rsaSig
 					getfield_a_this 2;		// reference CardUser/CardUser.s3
 					sconst_0;
@@ -1968,7 +2021,7 @@
 					getfield_a_this 4;		// reference CardUser/CardUser.sig_buffer
 					sconst_0;
 					getfield_s_this 3;		// short CardUser/CardUser.sigLen
-					invokevirtual 82;		// verify([BSS[BSS)Z
+					invokevirtual 83;		// verify([BSS[BSS)Z
 					sstore 5;
 				L3:	aload_2;
 					sconst_0;
@@ -1981,7 +2034,49 @@
 					aload_1;
 					sconst_0;
 					sconst_1;
-					invokevirtual 70;		// setOutgoingAndSend(SS)V
+					invokevirtual 72;		// setOutgoingAndSend(SS)V
+					return;
+		}
+
+		.method private exportPublicModulus(Ljavacard/framework/APDU;)V {
+			.stack 3;
+			.locals 2;
+
+			.descriptor	Ljavacard/framework/APDU;	0.10;
+
+				L0:	aload_1;
+					invokevirtual 39;		// getBuffer()[B
+					astore_2;
+				L1:	getfield_a_this 7;		// reference CardUser/CardUser.rsaPubKey
+					aload_2;
+					sconst_0;
+					invokeinterface 3 16 5;		// javacard/security/RSAPublicKey
+					sstore_3;
+				L2:	aload_1;
+					sconst_0;
+					sload_3;
+					invokevirtual 72;		// setOutgoingAndSend(SS)V
+					return;
+		}
+
+		.method private exportPublicExponent(Ljavacard/framework/APDU;)V {
+			.stack 3;
+			.locals 2;
+
+			.descriptor	Ljavacard/framework/APDU;	0.10;
+
+				L0:	aload_1;
+					invokevirtual 39;		// getBuffer()[B
+					astore_2;
+				L1:	getfield_a_this 7;		// reference CardUser/CardUser.rsaPubKey
+					aload_2;
+					sconst_0;
+					invokeinterface 3 16 4;		// javacard/security/RSAPublicKey
+					sstore_3;
+				L2:	aload_1;
+					sconst_0;
+					sload_3;
+					invokevirtual 72;		// setOutgoingAndSend(SS)V
 					return;
 		}
 
@@ -1995,13 +2090,13 @@
 					aload_2;
 					sconst_5;
 					sload_3;
-					invokevirtual 77;		// check([BSB)Z
+					invokevirtual 78;		// check([BSB)Z
 					ifne L10;
 				L1:	sconst_1;
 					newarray 11;
 					astore 4;
 				L2:	getstatic_a 10;		// reference CardUser/CardUser.pin
-					invokevirtual 83;		// getTriesRemaining()B
+					invokevirtual 84;		// getTriesRemaining()B
 					stableswitch L8 0 4 L7 L3 L4 L5 L6;
 				L3:	aload 4;
 					sconst_0;
@@ -2028,16 +2123,16 @@
 					bspush 48;
 					bastore;
 				L8:	aload_1;
-					invokevirtual 73;		// setOutgoing()S
+					invokevirtual 75;		// setOutgoing()S
 					sstore 5;
 				L9:	aload_1;
 					sconst_1;
-					invokevirtual 74;		// setOutgoingLength(S)V
+					invokevirtual 76;		// setOutgoingLength(S)V
 					aload_1;
 					aload 4;
 					sconst_0;
 					sconst_1;
-					invokevirtual 75;		// sendBytesLong([BSS)V
+					invokevirtual 77;		// sendBytesLong([BSS)V
 					sspush 25344;
 					invokestatic 41;		// javacard/framework/ISOException.throwIt(S)V
 				L10:	sconst_1;
@@ -2048,16 +2143,16 @@
 					getstatic_b 33;		// byte CardUser/CardUser.isNewUser
 					bastore;
 					aload_1;
-					invokevirtual 73;		// setOutgoing()S
+					invokevirtual 75;		// setOutgoing()S
 					sstore 5;
 				L12:	aload_1;
 					sconst_1;
-					invokevirtual 74;		// setOutgoingLength(S)V
+					invokevirtual 76;		// setOutgoingLength(S)V
 					aload_1;
 					aload 4;
 					sconst_0;
 					sconst_1;
-					invokevirtual 75;		// sendBytesLong([BSS)V
+					invokevirtual 77;		// sendBytesLong([BSS)V
 					return;
 		}
 
@@ -2084,7 +2179,7 @@
 			.locals 0;
 
 				L0:	aload_0;
-					invokespecial 84;		// java/lang/Object.<init>()V
+					invokespecial 85;		// java/lang/Object.<init>()V
 					return;
 		}
 
@@ -2093,7 +2188,7 @@
 			.locals 0;
 
 				L0:	aload_0;
-					putstatic_a 85;		// reference CardUser/HMacSHA512.data
+					putstatic_a 86;		// reference CardUser/HMacSHA512.data
 					return;
 		}
 
@@ -2113,7 +2208,7 @@
 				L4:	sload 5;
 					sload_2;
 					if_scmpge L6;
-				L5:	getstatic_a 85;		// reference CardUser/HMacSHA512.data
+				L5:	getstatic_a 86;		// reference CardUser/HMacSHA512.data
 					sload 5;
 					aload_0;
 					sload_1;
@@ -2125,7 +2220,7 @@
 					bastore;
 					sinc 5 1;
 					goto L4;
-				L6:	getstatic_a 85;		// reference CardUser/HMacSHA512.data
+				L6:	getstatic_a 86;		// reference CardUser/HMacSHA512.data
 					sload_2;
 					sspush 128;
 					sload_2;
@@ -2133,19 +2228,19 @@
 					bspush 54;
 					invokestatic 32;		// javacard/framework/Util.arrayFillNonAtomic([BSSB)S
 					pop;
-					getstatic_a 85;		// reference CardUser/HMacSHA512.data
+					getstatic_a 86;		// reference CardUser/HMacSHA512.data
 					sconst_0;
 					sspush 128;
-					getstatic_a 85;		// reference CardUser/HMacSHA512.data
+					getstatic_a 86;		// reference CardUser/HMacSHA512.data
 					sspush 128;
-					invokestatic 86;		// CardUser/Sha512.resetUpdateDoFinal([BSS[BS)S
+					invokestatic 87;		// CardUser/Sha512.resetUpdateDoFinal([BSS[BS)S
 					pop;
 					sconst_0;
 					sstore 5;
 				L7:	sload 5;
 					sload_2;
 					if_scmpge L9;
-				L8:	getstatic_a 85;		// reference CardUser/HMacSHA512.data
+				L8:	getstatic_a 86;		// reference CardUser/HMacSHA512.data
 					sload 5;
 					aload_0;
 					sload_1;
@@ -2157,7 +2252,7 @@
 					bastore;
 					sinc 5 1;
 					goto L7;
-				L9:	getstatic_a 85;		// reference CardUser/HMacSHA512.data
+				L9:	getstatic_a 86;		// reference CardUser/HMacSHA512.data
 					sload_1;
 					sspush 128;
 					sload_2;
@@ -2165,12 +2260,12 @@
 					bspush 92;
 					invokestatic 32;		// javacard/framework/Util.arrayFillNonAtomic([BSSB)S
 					pop;
-					getstatic_a 85;		// reference CardUser/HMacSHA512.data
+					getstatic_a 86;		// reference CardUser/HMacSHA512.data
 					sconst_0;
 					sspush 128;
 					aload_3;
 					sload 4;
-					invokestatic 86;		// CardUser/Sha512.resetUpdateDoFinal([BSS[BS)S
+					invokestatic 87;		// CardUser/Sha512.resetUpdateDoFinal([BSS[BS)S
 					pop;
 					aload_3;
 					areturn;
@@ -2203,7 +2298,7 @@
 			.locals 0;
 
 				L0:	aload_0;
-					invokespecial 84;		// java/lang/Object.<init>()V
+					invokespecial 85;		// java/lang/Object.<init>()V
 					return;
 		}
 
@@ -2213,20 +2308,20 @@
 
 				L0:	bspush 64;
 					sconst_2;
-					invokestatic 87;		// javacard/framework/JCSystem.makeTransientShortArray(SB)[S
-					putstatic_a 88;		// reference CardUser/Sha512.w_short
+					invokestatic 88;		// javacard/framework/JCSystem.makeTransientShortArray(SB)[S
+					putstatic_a 89;		// reference CardUser/Sha512.w_short
 					bspush 32;
 					sconst_2;
-					invokestatic 87;		// javacard/framework/JCSystem.makeTransientShortArray(SB)[S
-					putstatic_a 89;		// reference CardUser/Sha512.h_short
+					invokestatic 88;		// javacard/framework/JCSystem.makeTransientShortArray(SB)[S
+					putstatic_a 90;		// reference CardUser/Sha512.h_short
 					bspush 32;
 					sconst_2;
-					invokestatic 87;		// javacard/framework/JCSystem.makeTransientShortArray(SB)[S
-					putstatic_a 90;		// reference CardUser/Sha512.hashState
+					invokestatic 88;		// javacard/framework/JCSystem.makeTransientShortArray(SB)[S
+					putstatic_a 91;		// reference CardUser/Sha512.hashState
 					sspush 128;
 					sconst_2;
 					invokestatic 12;		// javacard/framework/JCSystem.makeTransientByteArray(SB)[B
-					putstatic_a 91;		// reference CardUser/Sha512.buffer
+					putstatic_a 92;		// reference CardUser/Sha512.buffer
 					return;
 		}
 
@@ -2239,7 +2334,7 @@
 				L1:	sload 19;
 					bspush 64;
 					if_scmpge L3;
-				L2:	getstatic_a 88;		// reference CardUser/Sha512.w_short
+				L2:	getstatic_a 89;		// reference CardUser/Sha512.w_short
 					sload 19;
 					aload_2;
 					sload_3;
@@ -2247,7 +2342,7 @@
 					sload 19;
 					smul;
 					sadd;
-					invokestatic 92;		// javacard/framework/Util.getShort([BS)S
+					invokestatic 93;		// javacard/framework/Util.getShort([BS)S
 					sastore;
 					sinc 19 1;
 					goto L1;
@@ -2278,23 +2373,23 @@
 					bspush 64;
 					srem;
 					sstore 6;
-				L10:	getstatic_a 88;		// reference CardUser/Sha512.w_short
+				L10:	getstatic_a 89;		// reference CardUser/Sha512.w_short
 					sload 4;
 					saload;
 					sstore 15;
-				L11:	getstatic_a 88;		// reference CardUser/Sha512.w_short
+				L11:	getstatic_a 89;		// reference CardUser/Sha512.w_short
 					sload 4;
 					sconst_1;
 					sadd;
 					saload;
 					sstore 16;
-				L12:	getstatic_a 88;		// reference CardUser/Sha512.w_short
+				L12:	getstatic_a 89;		// reference CardUser/Sha512.w_short
 					sload 4;
 					sconst_2;
 					sadd;
 					saload;
 					sstore 17;
-				L13:	getstatic_a 88;		// reference CardUser/Sha512.w_short
+				L13:	getstatic_a 89;		// reference CardUser/Sha512.w_short
 					sload 4;
 					sconst_3;
 					sadd;
@@ -2416,23 +2511,23 @@
 					sor;
 					sxor;
 					sstore 10;
-				L18:	getstatic_a 88;		// reference CardUser/Sha512.w_short
+				L18:	getstatic_a 89;		// reference CardUser/Sha512.w_short
 					sload 5;
 					saload;
 					sstore 11;
-				L19:	getstatic_a 88;		// reference CardUser/Sha512.w_short
+				L19:	getstatic_a 89;		// reference CardUser/Sha512.w_short
 					sload 5;
 					sconst_1;
 					sadd;
 					saload;
 					sstore 12;
-				L20:	getstatic_a 88;		// reference CardUser/Sha512.w_short
+				L20:	getstatic_a 89;		// reference CardUser/Sha512.w_short
 					sload 5;
 					sconst_2;
 					sadd;
 					saload;
 					sstore 13;
-				L21:	getstatic_a 88;		// reference CardUser/Sha512.w_short
+				L21:	getstatic_a 89;		// reference CardUser/Sha512.w_short
 					sload 5;
 					sconst_3;
 					sadd;
@@ -2514,23 +2609,23 @@
 					sload 17;
 					sadd;
 					sstore 7;
-					getstatic_a 88;		// reference CardUser/Sha512.w_short
+					getstatic_a 89;		// reference CardUser/Sha512.w_short
 					sload 6;
 					saload;
 					sstore 15;
-					getstatic_a 88;		// reference CardUser/Sha512.w_short
+					getstatic_a 89;		// reference CardUser/Sha512.w_short
 					sload 6;
 					sconst_1;
 					sadd;
 					saload;
 					sstore 16;
-					getstatic_a 88;		// reference CardUser/Sha512.w_short
+					getstatic_a 89;		// reference CardUser/Sha512.w_short
 					sload 6;
 					sconst_2;
 					sadd;
 					saload;
 					sstore 17;
-					getstatic_a 88;		// reference CardUser/Sha512.w_short
+					getstatic_a 89;		// reference CardUser/Sha512.w_short
 					sload 6;
 					sconst_3;
 					sadd;
@@ -2728,23 +2823,23 @@
 					sload 17;
 					sadd;
 					sstore 7;
-					getstatic_a 88;		// reference CardUser/Sha512.w_short
+					getstatic_a 89;		// reference CardUser/Sha512.w_short
 					sload 20;
 					saload;
 					sstore 11;
-					getstatic_a 88;		// reference CardUser/Sha512.w_short
+					getstatic_a 89;		// reference CardUser/Sha512.w_short
 					sload 20;
 					sconst_1;
 					sadd;
 					saload;
 					sstore 12;
-					getstatic_a 88;		// reference CardUser/Sha512.w_short
+					getstatic_a 89;		// reference CardUser/Sha512.w_short
 					sload 20;
 					sconst_2;
 					sadd;
 					saload;
 					sstore 13;
-					getstatic_a 88;		// reference CardUser/Sha512.w_short
+					getstatic_a 89;		// reference CardUser/Sha512.w_short
 					sload 20;
 					sconst_3;
 					sadd;
@@ -2826,45 +2921,45 @@
 					sload 17;
 					sadd;
 					sstore 7;
-					getstatic_a 88;		// reference CardUser/Sha512.w_short
+					getstatic_a 89;		// reference CardUser/Sha512.w_short
 					sload 20;
 					saload;
 					sstore 11;
-					getstatic_a 88;		// reference CardUser/Sha512.w_short
+					getstatic_a 89;		// reference CardUser/Sha512.w_short
 					sload 20;
 					sconst_1;
 					sadd;
 					saload;
 					sstore 12;
-					getstatic_a 88;		// reference CardUser/Sha512.w_short
+					getstatic_a 89;		// reference CardUser/Sha512.w_short
 					sload 20;
 					sconst_2;
 					sadd;
 					saload;
 					sstore 13;
-					getstatic_a 88;		// reference CardUser/Sha512.w_short
+					getstatic_a 89;		// reference CardUser/Sha512.w_short
 					sload 20;
 					sconst_3;
 					sadd;
 					saload;
 					sstore 14;
-					getstatic_a 88;		// reference CardUser/Sha512.w_short
+					getstatic_a 89;		// reference CardUser/Sha512.w_short
 					sload 20;
 					sload 7;
 					sastore;
-					getstatic_a 88;		// reference CardUser/Sha512.w_short
+					getstatic_a 89;		// reference CardUser/Sha512.w_short
 					sload 20;
 					sconst_1;
 					sadd;
 					sload 8;
 					sastore;
-					getstatic_a 88;		// reference CardUser/Sha512.w_short
+					getstatic_a 89;		// reference CardUser/Sha512.w_short
 					sload 20;
 					sconst_2;
 					sadd;
 					sload 9;
 					sastore;
-					getstatic_a 88;		// reference CardUser/Sha512.w_short
+					getstatic_a 89;		// reference CardUser/Sha512.w_short
 					sload 20;
 					sconst_3;
 					sadd;
@@ -2892,7 +2987,7 @@
 					sadd;
 					saload;
 					sstore 15;
-					getstatic_a 93;		// reference CardUser/Sha512.K_SHORT
+					getstatic_a 94;		// reference CardUser/Sha512.K_SHORT
 					sload 5;
 					sconst_3;
 					sadd;
@@ -2924,7 +3019,7 @@
 					sadd;
 					saload;
 					sstore 15;
-					getstatic_a 93;		// reference CardUser/Sha512.K_SHORT
+					getstatic_a 94;		// reference CardUser/Sha512.K_SHORT
 					sload 5;
 					sconst_2;
 					sadd;
@@ -2958,7 +3053,7 @@
 					sadd;
 					saload;
 					sstore 15;
-					getstatic_a 93;		// reference CardUser/Sha512.K_SHORT
+					getstatic_a 94;		// reference CardUser/Sha512.K_SHORT
 					sload 5;
 					sconst_1;
 					sadd;
@@ -2989,7 +3084,7 @@
 					aload_0;
 					sload 4;
 					saload;
-					getstatic_a 93;		// reference CardUser/Sha512.K_SHORT
+					getstatic_a 94;		// reference CardUser/Sha512.K_SHORT
 					sload 5;
 					saload;
 					sadd;
@@ -4070,48 +4165,48 @@
 			.locals 7;
 
 				L0:	sconst_0;
-					putstatic_s 94;		// short CardUser/Sha512.bufferOff
+					putstatic_s 95;		// short CardUser/Sha512.bufferOff
 					sspush 128;
-					putstatic_s 95;		// short CardUser/Sha512.bufferLeft
+					putstatic_s 96;		// short CardUser/Sha512.bufferLeft
 					aload_0;
 					sload_1;
-					getstatic_a 91;		// reference CardUser/Sha512.buffer
-					getstatic_s 94;		// short CardUser/Sha512.bufferOff
-					getstatic_s 95;		// short CardUser/Sha512.bufferLeft
-					invokestatic 96;		// javacard/framework/Util.arrayCopyNonAtomic([BS[BSS)S
+					getstatic_a 92;		// reference CardUser/Sha512.buffer
+					getstatic_s 95;		// short CardUser/Sha512.bufferOff
+					getstatic_s 96;		// short CardUser/Sha512.bufferLeft
+					invokestatic 97;		// javacard/framework/Util.arrayCopyNonAtomic([BS[BSS)S
 					pop;
 					sload_1;
-					getstatic_s 95;		// short CardUser/Sha512.bufferLeft
+					getstatic_s 96;		// short CardUser/Sha512.bufferLeft
 					sadd;
 					sstore_1;
 					sspush 128;
-					putstatic_s 95;		// short CardUser/Sha512.bufferLeft
+					putstatic_s 96;		// short CardUser/Sha512.bufferLeft
 					sconst_0;
-					putstatic_s 94;		// short CardUser/Sha512.bufferOff
+					putstatic_s 95;		// short CardUser/Sha512.bufferOff
 					sconst_0;
 					sstore 10;
 				L1:	sload 10;
 					bspush 32;
 					if_scmpge L3;
-				L2:	getstatic_a 90;		// reference CardUser/Sha512.hashState
+				L2:	getstatic_a 91;		// reference CardUser/Sha512.hashState
 					sload 10;
-					getstatic_a 97;		// reference CardUser/Sha512.H_INIT_SHORT
+					getstatic_a 98;		// reference CardUser/Sha512.H_INIT_SHORT
 					sload 10;
 					saload;
 					sastore;
-					getstatic_a 89;		// reference CardUser/Sha512.h_short
+					getstatic_a 90;		// reference CardUser/Sha512.h_short
 					sload 10;
-					getstatic_a 90;		// reference CardUser/Sha512.hashState
+					getstatic_a 91;		// reference CardUser/Sha512.hashState
 					sload 10;
 					saload;
 					sastore;
 					sinc 10 1;
 					goto L1;
-				L3:	getstatic_a 89;		// reference CardUser/Sha512.h_short
+				L3:	getstatic_a 90;		// reference CardUser/Sha512.h_short
 					sconst_0;
-					getstatic_a 91;		// reference CardUser/Sha512.buffer
+					getstatic_a 92;		// reference CardUser/Sha512.buffer
 					sconst_0;
-					invokestatic 98;		// CardUser/Sha512.CompressionFunction([SS[BS)V
+					invokestatic 99;		// CardUser/Sha512.CompressionFunction([SS[BS)V
 					sconst_0;
 					sstore 10;
 				L4:	sload 10;
@@ -4127,15 +4222,15 @@
 					sconst_3;
 					sadd;
 					sstore 7;
-				L8:	getstatic_a 90;		// reference CardUser/Sha512.hashState
+				L8:	getstatic_a 91;		// reference CardUser/Sha512.hashState
 					sload 7;
 					saload;
 					sstore 8;
-				L9:	getstatic_a 89;		// reference CardUser/Sha512.h_short
+				L9:	getstatic_a 90;		// reference CardUser/Sha512.h_short
 					sload 6;
 					saload;
 					sstore 9;
-				L10:	getstatic_a 90;		// reference CardUser/Sha512.hashState
+				L10:	getstatic_a 91;		// reference CardUser/Sha512.hashState
 					sload 7;
 					sload 8;
 					sload 9;
@@ -4149,7 +4244,7 @@
 					sload 8;
 					sload 9;
 					sor;
-					getstatic_a 90;		// reference CardUser/Sha512.hashState
+					getstatic_a 91;		// reference CardUser/Sha512.hashState
 					sload 7;
 					saload;
 					sconst_m1;
@@ -4163,15 +4258,15 @@
 					sstore 5;
 					sinc 6 -1;
 					sinc 7 -1;
-					getstatic_a 90;		// reference CardUser/Sha512.hashState
+					getstatic_a 91;		// reference CardUser/Sha512.hashState
 					sload 7;
 					saload;
 					sstore 8;
-					getstatic_a 89;		// reference CardUser/Sha512.h_short
+					getstatic_a 90;		// reference CardUser/Sha512.h_short
 					sload 6;
 					saload;
 					sstore 9;
-					getstatic_a 90;		// reference CardUser/Sha512.hashState
+					getstatic_a 91;		// reference CardUser/Sha512.hashState
 					sload 7;
 					sload 8;
 					sload 9;
@@ -4185,7 +4280,7 @@
 					sload 8;
 					sload 9;
 					sor;
-					getstatic_a 90;		// reference CardUser/Sha512.hashState
+					getstatic_a 91;		// reference CardUser/Sha512.hashState
 					sload 7;
 					saload;
 					sconst_m1;
@@ -4199,15 +4294,15 @@
 					sstore 5;
 					sinc 6 -1;
 					sinc 7 -1;
-					getstatic_a 90;		// reference CardUser/Sha512.hashState
+					getstatic_a 91;		// reference CardUser/Sha512.hashState
 					sload 7;
 					saload;
 					sstore 8;
-					getstatic_a 89;		// reference CardUser/Sha512.h_short
+					getstatic_a 90;		// reference CardUser/Sha512.h_short
 					sload 6;
 					saload;
 					sstore 9;
-					getstatic_a 90;		// reference CardUser/Sha512.hashState
+					getstatic_a 91;		// reference CardUser/Sha512.hashState
 					sload 7;
 					sload 8;
 					sload 9;
@@ -4221,7 +4316,7 @@
 					sload 8;
 					sload 9;
 					sor;
-					getstatic_a 90;		// reference CardUser/Sha512.hashState
+					getstatic_a 91;		// reference CardUser/Sha512.hashState
 					sload 7;
 					saload;
 					sconst_m1;
@@ -4235,15 +4330,15 @@
 					sstore 5;
 					sinc 6 -1;
 					sinc 7 -1;
-					getstatic_a 90;		// reference CardUser/Sha512.hashState
+					getstatic_a 91;		// reference CardUser/Sha512.hashState
 					sload 7;
 					saload;
 					sstore 8;
-					getstatic_a 89;		// reference CardUser/Sha512.h_short
+					getstatic_a 90;		// reference CardUser/Sha512.h_short
 					sload 6;
 					saload;
 					sstore 9;
-					getstatic_a 90;		// reference CardUser/Sha512.hashState
+					getstatic_a 91;		// reference CardUser/Sha512.hashState
 					sload 7;
 					sload 8;
 					sload 9;
@@ -4259,39 +4354,39 @@
 					sstore 10;
 				L12:	aload_0;
 					sload_1;
-					getstatic_a 91;		// reference CardUser/Sha512.buffer
-					getstatic_s 94;		// short CardUser/Sha512.bufferOff
+					getstatic_a 92;		// reference CardUser/Sha512.buffer
+					getstatic_s 95;		// short CardUser/Sha512.bufferOff
 					sload 10;
-					invokestatic 96;		// javacard/framework/Util.arrayCopyNonAtomic([BS[BSS)S
+					invokestatic 97;		// javacard/framework/Util.arrayCopyNonAtomic([BS[BSS)S
 					pop;
-					getstatic_s 95;		// short CardUser/Sha512.bufferLeft
+					getstatic_s 96;		// short CardUser/Sha512.bufferLeft
 					sload 10;
 					ssub;
-					putstatic_s 95;		// short CardUser/Sha512.bufferLeft
-					getstatic_s 94;		// short CardUser/Sha512.bufferOff
+					putstatic_s 96;		// short CardUser/Sha512.bufferLeft
+					getstatic_s 95;		// short CardUser/Sha512.bufferOff
 					sload 10;
 					sadd;
-					putstatic_s 94;		// short CardUser/Sha512.bufferOff
-					getstatic_a 91;		// reference CardUser/Sha512.buffer
-					getstatic_s 94;		// short CardUser/Sha512.bufferOff
+					putstatic_s 95;		// short CardUser/Sha512.bufferOff
+					getstatic_a 92;		// reference CardUser/Sha512.buffer
+					getstatic_s 95;		// short CardUser/Sha512.bufferOff
 					bspush -128;
 					bastore;
-					getstatic_s 95;		// short CardUser/Sha512.bufferLeft
+					getstatic_s 96;		// short CardUser/Sha512.bufferLeft
 					sconst_1;
 					ssub;
-					putstatic_s 95;		// short CardUser/Sha512.bufferLeft
-					getstatic_s 94;		// short CardUser/Sha512.bufferOff
+					putstatic_s 96;		// short CardUser/Sha512.bufferLeft
+					getstatic_s 95;		// short CardUser/Sha512.bufferOff
 					sconst_1;
 					sadd;
-					putstatic_s 94;		// short CardUser/Sha512.bufferOff
-					getstatic_a 91;		// reference CardUser/Sha512.buffer
-					getstatic_s 94;		// short CardUser/Sha512.bufferOff
-					getstatic_s 95;		// short CardUser/Sha512.bufferLeft
+					putstatic_s 95;		// short CardUser/Sha512.bufferOff
+					getstatic_a 92;		// reference CardUser/Sha512.buffer
+					getstatic_s 95;		// short CardUser/Sha512.bufferOff
+					getstatic_s 96;		// short CardUser/Sha512.bufferLeft
 					sconst_0;
 					invokestatic 32;		// javacard/framework/Util.arrayFillNonAtomic([BSSB)S
 					pop;
-					getstatic_a 91;		// reference CardUser/Sha512.buffer
-					getstatic_a 91;		// reference CardUser/Sha512.buffer
+					getstatic_a 92;		// reference CardUser/Sha512.buffer
+					getstatic_a 92;		// reference CardUser/Sha512.buffer
 					arraylength;
 					sconst_2;
 					ssub;
@@ -4304,8 +4399,8 @@
 					sand;
 					s2b;
 					bastore;
-					getstatic_a 91;		// reference CardUser/Sha512.buffer
-					getstatic_a 91;		// reference CardUser/Sha512.buffer
+					getstatic_a 92;		// reference CardUser/Sha512.buffer
+					getstatic_a 92;		// reference CardUser/Sha512.buffer
 					arraylength;
 					sconst_1;
 					ssub;
@@ -4321,19 +4416,19 @@
 				L13:	sload 11;
 					bspush 32;
 					if_scmpge L15;
-				L14:	getstatic_a 89;		// reference CardUser/Sha512.h_short
+				L14:	getstatic_a 90;		// reference CardUser/Sha512.h_short
 					sload 11;
-					getstatic_a 90;		// reference CardUser/Sha512.hashState
+					getstatic_a 91;		// reference CardUser/Sha512.hashState
 					sload 11;
 					saload;
 					sastore;
 					sinc 11 1;
 					goto L13;
-				L15:	getstatic_a 89;		// reference CardUser/Sha512.h_short
+				L15:	getstatic_a 90;		// reference CardUser/Sha512.h_short
 					sconst_0;
-					getstatic_a 91;		// reference CardUser/Sha512.buffer
+					getstatic_a 92;		// reference CardUser/Sha512.buffer
 					sconst_0;
-					invokestatic 98;		// CardUser/Sha512.CompressionFunction([SS[BS)V
+					invokestatic 99;		// CardUser/Sha512.CompressionFunction([SS[BS)V
 					sconst_0;
 					sstore 11;
 				L16:	sload 11;
@@ -4349,15 +4444,15 @@
 					sconst_3;
 					sadd;
 					sstore 7;
-				L20:	getstatic_a 90;		// reference CardUser/Sha512.hashState
+				L20:	getstatic_a 91;		// reference CardUser/Sha512.hashState
 					sload 7;
 					saload;
 					sstore 8;
-				L21:	getstatic_a 89;		// reference CardUser/Sha512.h_short
+				L21:	getstatic_a 90;		// reference CardUser/Sha512.h_short
 					sload 6;
 					saload;
 					sstore 9;
-				L22:	getstatic_a 90;		// reference CardUser/Sha512.hashState
+				L22:	getstatic_a 91;		// reference CardUser/Sha512.hashState
 					sload 7;
 					sload 8;
 					sload 9;
@@ -4371,7 +4466,7 @@
 					sload 8;
 					sload 9;
 					sor;
-					getstatic_a 90;		// reference CardUser/Sha512.hashState
+					getstatic_a 91;		// reference CardUser/Sha512.hashState
 					sload 7;
 					saload;
 					sconst_m1;
@@ -4385,15 +4480,15 @@
 					sstore 5;
 					sinc 6 -1;
 					sinc 7 -1;
-					getstatic_a 90;		// reference CardUser/Sha512.hashState
+					getstatic_a 91;		// reference CardUser/Sha512.hashState
 					sload 7;
 					saload;
 					sstore 8;
-					getstatic_a 89;		// reference CardUser/Sha512.h_short
+					getstatic_a 90;		// reference CardUser/Sha512.h_short
 					sload 6;
 					saload;
 					sstore 9;
-					getstatic_a 90;		// reference CardUser/Sha512.hashState
+					getstatic_a 91;		// reference CardUser/Sha512.hashState
 					sload 7;
 					sload 8;
 					sload 9;
@@ -4407,7 +4502,7 @@
 					sload 8;
 					sload 9;
 					sor;
-					getstatic_a 90;		// reference CardUser/Sha512.hashState
+					getstatic_a 91;		// reference CardUser/Sha512.hashState
 					sload 7;
 					saload;
 					sconst_m1;
@@ -4421,15 +4516,15 @@
 					sstore 5;
 					sinc 6 -1;
 					sinc 7 -1;
-					getstatic_a 90;		// reference CardUser/Sha512.hashState
+					getstatic_a 91;		// reference CardUser/Sha512.hashState
 					sload 7;
 					saload;
 					sstore 8;
-					getstatic_a 89;		// reference CardUser/Sha512.h_short
+					getstatic_a 90;		// reference CardUser/Sha512.h_short
 					sload 6;
 					saload;
 					sstore 9;
-					getstatic_a 90;		// reference CardUser/Sha512.hashState
+					getstatic_a 91;		// reference CardUser/Sha512.hashState
 					sload 7;
 					sload 8;
 					sload 9;
@@ -4443,7 +4538,7 @@
 					sload 8;
 					sload 9;
 					sor;
-					getstatic_a 90;		// reference CardUser/Sha512.hashState
+					getstatic_a 91;		// reference CardUser/Sha512.hashState
 					sload 7;
 					saload;
 					sconst_m1;
@@ -4457,15 +4552,15 @@
 					sstore 5;
 					sinc 6 -1;
 					sinc 7 -1;
-					getstatic_a 90;		// reference CardUser/Sha512.hashState
+					getstatic_a 91;		// reference CardUser/Sha512.hashState
 					sload 7;
 					saload;
 					sstore 8;
-					getstatic_a 89;		// reference CardUser/Sha512.h_short
+					getstatic_a 90;		// reference CardUser/Sha512.h_short
 					sload 6;
 					saload;
 					sstore 9;
-					getstatic_a 90;		// reference CardUser/Sha512.hashState
+					getstatic_a 91;		// reference CardUser/Sha512.hashState
 					sload 7;
 					sload 8;
 					sload 9;
@@ -4482,7 +4577,7 @@
 					if_scmpge L26;
 				L25:	aload_3;
 					sload 4;
-					getstatic_a 90;		// reference CardUser/Sha512.hashState
+					getstatic_a 91;		// reference CardUser/Sha512.hashState
 					sload 11;
 					saload;
 					bspush 8;
@@ -4494,7 +4589,7 @@
 					sinc 4 1;
 					aload_3;
 					sload 4;
-					getstatic_a 90;		// reference CardUser/Sha512.hashState
+					getstatic_a 91;		// reference CardUser/Sha512.hashState
 					sload 11;
 					saload;
 					sspush 255;

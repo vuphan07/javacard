@@ -10,7 +10,7 @@ package JavaCardMain.define;
  * @author Spark_Mac
  */
 public class RSA {
-    public static final byte INS_GET_PUB_MODULUS= (byte)0x00;
-    public static final byte INS_GET_PUB_EXPONENT= (byte)0x01;
+    public static final byte INS_GET_PUB_MODULUS= (byte)0x5f;
+    public static final byte INS_GET_PUB_EXPONENT= (byte)0x6f;
     public static final byte INS_SIGN= (byte)0x0f;
 }

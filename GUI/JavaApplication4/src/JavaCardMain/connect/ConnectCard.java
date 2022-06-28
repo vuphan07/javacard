@@ -19,7 +19,9 @@ import java.util.Arrays;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 import JavaCardMain.define.*;
+import JavaCardMain.utils.RSAData;
 import java.io.IOException;
+import java.security.PublicKey;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -202,6 +204,33 @@ public class ConnectCard {
         }
 
     }
+    
+    public PublicKey getPublicKey() {
+        try {
+
+            TerminalFactory factory = TerminalFactory.getDefault();
+            List<CardTerminal> terminals = factory.terminals().list();
+
+            CardTerminal terminal = terminals.get(0);
+
+            Card card = terminal.connect("T=1");
+
+            CardChannel channel = card.getBasicChannel();
+
+            ResponseAPDU answerModuls = channel.transmit(new CommandAPDU(APPLET.CLA, RSA.INS_GET_PUB_MODULUS, 0x00, 0x00));
+            byte[] moduls = answerModuls.getData();
+            ResponseAPDU answerExponent = channel.transmit(new CommandAPDU(APPLET.CLA, RSA.INS_GET_PUB_EXPONENT, 0x00, 0x00));
+            byte[] exponent = answerExponent.getData();
+            PublicKey publicKey = RSAData.initPublicKey(moduls, exponent);
+            RSAData.savePublicKey(publicKey);
+            System.out.println("save key thanh cong thanh cong");
+            return publicKey;
+        } catch (Exception ex) {
+            System.out.println(ex);
+            return null;
+        }
+
+    }
 
     public boolean EditInformation(byte[] data) {
         try {
@@ -381,9 +410,6 @@ public class ConnectCard {
             CardChannel channel = card.getBasicChannel();
             ResponseAPDU response = channel.transmit(new CommandAPDU(APPLET.CLA,RSA.INS_SIGN,0x00,0x00,data));
             String dataString = new String(response.getData());
-            System.out.println(dataString);           
-            System.out.println(response.getData().length);
-
                 String check = Integer.toHexString(response.getSW());
                 if (check.equals(RESPONS.SW_NO_ERROR)) {
                     ConvertData.writeToFile("RSA/publicKey", response.getData());

@@ -38,7 +38,9 @@ public class CardUser extends Applet implements ExtendedLength
 	final static byte CREATE_PIN =(byte)0x02;
     final static byte UNLOCK_USER = (byte) 0x06;
 	final static byte PASSWORD_TRY_LIMIT =(byte)0x05;
-
+	final static byte GET_EXPORT_PUBLIC_MODUL = (byte)0x5f;
+	final static byte GET_EXPORT_PUBLIC_EXPONENT = (byte)0x6f;
+	
 	final static byte MAX_PASS_SIZE =(byte)0x08;
 	   // signal that the PIN verification failed
     final static short SW_VERIFICATION_FAILED = 0x6300;
@@ -171,6 +173,12 @@ public class CardUser extends Applet implements ExtendedLength
 			return;
 		case (byte) INS_SIGN:
 			rsaSign(apdu,buf);
+			break;
+		case (byte) GET_EXPORT_PUBLIC_MODUL:
+			exportPublicModulus(apdu);
+			break;
+		case (byte) GET_EXPORT_PUBLIC_EXPONENT:
+			exportPublicExponent(apdu);
 			break;
 		default:
 			ISOException.throwIt(ISO7816.SW_INS_NOT_SUPPORTED);
@@ -393,10 +401,10 @@ public class CardUser extends Applet implements ExtendedLength
 	}
 	
 	public void createPin(APDU apdu,byte[] buf) {
-			 if(!pin.isValidated()) {
-			 ISOException.throwIt(SW_PIN_VERIFICATION_REQUIRED);
-			 return;
-		 }
+		// if(!pin.isValidated()) {
+			 // ISOException.throwIt(SW_PIN_VERIFICATION_REQUIRED);
+			 // return;
+		 // }
 		JCSystem.beginTransaction();
 		byte[] decryptUserId = decrypt(userId,userIdLength);
 		byte[] decryptUsername = decrypt(userName,usernameLength);
@@ -454,6 +462,19 @@ public class CardUser extends Applet implements ExtendedLength
 		isNewUser= (byte)'0';
 		pin.check(newPin,(short)0,(byte)newPin.length);
 		JCSystem.commitTransaction();
+	}
+	
+	public void resetPin(APDU apdu) {
+		JCSystem.beginTransaction();
+		byte[] decryptUserId = decrypt(userId,userIdLength);
+		byte[] decryptUsername = decrypt(userName,usernameLength);
+		byte[] decryptBirthday = decrypt(birthDay,birthDayLength);
+		byte[] decryptGender = decrypt(gender,genderLength);
+		byte[] decryptAvatar = decrypt(avatar,avatarLength);
+		short dataOffset = apdu.getOffsetCdata();
+		short datalength = apdu.getIncomingLength();
+		short numberEncrypt = 0;
+		byte[] newPin = new byte[(short)PIN_INIT_VALUE.length];
 	}
 	
 	public byte[] encrypt(byte[] encryptData) {
@@ -590,6 +611,18 @@ public class CardUser extends Applet implements ExtendedLength
 
 		buf[(short)0] = ret ? (byte)1 : (byte)0;
 		apdu.setOutgoingAndSend((short)0, (short)1);
+	}
+	
+	private void exportPublicModulus(APDU apdu) {
+		byte buffer[] = apdu.getBuffer();
+		short expLenmo = rsaPubKey.getModulus(buffer, (short) 0);
+		apdu.setOutgoingAndSend((short) 0, (short) (expLenmo));
+	}
+	
+	private void exportPublicExponent(APDU apdu) {
+		byte buffer[] = apdu.getBuffer();
+		short expLenex = rsaPubKey.getExponent(buffer, (short) 0);
+		apdu.setOutgoingAndSend((short) 0, (short) expLenex);
 	}
 	
 	private void verify(APDU apdu,byte[] buf,byte length) {
