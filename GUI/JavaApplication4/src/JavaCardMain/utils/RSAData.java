@@ -52,26 +52,17 @@ public class RSAData {
     }
 
     public static PublicKey generatePublicKeyFromDB(String publickey) {
-        FileInputStream fis = null;
         try {
             byte[] b = Base64.getDecoder().decode(publickey);
-             System.out.println("test"+b.length);
             X509EncodedKeySpec spec = new X509EncodedKeySpec(b);
             KeyFactory factory = KeyFactory.getInstance("RSA");
             PublicKey pubKey = factory.generatePublic(spec);
-
             return pubKey;
         } catch (NoSuchAlgorithmException ex) {
             Logger.getLogger(RSAData.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InvalidKeySpecException ex) {
             Logger.getLogger(RSAData.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                fis.close();
-            } catch (IOException ex) {
-                Logger.getLogger(RSAData.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+        } 
 
         return null;
     }

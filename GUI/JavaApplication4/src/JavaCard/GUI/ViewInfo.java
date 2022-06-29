@@ -87,11 +87,12 @@ public class ViewInfo extends javax.swing.JFrame {
             System.err.println("Error image");
         }
         try {
-            User user = new Database().getUserById(Integer.parseInt("9"));
+            User user = new Database().getUserById(Integer.parseInt("1"));
             this.publicKey = RSAData.generatePublicKeyFromDB(user.getPublicKey());
-            System.out.println("get publickey oki");
         } catch (Exception e) {
-            System.err.println("Error convert");
+            System.err.println("Error convert");            
+            System.err.println(e);
+
         }
     }
 
