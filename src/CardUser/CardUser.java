@@ -51,8 +51,10 @@ public class CardUser extends Applet implements ExtendedLength
 	/* instance variables declaration */
 	static OwnerPIN pin;
 	private MessageDigest sha;
+	private static Cipher aesCipherRSA;
 	private static Cipher aesCipher;
 	private static AESKey aesKey;
+	private static AESKey aesKeyMain;
 	private RSAPrivateKey rsaPrivKey;
 	private RSAPublicKey rsaPubKey;
 	private Signature rsaSig;
@@ -95,7 +97,9 @@ public class CardUser extends Applet implements ExtendedLength
 		rsaPrivKey = (RSAPrivateKey)keyPair.getPrivate();
 		rsaPubKey = (RSAPublicKey)keyPair.getPublic();
 		sha = MessageDigest.getInstance(MessageDigest.ALG_MD5,false);
+		
 		aesCipher = Cipher.getInstance(Cipher.ALG_AES_BLOCK_128_CBC_NOPAD, false);
+		aesKeyMain = (AESKey) KeyBuilder.buildKey(KeyBuilder.TYPE_AES, KeyBuilder.LENGTH_AES_128, false);
         aesKey = (AESKey) KeyBuilder.buildKey(KeyBuilder.TYPE_AES, KeyBuilder.LENGTH_AES_128, false);
         // Sha512.init();
 		// HMacSHA512.init(tmpBuffer);
@@ -104,11 +108,16 @@ public class CardUser extends Applet implements ExtendedLength
         	short shalen = sha.doFinal(PIN_INIT_VALUE, (short)0,(short)PIN_INIT_VALUE.length, keyBytes, (short)0);
             // HMacSHA512.computeHmacSha512(PIN_INIT_VALUE,(short)0x00,(short)PIN_INIT_VALUE.length,keyBytes,(short)0);
             aesKey.setKey(keyBytes, (short) 0);
+            aesKeyMain.setKey(keyBytes, (short) 0);
         } finally {
             Util.arrayFillNonAtomic(keyBytes, (short) 0, LENGTH_BLOCK_AES, (byte) 0);
         }
-        // The installation parameters contain the PIN
-        // initialization value
+        //
+		aesCipherRSA = Cipher.getInstance(Cipher.ALG_RSA_PKCS1,false);
+		aesCipherRSA.init(rsaPubKey,Cipher.MODE_ENCRYPT);
+
+		byte encryptOut[] = aesCipherRSA.doFinal(aesKeyMain);
+		//
 		isNewUser= (byte)'1';
         register();
 	}
@@ -364,6 +373,7 @@ public class CardUser extends Applet implements ExtendedLength
 		// Util.arrayCopy(dataEncrypt, (short)0x00, avatar, (short)0,(short)dataEncrypt.length);
 	}
 	
+	
 	public void endCodeData(APDU apdu,byte[] buf,short recvLen){
 		short pointer = 0;
 		short dataOffset = apdu.getOffsetCdata();
@@ -379,8 +389,8 @@ public class CardUser extends Applet implements ExtendedLength
 			pointer += recvLen;
 			recvLen = apdu.receiveBytes(dataOffset);
 		}
-		byte[] dataEndcode = new byte[(short)(128*numberEncrypt)];
-
+		byte[] dataEndcode = new byte[(short)((128*numberEncrypt) + 2)];
+		
 		byte[] dataEncrypt = encrypt(temp);
 		short lenData = (short)dataEncrypt.length;
 		short countCopy = (short)(lenData/128);
@@ -388,6 +398,8 @@ public class CardUser extends Applet implements ExtendedLength
 		{
 			dataEndcode[i] = dataEncrypt[i];
 		}
+		 dataEndcode[(short)(128*numberEncrypt)] = (byte)0x2c;
+		 dataEndcode[(short)(128*numberEncrypt +1)] = (byte)datalength;
 		short le = apdu.setOutgoing();
 		short toSend = (short)(128*numberEncrypt);
 		apdu.setOutgoingLength((short)toSend);
