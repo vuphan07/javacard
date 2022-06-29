@@ -26,7 +26,11 @@ public class APPLET {
     public final static byte INS_NAME = (byte) 0x22;    
     public final static byte INS_BIRTHDAY= (byte) 0x33;
     public final static byte INS_GENDER = (byte) 0x44;    
-    public final static byte INS_IMAGE = (byte) 0x55;
+    public final static byte INS_IMAGE = (byte) 0x55;    
+    public final static byte INS_ENCODE_DATA = (byte) 0x2d;    
+    public final static byte INS_DECODE_DATA = (byte) 0x3d;
+
+
 
 
 //

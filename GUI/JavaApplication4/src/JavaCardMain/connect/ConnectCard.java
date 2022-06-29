@@ -371,6 +371,64 @@ public class ConnectCard {
             return false;
         }
     }
+    
+    public byte[] EndCodeData(byte[] data) {
+        try {
+            connectapplet();
+            TerminalFactory factory = TerminalFactory.getDefault();
+            List<CardTerminal> terminals = factory.terminals().list();
+
+            CardTerminal terminal = terminals.get(0);
+            Card card = terminal.connect("T=1");
+            CardChannel channel = card.getBasicChannel();
+            ResponseAPDU answer = channel.transmit(new CommandAPDU(APPLET.CLA, APPLET.INS_ENCODE_DATA, 0x00, 0x00, data));
+
+            message = answer.toString();
+            switch (((message.split("="))[1]).toUpperCase()) {
+                case "9000":
+                    JOptionPane.showMessageDialog(null, "Endcode thanh cong!");
+                    return answer.getData();
+                case RESPONS.SW_WRONG_LENGTH:
+                    JOptionPane.showMessageDialog(null, "Dữ liệu quá lớn, vui lòng kiểm tra lại!");
+                    return null;
+                default:
+                    return null;
+            }
+
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+    
+    
+    public byte[] DecodeData(byte[] data) {
+        try {
+            connectapplet();
+            TerminalFactory factory = TerminalFactory.getDefault();
+            List<CardTerminal> terminals = factory.terminals().list();
+
+            CardTerminal terminal = terminals.get(0);
+            Card card = terminal.connect("T=1");
+            CardChannel channel = card.getBasicChannel();
+            ResponseAPDU answer = channel.transmit(new CommandAPDU(APPLET.CLA, APPLET.INS_DECODE_DATA, 0x00, 0x00, data));
+
+            message = answer.toString();
+            switch (((message.split("="))[1]).toUpperCase()) {
+                case "9000":
+                    JOptionPane.showMessageDialog(null, "Decode thanh cong!");
+                    return answer.getData();
+                case RESPONS.SW_WRONG_LENGTH:
+                    JOptionPane.showMessageDialog(null, "Dữ liệu quá lớn, vui lòng kiểm tra lại!");
+                    return null;
+                default:
+                    return null;
+            }
+
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+            
 
     public String ReadInformation() {
         try {
