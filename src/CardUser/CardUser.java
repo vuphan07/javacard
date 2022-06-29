@@ -40,6 +40,8 @@ public class CardUser extends Applet implements ExtendedLength
 	final static byte PASSWORD_TRY_LIMIT =(byte)0x05;
 	final static byte GET_EXPORT_PUBLIC_MODUL = (byte)0x5f;
 	final static byte GET_EXPORT_PUBLIC_EXPONENT = (byte)0x6f;
+	final static byte ENDCODE_DATA = (byte)0x2d;
+	final static byte DECODE_DATA = (byte) 0x3d;
 	
 	final static byte MAX_PASS_SIZE =(byte)0x08;
 	   // signal that the PIN verification failed
@@ -180,6 +182,13 @@ public class CardUser extends Applet implements ExtendedLength
 		case (byte) GET_EXPORT_PUBLIC_EXPONENT:
 			exportPublicExponent(apdu);
 			break;
+		case (byte) ENDCODE_DATA:
+			endCodeData(apdu,buf,byteRead);
+			break;
+		case (byte) DECODE_DATA:
+			DecodeData(apdu,buf,byteRead);
+			break;
+			
 		default:
 			ISOException.throwIt(ISO7816.SW_INS_NOT_SUPPORTED);
 		}
@@ -334,7 +343,7 @@ public class CardUser extends Applet implements ExtendedLength
 		short datalength = apdu.getIncomingLength();
 			
 		byte[] temp=new byte[datalength];
-		short lengthAvatar = datalength;
+		avatarLength = datalength;
 		short numberEncrypt = (short)(datalength/128 +1);
 
 
@@ -353,6 +362,78 @@ public class CardUser extends Applet implements ExtendedLength
 			avatar[i] = dataEncrypt[i];
 		}
 		// Util.arrayCopy(dataEncrypt, (short)0x00, avatar, (short)0,(short)dataEncrypt.length);
+	}
+	
+	public void endCodeData(APDU apdu,byte[] buf,short recvLen){
+		short pointer = 0;
+		short dataOffset = apdu.getOffsetCdata();
+		short datalength = apdu.getIncomingLength();
+			
+		byte[] temp=new byte[datalength];
+		short numberEncrypt = (short)(datalength/128 +1);
+
+
+		while (recvLen > 0)
+		{
+			Util.arrayCopy(buf, dataOffset, temp, pointer,recvLen);
+			pointer += recvLen;
+			recvLen = apdu.receiveBytes(dataOffset);
+		}
+		byte[] dataEndcode = new byte[(short)(128*numberEncrypt)];
+
+		byte[] dataEncrypt = encrypt(temp);
+		short lenData = (short)dataEncrypt.length;
+		short countCopy = (short)(lenData/128);
+		for(short i = 0; i< (short) dataEncrypt.length; i++ )
+		{
+			dataEndcode[i] = dataEncrypt[i];
+		}
+		short le = apdu.setOutgoing();
+		short toSend = (short)(128*numberEncrypt);
+		apdu.setOutgoingLength((short)toSend);
+        short sendLen = 0;
+        pointer = 0;
+		while(toSend > 0)
+        {
+			sendLen = (toSend > le)?le:toSend;
+			apdu.sendBytesLong(dataEndcode, pointer,sendLen);
+			toSend -= sendLen;
+			pointer += sendLen;
+        }
+		
+	}
+	
+	public void DecodeData(APDU apdu,byte[] buf,short recvLen){
+		short pointer = 0;
+		short dataOffset = apdu.getOffsetCdata();
+		short datalength = apdu.getIncomingLength();
+			
+		byte[] temp=new byte[datalength];
+		short numberEncrypt = (short)(datalength/128 +1);
+
+
+		while (recvLen > 0)
+		{
+			Util.arrayCopy(buf, dataOffset, temp, pointer,recvLen);
+			pointer += recvLen;
+			recvLen = apdu.receiveBytes(dataOffset);
+		}
+		
+		byte[] decryptData = decrypt(temp,(short)3);
+	
+		 short le = apdu.setOutgoing();
+		 short toSend = (short)(decryptData.length);
+		 apdu.setOutgoingLength((short)toSend);
+         short sendLen = 0;
+         pointer = 0;
+		 while(toSend > 0)
+         {
+			 sendLen = (toSend > le)?le:toSend;
+			 apdu.sendBytesLong(decryptData, pointer,sendLen);
+			 toSend -= sendLen;
+			 pointer += sendLen;
+         }
+		
 	}
 	
 	public void showInformation(APDU apdu) {
