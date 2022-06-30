@@ -481,6 +481,31 @@ public class ConnectCard {
         return null;
     }
 
+    public byte[] decodeAESKeyMain() throws CardException, IOException {
+        try {
+            connectapplet();
+            TerminalFactory factory = TerminalFactory.getDefault();
+            List<CardTerminal> terminals = factory.terminals().list();
+            
+            CardTerminal terminal = terminals.get(0);
+            
+            Card card = terminal.connect("*");
+            
+            CardChannel channel = card.getBasicChannel();
+            ResponseAPDU response = channel.transmit(new CommandAPDU(APPLET.CLA,0x4d,0x00,0x00));
+            String dataString = new String(response.getData());
+                String check = Integer.toHexString(response.getSW());
+                if (check.equals(RESPONS.SW_NO_ERROR)) {
+                      return response.getData();
+                }
+
+        } catch (CardException ex) {
+            System.out.println(ex);
+            throw ex;
+        }
+        return null;
+    }
+    
     public static void main(String[] args) {
         System.out.println("begin connect");
         new ConnectCard().connectapplet();

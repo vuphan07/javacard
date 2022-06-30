@@ -11,6 +11,9 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import JavaCardMain.connect.ConnectCard;
 import JavaCardMain.utils.ConvertData;
+import JavaCardMain.utils.Database;
+import JavaCardMain.utils.RSAData;
+import JavaCardMain.utils.User;
 //import javacard.connect.RSAAppletHelper;
 import javax.smartcardio.CardException;
 
@@ -169,6 +172,23 @@ public class LoginForm extends javax.swing.JFrame {
         String isNewUser = connect.verifyPin(pin);
         System.out.println(isNewUser.toString());
         if (isNewUser != "") {
+
+            try {
+                String code = ConvertData.generateString();
+                byte[] byteCode = code.getBytes();
+                byte[] codeAsign = connect.requestSign(byteCode);
+                 String Data = connect.ReadInformation();
+                String[] arrOfStr = Data.split(",");
+                User user = new Database().getUserById(Integer.parseInt(arrOfStr[0]));
+                PublicKey publicKey = RSAData.generatePublicKeyFromDB(user.getPublicKey());
+                boolean isVerified = RSAData.verify(publicKey, codeAsign, byteCode);
+                if (isVerified) {
+                    JOptionPane.showMessageDialog(null, "Verify thành công");
+                }
+            } catch (Exception e) {
+                System.out.println("co loi xay ra");
+            }
+
             if (isNewUser.equalsIgnoreCase("1")) {
                 PinForm pinform = new PinForm("1234");
                 pinform.setVisible(true);
@@ -256,7 +276,7 @@ public class LoginForm extends javax.swing.JFrame {
         }
         //</editor-fold>
         //</editor-fold>
-        System.out.println("className.methodName()");
+
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {

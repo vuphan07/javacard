@@ -30,6 +30,27 @@ import java.util.Base64;
  */
 public class RSAData {
 
+    public static void exportToFile (String nameFile, String data) {
+        FileOutputStream fos = null;
+        try {
+            File file = createKeyFile(new File(nameFile));
+            // Lưu Public Key
+            fos = new FileOutputStream(file);
+            fos.write(data.getBytes());
+            fos.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(RSAData.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(RSAData.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                fos.close();
+            } catch (IOException ex) {
+                Logger.getLogger(RSAData.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
     public static void savePublicKey(PublicKey publicKey) {
         FileOutputStream fos = null;
         try {

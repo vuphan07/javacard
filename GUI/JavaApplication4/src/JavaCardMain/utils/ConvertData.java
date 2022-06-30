@@ -15,11 +15,15 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
+import java.util.Base64;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.SecretKeySpec;
 
 /**
  *
@@ -116,6 +120,40 @@ public class ConvertData {
         }
         fin.close();
     }
+    
+    public static byte[] encodeDataAes (String data, byte[] key) throws InvalidKeyException, IllegalBlockSizeException {
+        try {
+            SecretKeySpec secretKey = new  SecretKeySpec(key, "AES");
+            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+            byte[] dataEncode = cipher.doFinal(data.getBytes());
+            return dataEncode;
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(ConvertData.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchPaddingException ex) {
+            Logger.getLogger(ConvertData.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (BadPaddingException ex) {
+            Logger.getLogger(ConvertData.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    } 
+    
+    public static String DecodeDataAes (String data, byte[] key) throws InvalidKeyException, IllegalBlockSizeException {
+        try {
+            SecretKeySpec secretKey = new  SecretKeySpec(key, "AES");
+            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+            cipher.init(Cipher.DECRYPT_MODE, secretKey);
+            byte[] dataEncode = cipher.doFinal(Base64.getDecoder().decode(data));
+            return new String(dataEncode);
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(ConvertData.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchPaddingException ex) {
+            Logger.getLogger(ConvertData.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (BadPaddingException ex) {
+            Logger.getLogger(ConvertData.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    } 
 
 //    public static byte[] encrypt(String data, String publicKey) throws BadPaddingException, IllegalBlockSizeException, InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException {
 //        Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
