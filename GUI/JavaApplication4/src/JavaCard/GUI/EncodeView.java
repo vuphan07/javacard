@@ -6,6 +6,8 @@ package JavaCard.GUI;
 
 import static JavaCard.GUI.HomeForm.encodeToString;
 import JavaCardMain.connect.ConnectCard;
+import JavaCardMain.utils.ConvertData;
+import JavaCardMain.utils.RSAData;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
@@ -32,13 +34,14 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class EncodeView extends javax.swing.JFrame {
 
     byte[] textRo;
-    byte[] textMaHoa;
-
+    String textMaHoa;
+    private byte[] AesKeyMain; 
     /**
      * Creates new form EncodeView
      */
-    public EncodeView() {
+    public EncodeView(byte[] key) {
         initComponents();
+        this.AesKeyMain = key;
     }
 
     /**
@@ -59,6 +62,7 @@ public class EncodeView extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
+        jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -100,6 +104,14 @@ public class EncodeView extends javax.swing.JFrame {
         getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 320, -1, -1));
         getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 324, 480, 20));
 
+        jButton3.setText("Export file");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 330, -1, -1));
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -139,14 +151,24 @@ public class EncodeView extends javax.swing.JFrame {
         try {
             textRo = jTextArea1.getText().getBytes();
             if(textRo == null || textRo.length <= 0 ) return;
-            ConnectCard connect = new ConnectCard();
-           byte[] dataEndcoded = connect.EndCodeData(textRo);
+            
+//            ConnectCard connect = new ConnectCard();  ma hoa bang the
+//           byte[] dataEndcoded = connect.EndCodeData(textRo);  ma hoa bang the
+           byte[] dataEndcoded = ConvertData.encodeDataAes(jTextArea1.getText(), this.AesKeyMain);  // ma hoa bang netbean
+
            String dataEndCodedbase64 = Base64.getEncoder().encodeToString(dataEndcoded);
+           this.textMaHoa = dataEndCodedbase64;
             jTextArea2.setText(dataEndCodedbase64);
         } catch (Exception e) {
             System.out.println(e);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        RSAData.exportToFile("filemahoa.txt", this.textMaHoa);
+        JOptionPane.showMessageDialog(null,"Export file thanh cong");
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -176,16 +198,17 @@ public class EncodeView extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new EncodeView().setVisible(true);
-            }
-        });
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new EncodeView().setVisible(true);
+//            }
+//        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

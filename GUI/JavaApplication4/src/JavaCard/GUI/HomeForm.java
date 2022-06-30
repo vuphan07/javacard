@@ -63,7 +63,7 @@ public class HomeForm extends javax.swing.JFrame {
 
     public HomeForm() {
         initComponents();
-        int idDefault = new Database().countNumber();
+        int idDefault = new Database().countNumber() +1;
         txtID.setText(Integer.toString(idDefault));
         ConnectCard connect = new ConnectCard();
         jpnInfo.setVisible(true);

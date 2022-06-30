@@ -14,7 +14,10 @@ import java.io.File;
 import java.io.IOException;
 import java.security.PublicKey;
 import java.util.Base64;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.smartcardio.CardException;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -38,6 +41,7 @@ public class ViewInfo extends javax.swing.JFrame {
     private String newGender;
     private BufferedImage newBufferImage;
     private PublicKey publicKey;
+    private byte[] AesKeyMain;
 
     /**
      * Creates new form ViewInfo2
@@ -87,8 +91,10 @@ public class ViewInfo extends javax.swing.JFrame {
             System.err.println("Error image");
         }
         try {
-            User user = new Database().getUserById(Integer.parseInt("1"));
+                        System.out.println(this.id);
+            User user = new Database().getUserById(Integer.parseInt(this.id));
             this.publicKey = RSAData.generatePublicKeyFromDB(user.getPublicKey());
+            this.AesKeyMain = connect.decodeAESKeyMain();
         } catch (Exception e) {
             System.err.println("Error convert");            
             System.err.println(e);
@@ -138,6 +144,7 @@ public class ViewInfo extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        jButton7 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
@@ -335,6 +342,13 @@ public class ViewInfo extends javax.swing.JFrame {
             }
         });
 
+        jButton7.setText("jButton7");
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jpnInfoLayout = new javax.swing.GroupLayout(jpnInfo);
         jpnInfo.setLayout(jpnInfoLayout);
         jpnInfoLayout.setHorizontalGroup(
@@ -395,6 +409,8 @@ public class ViewInfo extends javax.swing.JFrame {
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpnInfoLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton7)
+                .addGap(46, 46, 46)
                 .addComponent(jButton2)
                 .addGap(323, 323, 323))
         );
@@ -445,7 +461,9 @@ public class ViewInfo extends javax.swing.JFrame {
                     .addComponent(jButton3)
                     .addComponent(jButton4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
-                .addComponent(jButton2)
+                .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton2)
+                    .addComponent(jButton7))
                 .addContainerGap())
         );
 
@@ -788,19 +806,7 @@ public class ViewInfo extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        try {
-            String code = ConvertData.generateString();
-            byte[] byteCode = code.getBytes();
-            ConnectCard connect = new ConnectCard();
-            byte[] codeAsign = connect.requestSign(byteCode);
-//            PublicKey publicKey = RSAData.getPublicKey();
-            boolean isVerified = RSAData.verify(this.publicKey, codeAsign, byteCode);
-            if (isVerified) {
-                JOptionPane.showMessageDialog(null, "Verify thành công");
-            }
-        } catch (Exception e) {
-            System.out.println("co loi xay ra");
-        }
+       
 
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -810,6 +816,7 @@ public class ViewInfo extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
+        new EncodeView(this.AesKeyMain).setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MouseClicked
@@ -818,7 +825,20 @@ public class ViewInfo extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
+        new DecodeView(this.AesKeyMain).setVisible(true);
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        // TODO add your handling code here:
+         ConnectCard connect = new ConnectCard();
+        try {
+            connect.decodeAESKeyMain();
+        } catch (CardException ex) {
+            Logger.getLogger(ViewInfo.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ViewInfo.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton7ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -870,6 +890,7 @@ public class ViewInfo extends javax.swing.JFrame {
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

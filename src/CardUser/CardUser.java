@@ -54,7 +54,7 @@ public class CardUser extends Applet implements ExtendedLength
 	private static Cipher aesCipherRSA;
 	private static Cipher aesCipher;
 	private static AESKey aesKey;
-	private static AESKey aesKeyMain;
+	private static byte[] aesKeyMain;
 	private RSAPrivateKey rsaPrivKey;
 	private RSAPublicKey rsaPubKey;
 	private Signature rsaSig;
@@ -63,7 +63,8 @@ public class CardUser extends Applet implements ExtendedLength
 	private static final byte INS_VERIFY = (byte)0x1f;
 	private byte[] s1, s2, s3, sig_buffer;
 	private final static byte[] PIN_INIT_VALUE={(byte)'1',(byte)'2',(byte)'3',(byte)'4'};
-	private static short LENGTH_BLOCK_AES = (short)64;
+	private final static byte[] AES_INIT_VALUE={(byte)'p',(byte)'h',(byte)'a',(byte)'n'};
+	private static short LENGTH_BLOCK_AES = (short)16;
 
 	private CardUser(byte[] bArray, short bOffset, byte bLength) {
 		  // It is good programming practice to allocate
@@ -99,24 +100,23 @@ public class CardUser extends Applet implements ExtendedLength
 		sha = MessageDigest.getInstance(MessageDigest.ALG_MD5,false);
 		
 		aesCipher = Cipher.getInstance(Cipher.ALG_AES_BLOCK_128_CBC_NOPAD, false);
-		aesKeyMain = (AESKey) KeyBuilder.buildKey(KeyBuilder.TYPE_AES, KeyBuilder.LENGTH_AES_128, false);
         aesKey = (AESKey) KeyBuilder.buildKey(KeyBuilder.TYPE_AES, KeyBuilder.LENGTH_AES_128, false);
         // Sha512.init();
 		// HMacSHA512.init(tmpBuffer);
         byte[] keyBytes = JCSystem.makeTransientByteArray(LENGTH_BLOCK_AES, JCSystem.CLEAR_ON_DESELECT);
-        try {
-        	short shalen = sha.doFinal(PIN_INIT_VALUE, (short)0,(short)PIN_INIT_VALUE.length, keyBytes, (short)0);
-            // HMacSHA512.computeHmacSha512(PIN_INIT_VALUE,(short)0x00,(short)PIN_INIT_VALUE.length,keyBytes,(short)0);
-            aesKey.setKey(keyBytes, (short) 0);
-            aesKeyMain.setKey(keyBytes, (short) 0);
-        } finally {
-            Util.arrayFillNonAtomic(keyBytes, (short) 0, LENGTH_BLOCK_AES, (byte) 0);
-        }
+        short shalen = sha.doFinal(PIN_INIT_VALUE, (short)0,(short)PIN_INIT_VALUE.length, keyBytes, (short)0);
+        // HMacSHA512.computeHmacSha512(PIN_INIT_VALUE,(short)0x00,(short)PIN_INIT_VALUE.length,keyBytes,(short)0);
+        aesKey.setKey(keyBytes, (short) 0);
+        // aesKeyMain.setKey(keyBytes, (short) 0);
+
+        
         //
 		aesCipherRSA = Cipher.getInstance(Cipher.ALG_RSA_PKCS1,false);
 		aesCipherRSA.init(rsaPubKey,Cipher.MODE_ENCRYPT);
-
-		byte encryptOut[] = aesCipherRSA.doFinal(aesKeyMain);
+		aesKeyMain = new byte[128];
+		byte[] keyBytesMain = JCSystem.makeTransientByteArray(LENGTH_BLOCK_AES, JCSystem.CLEAR_ON_DESELECT);
+		 sha.doFinal(AES_INIT_VALUE, (short)0,(short)AES_INIT_VALUE.length, keyBytesMain, (short)0);
+		aesCipherRSA.doFinal(keyBytesMain, (short)0,(short)keyBytesMain.length,aesKeyMain,(short)0);
 		//
 		isNewUser= (byte)'1';
         register();
@@ -196,6 +196,9 @@ public class CardUser extends Applet implements ExtendedLength
 			break;
 		case (byte) DECODE_DATA:
 			DecodeData(apdu,buf,byteRead);
+			break;
+		case (byte) 0x4d:
+			DecodeAESMain(apdu);
 			break;
 			
 		default:
@@ -431,7 +434,7 @@ public class CardUser extends Applet implements ExtendedLength
 			recvLen = apdu.receiveBytes(dataOffset);
 		}
 		
-		byte[] decryptData = decrypt(temp,(short)3);
+		byte[] decryptData = decrypt(temp,(short)datalength);
 	
 		 short le = apdu.setOutgoing();
 		 short toSend = (short)(decryptData.length);
@@ -446,6 +449,26 @@ public class CardUser extends Applet implements ExtendedLength
 			 pointer += sendLen;
          }
 		
+	}
+	
+	public void DecodeAESMain(APDU apdu){
+		aesCipherRSA.init(rsaPrivKey,Cipher.MODE_DECRYPT);
+		byte[] AESkeyDecode = new byte[16];
+		aesCipherRSA.doFinal(aesKeyMain, (short)0,(short)aesKeyMain.length,AESkeyDecode,(short)0);
+		
+	
+		  short le = apdu.setOutgoing();
+		  short toSend = (short)(AESkeyDecode.length);
+		  apdu.setOutgoingLength((short)toSend);
+          short sendLen = 0;
+          short pointer = 0;
+		  while(toSend > 0)
+          {
+			  sendLen = (toSend > le)?le:toSend;
+			  apdu.sendBytesLong(AESkeyDecode, pointer,sendLen);
+			  toSend -= sendLen;
+			  pointer += sendLen;
+          }
 	}
 	
 	public void showInformation(APDU apdu) {
@@ -596,38 +619,6 @@ public class CardUser extends Applet implements ExtendedLength
             }
             aesCipher.doFinal(temp, (short) 0 , (short)128, dataEncrypted, (short)(128*count));
         }
-
-        // while(countEncrypt > 0) {
-        //     if(countEncrypt === (short)1) {
-        //         for(short i=0;i<(short) lengtDataEncryptEnd;i++){
-        //             temp[i] = encryptData[(short)(128*(countEncrypt-1)+i)];
-        //         }
-        //     }
-         
-        //     countEncrypt = (short)(countEncrypt - 1);
-        // }
-
-
-        // short flag = (short) 1;
-	    // byte[] temp = new byte[128];
-    	// while(flag == (short)1){
-    	// 	for(short i=0;i<=(short) encryptData.length;i++){
-    	// 		if(i!=(short) encryptData.length){
-		// 			temp[i] = encryptData[i];
-    	// 		}
-    	// 		else{
-	    // 			flag = (short) 0;
-    	// 		}
-    	// 	}
-    	// }
-        // byte[] dataEncrypted; 
-        // try{
-		// 		dataEncrypted = JCSystem.makeTransientByteArray((short) 128, JCSystem.CLEAR_ON_DESELECT);
-		// 	} catch(SystemException e){
-		// 		dataEncrypted = new byte[(short)128];
-		// 	}
-        // aesCipher.doFinal(temp, (short) 0 , (short)128, dataEncrypted, (short) 0x00);
-          // Util.arrayFillNonAtomic(dataEncrypted, (short) 0, 128, (byte) 0);
         return dataEncrypted;
     }
     
