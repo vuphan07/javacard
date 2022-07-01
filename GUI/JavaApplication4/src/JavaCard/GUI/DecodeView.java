@@ -6,11 +6,14 @@ package JavaCard.GUI;
 
 import JavaCardMain.connect.ConnectCard;
 import JavaCardMain.utils.ConvertData;
+import JavaCardMain.utils.Database;
 import JavaCardMain.utils.RSAData;
+import JavaCardMain.utils.User;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.security.PublicKey;
 import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -154,6 +157,11 @@ public class DecodeView extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        boolean check = this.authen();
+        if (!check) {
+            JOptionPane.showMessageDialog(null, "Xác thực thất bại");
+            return;
+        }
         try {
             textMaHoa = Base64.getDecoder().decode(jTextArea1.getText());
             if (textMaHoa == null || textMaHoa.length <= 0) {
@@ -205,6 +213,27 @@ public class DecodeView extends javax.swing.JFrame {
         RSAData.exportToFile("filegiaima.txt", this.textRo);
         JOptionPane.showMessageDialog(null, "Export file thanh cong");
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    public boolean authen() {
+        try {
+            ConnectCard connect = new ConnectCard();
+            String code = ConvertData.generateString();
+            byte[] byteCode = code.getBytes();
+            byte[] codeAsign = connect.requestSign(byteCode);
+            String Data = connect.ReadInformation();
+            String[] arrOfStr = Data.split(",");
+            User user = new Database().getUserById(Integer.parseInt(arrOfStr[0]));
+            PublicKey publicKey = RSAData.generatePublicKeyFromDB(user.getPublicKey());
+            boolean isVerified = RSAData.verify(publicKey, codeAsign, byteCode);
+            if (isVerified) {
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            System.out.println("co loi xay ra");
+        }
+        return false;
+    }
 
     /**
      * @param args the command line arguments

@@ -180,7 +180,9 @@ public class CardUser extends Applet implements ExtendedLength
 		case (byte) VERIFY:
 			verify(apdu,buf,(byte)byteRead);
 			break;
-		case (byte)UNLOCK_USER: pin.resetAndUnblock();
+		case (byte)UNLOCK_USER: 
+			pin.resetAndUnblock();
+			pin.update(PIN_INIT_VALUE,(short)0,(byte)PIN_INIT_VALUE.length);
 			return;
 		case (byte) INS_SIGN:
 			rsaSign(apdu,buf);

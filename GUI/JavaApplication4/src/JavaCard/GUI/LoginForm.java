@@ -242,10 +242,10 @@ public class LoginForm extends javax.swing.JFrame {
         ConnectCard connect = new ConnectCard();
         byte[] a = {1, 2, 3};
         if (connect.UnblockPin(a)) {
-            JOptionPane.showMessageDialog(null, "Đổi mã pin thành công");
-            ViewInfo info = new ViewInfo();
-            info.setVisible(true);
-            this.dispose();
+            JOptionPane.showMessageDialog(null, "Reset thành công");
+//            ViewInfo info = new ViewInfo();
+//            info.setVisible(true);
+//            this.dispose();
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 

@@ -141,10 +141,8 @@ public class ViewInfo extends javax.swing.JFrame {
         buttonSubmitChangeName = new javax.swing.JLabel();
         buttonSubmitChangeGender = new javax.swing.JLabel();
         buttonSubmitChangeBirthDay = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
@@ -305,13 +303,6 @@ public class ViewInfo extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("jButton2");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
         jButton3.setBackground(new java.awt.Color(0, 102, 153));
         jButton3.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         jButton3.setForeground(new java.awt.Color(255, 255, 255));
@@ -339,13 +330,6 @@ public class ViewInfo extends javax.swing.JFrame {
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
-            }
-        });
-
-        jButton7.setText("jButton7");
-        jButton7.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7ActionPerformed(evt);
             }
         });
 
@@ -407,12 +391,6 @@ public class ViewInfo extends javax.swing.JFrame {
                         .addGap(63, 63, 63)
                         .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpnInfoLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton7)
-                .addGap(46, 46, 46)
-                .addComponent(jButton2)
-                .addGap(323, 323, 323))
         );
         jpnInfoLayout.setVerticalGroup(
             jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -460,11 +438,7 @@ public class ViewInfo extends javax.swing.JFrame {
                     .addComponent(jButton1)
                     .addComponent(jButton3)
                     .addComponent(jButton4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
-                .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton7))
-                .addContainerGap())
+                .addContainerGap(61, Short.MAX_VALUE))
         );
 
         jPanel1.add(jpnInfo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 110, 780, -1));
@@ -804,12 +778,6 @@ public class ViewInfo extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton5MouseClicked
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-       
-
-    }//GEN-LAST:event_jButton2ActionPerformed
-
     private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton3MouseClicked
@@ -827,18 +795,6 @@ public class ViewInfo extends javax.swing.JFrame {
         // TODO add your handling code here:
         new DecodeView(this.AesKeyMain).setVisible(true);
     }//GEN-LAST:event_jButton4ActionPerformed
-
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        // TODO add your handling code here:
-         ConnectCard connect = new ConnectCard();
-        try {
-            connect.decodeAESKeyMain();
-        } catch (CardException ex) {
-            Logger.getLogger(ViewInfo.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(ViewInfo.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_jButton7ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -885,12 +841,10 @@ public class ViewInfo extends javax.swing.JFrame {
     private javax.swing.JLabel buttonSubmitChangeGender;
     private javax.swing.JLabel buttonSubmitChangeName;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

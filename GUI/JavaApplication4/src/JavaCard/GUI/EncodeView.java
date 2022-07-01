@@ -7,7 +7,9 @@ package JavaCard.GUI;
 import static JavaCard.GUI.HomeForm.encodeToString;
 import JavaCardMain.connect.ConnectCard;
 import JavaCardMain.utils.ConvertData;
+import JavaCardMain.utils.Database;
 import JavaCardMain.utils.RSAData;
+import JavaCardMain.utils.User;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
@@ -18,6 +20,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.security.PublicKey;
 import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,7 +38,8 @@ public class EncodeView extends javax.swing.JFrame {
 
     byte[] textRo;
     String textMaHoa;
-    private byte[] AesKeyMain; 
+    private byte[] AesKeyMain;
+
     /**
      * Creates new form EncodeView
      */
@@ -149,15 +153,22 @@ public class EncodeView extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         try {
+            boolean check  = this.authen();
+            if(!check) {
+                JOptionPane.showMessageDialog(null, "Xác thực thất bại");
+                return;
+            }
             textRo = jTextArea1.getText().getBytes();
-            if(textRo == null || textRo.length <= 0 ) return;
-            
+            if (textRo == null || textRo.length <= 0) {
+                return;
+            }
+
 //            ConnectCard connect = new ConnectCard();  ma hoa bang the
 //           byte[] dataEndcoded = connect.EndCodeData(textRo);  ma hoa bang the
-           byte[] dataEndcoded = ConvertData.encodeDataAes(jTextArea1.getText(), this.AesKeyMain);  // ma hoa bang netbean
+            byte[] dataEndcoded = ConvertData.encodeDataAes(jTextArea1.getText(), this.AesKeyMain);  // ma hoa bang netbean
 
-           String dataEndCodedbase64 = Base64.getEncoder().encodeToString(dataEndcoded);
-           this.textMaHoa = dataEndCodedbase64;
+            String dataEndCodedbase64 = Base64.getEncoder().encodeToString(dataEndcoded);
+            this.textMaHoa = dataEndCodedbase64;
             jTextArea2.setText(dataEndCodedbase64);
         } catch (Exception e) {
             System.out.println(e);
@@ -167,8 +178,29 @@ public class EncodeView extends javax.swing.JFrame {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
         RSAData.exportToFile("filemahoa.txt", this.textMaHoa);
-        JOptionPane.showMessageDialog(null,"Export file thanh cong");
+        JOptionPane.showMessageDialog(null, "Export file thanh cong");
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    public boolean authen() {
+        try {
+            ConnectCard connect = new ConnectCard();
+            String code = ConvertData.generateString();
+            byte[] byteCode = code.getBytes();
+            byte[] codeAsign = connect.requestSign(byteCode);
+            String Data = connect.ReadInformation();
+            String[] arrOfStr = Data.split(",");
+            User user = new Database().getUserById(Integer.parseInt(arrOfStr[0]));
+            PublicKey publicKey = RSAData.generatePublicKeyFromDB(user.getPublicKey());
+            boolean isVerified = RSAData.verify(publicKey, codeAsign, byteCode);
+            if (isVerified) {
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            System.out.println("co loi xay ra");
+        }
+        return false;
+    }
 
     /**
      * @param args the command line arguments
