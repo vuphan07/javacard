@@ -697,7 +697,7 @@ public class ViewInfo extends javax.swing.JFrame {
         ConnectCard connect = new ConnectCard();
         byte[] byteName = this.newGender.getBytes();
 
-        if (connect.EditName(byteName)) {
+        if (connect.EditGender(byteName)) {
             this.hiddenButton(buttonSubmitChangeGender);
             this.gender = this.newGender;
         } else {

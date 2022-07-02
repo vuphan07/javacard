@@ -192,6 +192,7 @@ public class EncodeView extends javax.swing.JFrame {
             User user = new Database().getUserById(Integer.parseInt(arrOfStr[0]));
             PublicKey publicKey = RSAData.generatePublicKeyFromDB(user.getPublicKey());
             boolean isVerified = RSAData.verify(publicKey, codeAsign, byteCode);
+            System.out.println(isVerified);
             if (isVerified) {
                 return true;
             }

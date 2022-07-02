@@ -53,7 +53,6 @@ public class LoginForm extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
         txtPIN = new javax.swing.JPasswordField();
         jLabel5 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -61,23 +60,14 @@ public class LoginForm extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         btnLogin = new javax.swing.JButton();
         btnConnect = new javax.swing.JButton();
-        jlbLogin = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
+        jlbLogin = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setLocationByPlatform(true);
         setUndecorated(true);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jButton1.setBackground(new java.awt.Color(0, 255, 255));
-        jButton1.setText("AdminForm");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 550, -1, -1));
 
         txtPIN.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         txtPIN.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)));
@@ -137,9 +127,6 @@ public class LoginForm extends javax.swing.JFrame {
         });
         getContentPane().add(btnConnect, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 540, 350, -1));
 
-        jlbLogin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Trang.jpg"))); // NOI18N
-        getContentPane().add(jlbLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 140, 350, 390));
-
         jButton2.setBackground(new java.awt.Color(0, 255, 255));
         jButton2.setText("Reset Pin");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -147,7 +134,10 @@ public class LoginForm extends javax.swing.JFrame {
                 jButton2ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 550, -1, -1));
+        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 450, 240, 30));
+
+        jlbLogin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Trang.jpg"))); // NOI18N
+        getContentPane().add(jlbLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 140, 350, 390));
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/LM logo.jpg"))); // NOI18N
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -10, -1, 690));
@@ -177,16 +167,21 @@ public class LoginForm extends javax.swing.JFrame {
                 String code = ConvertData.generateString();
                 byte[] byteCode = code.getBytes();
                 byte[] codeAsign = connect.requestSign(byteCode);
-                 String Data = connect.ReadInformation();
+                String Data = connect.ReadInformation();
                 String[] arrOfStr = Data.split(",");
                 User user = new Database().getUserById(Integer.parseInt(arrOfStr[0]));
                 PublicKey publicKey = RSAData.generatePublicKeyFromDB(user.getPublicKey());
                 boolean isVerified = RSAData.verify(publicKey, codeAsign, byteCode);
+                System.out.println(isVerified);
                 if (isVerified) {
                     JOptionPane.showMessageDialog(null, "Verify thành công");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Verify thất bại");
+                    return;
                 }
             } catch (Exception e) {
-                System.out.println("co loi xay ra");
+                JOptionPane.showMessageDialog(null, "Verify thất bại");
+                return;
             }
 
             if (isNewUser.equalsIgnoreCase("1")) {
@@ -222,11 +217,6 @@ public class LoginForm extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_btnConnectMouseClicked
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-        new HomeForm().setVisible(true);
-    }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
         // TODO add your handling code here:
@@ -280,7 +270,7 @@ public class LoginForm extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new LoginForm(0).setVisible(true);
+                new LoginForm(1).setVisible(true);
             }
         });
     }
@@ -289,7 +279,6 @@ public class LoginForm extends javax.swing.JFrame {
     private javax.swing.JButton btnConnect;
     private javax.swing.JButton btnLogin;
     private javax.swing.JCheckBox checkbox;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;

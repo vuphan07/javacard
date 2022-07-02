@@ -142,7 +142,7 @@ public class PinForm extends javax.swing.JFrame {
             return;
         }
 
-        if ((txtSave.length() < 5) || (txtSave.length() > 8)) {
+        if ((txtSave.length() < 4) || (txtSave.length() > 8)) {
             JOptionPane.showMessageDialog(null, "Mã pin phải lớn hơn 5 và nhỏ hơn 8 kí tự");
             return;
         }
